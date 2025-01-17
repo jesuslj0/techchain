@@ -1,0 +1,27 @@
+.sr-only { /* Para lectores de pantallas */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.n-likes{
+    text-decoration: none;
+}
+
+a.like-button {
+    text-decoration: none;
+    color: rgba(33, 37, 41, 0.75);
+}
+
+#user-search {
+    width: 270px;
+}
+
+details>summary::marker {
+    content: ""; 
+}
