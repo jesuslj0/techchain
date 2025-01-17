@@ -3,7 +3,7 @@ from django.shortcuts import render
 from .models import Post, Comment
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, DeleteView
-from instagram.forms import PostCreateForm, CommentCreateForm
+from techchain.forms import PostCreateForm, CommentCreateForm
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages

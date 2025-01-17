@@ -20,3 +20,4 @@ urlpatterns = [
 
     path('posts/', include('posts.urls', namespace='posts')),
 ] + debug_toolbar_urls()
+

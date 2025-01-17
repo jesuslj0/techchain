@@ -2,7 +2,7 @@ from django.views.generic import DetailView, ListView, UpdateView
 from .models import UserProfile, Follow
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
-from instagram.forms import UserProfileForm
+from techchain.forms import UserProfileForm
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile, Follow

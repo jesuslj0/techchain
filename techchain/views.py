@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
-from instagram import forms
+from techchain import forms
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
