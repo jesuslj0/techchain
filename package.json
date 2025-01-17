@@ -1,0 +1,21 @@
+{
+  "name": "instagram",
+  "version": "1.0.0",
+  "description": "Proyecto de Recreación de la aplicación web de Instagram con Django.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "mkdir -p static/css && cp node_modules/bootstrap/dist/css/bootstrap.min.css static/css/",
+    "build:js": "mkdir -p static/js && cp node_modules/bootstrap/dist/js/bootstrap.bundle.min.js static/js/",
+    "copy-icons": "cp -r node_modules/bootstrap-icons/font static/bootstrap-icons",
+    "postinstall": "npm run copy-icons"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3"
+  }
+}

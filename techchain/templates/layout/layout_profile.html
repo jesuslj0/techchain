@@ -1,0 +1,62 @@
+{% comment %} {% load i18n %} {% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <title>{% block title %}Profile Default{% endblock %}</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <main class="container flex-grow-1">
+        <div class='container'>
+        {% include '_include/_header.html' %}
+        </div>
+        <hr/>
+
+        <div class='container'>
+            <h1 class='text primary'>{% block title_h1 %}Profile default{% endblock %}</h1>
+        </div>
+
+        {% block form %}
+        {% endblock %}
+
+        {% block content %}
+        {% endblock %}
+        
+        {% block messages %}
+            {% if messages %} 
+                {% for message in messages %} 
+                    <div{% if message.tags %} class="{{ message.tags }}"{% endif %}><span>{{ message }}</span></div> 
+                {% endfor %} 
+            {% endif %}
+        {% endblock %}
+        
+        {% block session %}
+            {% if request.user.is_authenticated %}
+            <div class="container mt-3">
+                <div class="d-flex justify-content-between align-items-center bg-light p-3 border rounded shadow-sm mt-auto">
+                    <!-- Información del usuario -->
+                    <div>
+                        <strong>Sesión iniciada:</strong> <span class="text-primary">{{ user.username }}</span>
+                    </div>
+            
+                    <!-- Botón para salir -->
+                    <div>
+                        <form action="{% url 'logout' %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Cerrar sesión</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endblock %}
+
+    </main>
+    {% include "_include/_footer.html" %}
+</body>
+</html>

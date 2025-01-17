@@ -1,0 +1,82 @@
+from django.views.generic import TemplateView, FormView
+from django.contrib.auth.views import LoginView, LogoutView
+from instagram import forms
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+from posts.models import Post
+from profiles.models import Follow
+from django.contrib import messages
+
+
+# General Views
+class HomeView(TemplateView):
+    template_name = 'general/home.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.user.is_authenticated:
+            seguidos = Follow.objects.filter(follower=self.request.user.profile).values_list('followed__user', flat=True)
+            posts = Post.objects.filter(user__profile__user__in=seguidos)
+            # import ipdb; ipdb.set_trace()
+            context["recent_posts"] = posts.order_by('created_at').reverse()
+        else:
+            context["recent_posts"] = Post.objects.all().order_by('created_at')[:10]
+        
+        return context
+
+
+class ContactView(FormView):
+    template_name = 'general/contact.html'
+    form_class = forms.ContactForm
+    success_url = reverse_lazy('contact/')
+
+
+class LegalView(TemplateView):
+    template_name = 'general/legal.html'
+
+
+class LoginView(LoginView): 
+    template_name = 'general/login.html'
+    authentication_form = forms.LoginForm
+    redirect_authenticated_user = True
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.redirect_authenticated_user and self.request.user.is_authenticated:
+            redirect_to = self.get_success_url()
+            if redirect_to == self.request.path:
+                raise ValueError(
+                    "Redirection loop for authenticated user detected. Check that "
+                    "your LOGIN_REDIRECT_URL doesn't point to a login page."
+                )
+            return HttpResponseRedirect(redirect_to)
+        return super().dispatch(request, *args, **kwargs)
+
+class LogoutView(LogoutView):
+    template_name = 'general/logout.html'
+
+
+class RegisterView(FormView): 
+    template_name = 'general/register.html'
+    form_class = forms.RegisterForm
+    success_url = reverse_lazy('login')  # Redirige a la página de inicio de sesión después de un registro exitoso
+
+    def form_valid(self, form):
+        # Guarda el usuario pero no lo confirma aún
+        user = form.save(commit=False)
+        user.set_password(form.cleaned_data['password'])  # Encripta la contraseña
+        user.save()  # Guarda el usuario en la base de datos
+        messages.success(self.request, '¡Registro completado con éxito!')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Por favor, corrige los errores del formulario.')
+        return super().form_invalid(form)
+        
+    

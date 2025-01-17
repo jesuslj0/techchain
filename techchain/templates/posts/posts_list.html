@@ -1,0 +1,47 @@
+{% extends 'layout/layout_list.html' %}
+{% block title %}Posts{% endblock %}
+{% block title_h1%}
+    {% if request.user.is_authenticated.id != user_id %}
+    Tus Publicaciones
+    {% else %}
+    Publicaciones de {{object.user.username}}
+    {% endif %}
+{% endblock %}
+
+{% block element %}
+    {% for post in posts %}
+    <div class="list-group-item mb-3 p-3 shadow-sm border rounded">
+        <div class="row g-3">
+            <!-- Imagen del post -->
+            <div class="col-md-4">
+                <img src="..{{post.image.url}}" class="img-fluid rounded" alt="Imagen del post">
+            </div>
+            <!-- Contenido del post -->
+            <div class="col-md-8">
+                <p class="mb-2 text-muted small"><strong>{{post.user.username}}</strong> {{post.created_at|date}}</p>
+                <p class="mb-3 text-truncate text-wrap">{{post.caption}}</p>
+                <p class="mb-3 text-muted">
+                    <a 
+                        href="{% url 'posts:like_ajax' post.pk %}" 
+                        class="like-button" 
+                        data-post-id="{{ post.pk }}">
+                        {% if request.user in post.likes.all %}
+                            <i class="bi bi-heart-fill text-danger"></i>
+                            <span class="sr-only">Unlike this post</span> <!-- Texto visible para lectores de pantalla -->
+                        {% else %}
+                            <i class="bi bi-heart text-danger"></i>
+                            <span class="sr-only">Like this post</span> <!-- Texto visible para lectores de pantalla -->
+                        {% endif %}
+                    </a>
+                    <span class="n-likes" data-post-id="{{ post.pk }}">{{ post.likes.count }}</span>
+                    <span class="comment ms-2"><i class="bi bi-chat-dots-fill"></i> {{post.comments.count}}</span>
+                </p>       
+                <p class="mb-3">
+                    <a class="btn btn-primary p-1" href="{% url 'posts:detail' post.pk %}">Ver publicacíón</a>
+                    <a class="btn btn-danger p-1" href="{% url 'posts:delete' post.pk %}">Eliminar</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

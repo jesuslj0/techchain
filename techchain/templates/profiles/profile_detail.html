@@ -1,0 +1,106 @@
+{% extends 'layout/layout_profile.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Perfil{% endblock %}
+{% block title_h1 %}
+    {% if object.user.id == user_id %}
+        Mi perfil
+    {% else %}
+        {{object.user.username}}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="container m-auto">
+        <div class="row">
+            <!-- Menú vertical -->
+            <div class="col-3 menu-container">
+                <h4>Menú</h4>
+                <ul class="list-unstyled d-flex flex-column p-2 bg-light " style="width: 250px;">
+                    <li class='p-2'>
+                        <i class="bi bi-house"></i>
+                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'home' %}">Inicio</a>
+                    </li>
+                    <li class='p-2'>
+                        <i class="bi bi-people-fill"></i>
+                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Mis seguidores</a>
+                    </li>
+                    <li class='p-2'>
+                        <i class="bi bi-postcard-heart"></i>
+                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                    </li>
+                    <li class='p-2'>
+                        <i class="bi bi-file-earmark-plus"></i>
+                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:create' user_id %}">Crear</a>
+                    </li>
+                    </ul>
+            </div>
+
+            <!-- Información del perfil -->
+            <div class="col-9 profile-container" style="display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <div class="card shadow-sm" style="min-width: 150px; max-width: 400px; padding: 25px 20px; align-self: start; margin-right: 20px;">
+                    <img 
+                    src="..{{object.profile_picture.url}}" 
+                    style="width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    align-self: center"
+                    alt="Foto de Perfil">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@{{object.user.username}}</h5>
+                        <p class="card-subtitle text-muted" style="margin-bottom: 20px">{{object.user.first_name}} {{object.user.last_name}}</p>
+                        <p class="card-subtitle text-muted" style="margin-bottom: 20px">
+                            <strong>{{object.user.posts.count}}</strong> publicaciones </br>
+                            <strong>{{object.following.count}}</strong> seguidores </br>
+                            <strong>{{object.followers.count}}</strong> seguidos
+                        </p>
+                        <p class="card-text">{{object.bio}}</p>
+                        {% if request.user.is_authenticated %}
+                            {% if object.user != request.user %}
+                                <form action="{% url 'profiles:toggle_follow' user_id=object.user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">
+                                        {% if object.user.profile in request.user.profile.followers.all %}
+                                            Dejar de seguir
+                                        {% else %}
+                                            Seguir
+                                        {% endif %}
+                                    </button>
+                                </form>                            
+                            {% else %}
+                                <!-- Si es el propio perfil del usuario autenticado -->
+                                <a href="{% url 'profiles:update' user_id %}" class="btn btn-primary mb-2">Editar Perfil</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="list_group">
+                    {% if object.user == request.user %}
+                    <h3 class="m-3">Tus Publicaciones</h3>
+                    {% else %}
+                    <h3 class="m-3">Publicaciones</h3>
+                    {% endif %}
+                    {% for post in posts %}
+                        <div class="list-group-item d-flex align-items-center p-3">
+                            <img src="..{{post.image.url}}" alt="Imagen" class="rounded me-3" style="width: 60px; height: 90px;">
+                            <div>
+                                <p>
+                                    <span class="mb-1">{{post.user.username}} <i class="bi bi-heart-fill text-danger"></i> {{post.likes.all.count}}</span>
+                                    <span class="comment ms-2"><i class="bi bi-chat-dots-fill"></i> {{post.comments.count}}</span>
+                                </p>
+                                <p class="mb-0 text-muted">{{post.caption}}</p>
+                            </div>
+                            <p class="m-3" style="position: relative;">
+                                <a class="btn btn-primary p-2" href="{% url 'posts:detail' post.pk %}">Ver</a>
+                            </p>
+                        </div>
+                        {% endfor %}
+                        {% if request.user == object.user %}
+                        <p class='text-end'><a href="{% url 'posts:create' user_id %}" class="btn btn-primary mt-2"><i class="bi bi-plus-lg"></i> Crear</a>
+                            {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

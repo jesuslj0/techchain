@@ -1,0 +1,42 @@
+{% extends 'layout/layout_basic.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Publicaciones{% endblock %}
+{% block title_h1 %}Crear tu publicación{% endblock %}
+{% block form %}
+    <form method='post' enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class='mb-3'>
+            <img id="imagePreview" src="" alt="Vista previa"
+                 style="display: none; max-width: 200px; max-height: 200px; margin-top: 10px;" />
+        </div>
+        {{ form|crispy}}
+        <button type='submit' class='btn btn-primary'>Publicar</button>
+        <a href="{% url 'profiles:detail' user_id %}" class='btn btn-secondary'>Salir</a>
+    </form>
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+
+        fileInput.addEventListener('change', function (event) {
+            const file = event.target.files[0]; // Obtiene el archivo seleccionado
+            if (file) {
+                const reader = new FileReader(); // Crea un FileReader para leer el archivo
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result; // Establece la imagen en el atributo src
+                    imagePreview.style.display = 'block'; // Muestra la imagen
+                };
+                reader.readAsDataURL(file); // Lee el archivo como una URL de datos
+            } else {
+                imagePreview.src = '';
+                imagePreview.style.display = 'none'; // Oculta la imagen si no hay archivo
+            }
+        });
+    });
+</script>
+{% endblock %}
+

@@ -1,0 +1,139 @@
+{% comment %} {% load i18n %} {% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}?version=1.1">
+        <link href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+        <link href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <title>{% block title %}Title Default{% endblock %}</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <main class="container flex-grow-1">
+        <div class='container'>
+        {% include '_include/_header.html' %}
+        </div>
+        <div class='container d-flex justify-content-between mt-3'>
+            <h1 class='text primary'>{% block title_h1 %}Title default{% endblock %}</h1>
+            {% block search_bar %}
+            <form class="d-flex" method="get" action="{% url 'profiles:search' %}">
+                <!-- Barra de búsqueda -->
+                <input class="form-control me-2" type="search" name="query" placeholder="Buscar usuarios" id="user-search" value="{{ request.GET.query }}">
+                <button class="btn btn-outline-primary" type="submit" id="search-btn">
+                  <i class="bi bi-search"></i>
+                </button>
+              </form>
+            {% endblock %}
+        </div>
+        
+        {% comment %} {% block search_form %}
+            {% if search_form %}
+            <form method="GET" action="{% url 'search' %}">
+                {{search_form.as_p}}
+                <button type='submit'>Enviar</button>
+            </form>
+            {% else%}
+            {% endif %}
+        {% endblock %} {% endcomment %}
+    
+        <hr/>
+        {% block form %}
+        {% endblock %}
+        
+        {% block messages %}
+            {% if messages %} 
+                {% for message in messages %} 
+                    <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}><span>{{ message }}</span></div> 
+                {% endfor %} 
+            {% endif %}
+        {% endblock %}
+        
+        {% block content %}
+        {% endblock %}
+        
+        {% block session %}
+            {% if request.user.is_authenticated %}
+            <div class="container mt-3">
+                <div class="d-flex justify-content-between align-items-center bg-light p-3 border rounded shadow-sm mt-auto">
+                    <!-- Información del usuario -->
+                    <div>
+                        <strong>Sesión iniciada:</strong> <span class="text-primary">{{ user.username }}</span>
+                    </div>
+            
+                    <!-- Botón para salir -->
+                    <div>
+                        <form action="{% url 'logout' %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Cerrar sesión</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endblock %}
+            
+        
+        {% block script %}
+            <script>
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    const likeButtons = document.querySelectorAll('.like-button');
+                    
+                    likeButtons.forEach(button => {
+                        button.addEventListener('click', function(event) {
+                            event.preventDefault();
+                
+                            const postId = button.dataset.postId;
+                            const nLikesSpan = document.querySelector(`.n-likes[data-post-id="${postId}"]`);
+
+                            fetch(button.href, {
+                                method: 'POST',
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'X-CSRFToken': getCSRFToken() // Asegúrate de incluir el token CSRF
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.liked) {
+                                    button.innerHTML = `<i class="bi bi-heart-fill text-danger"></i>
+                                                        <span class="sr-only">Unlike this post</span>
+                                                        <span data-post-id="{{ post.pk }}" class="n-likes">${data.nLikes}</span>`;
+                                } else {
+                                    button.innerHTML = `<i class="bi bi-heart text-danger"></i>
+                                                        <span class="sr-only">Like this post</span>
+                                                        <span data-post-id="{{ post.pk }}" class="n-likes">${data.nLikes}</span>`;
+                                }
+                            })
+                            .catch(error => console.error('Error:', error));
+                        });
+                    });
+                });
+                
+                function getCSRFToken() {
+                    let cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        const cookies = document.cookie.split(';');
+                        for (let i = 0; i < cookies.length; i++) {
+                            const cookie = cookies[i].trim();
+                            // ¿Esta cookie comienza con el prefijo CSRF?
+                            if (cookie.substring(0, 10) === 'csrftoken=') {
+                                cookieValue = decodeURIComponent(cookie.substring(10));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+                      
+            </script>
+        {% endblock %}
+
+    </main>
+    {% include "_include/_footer.html" %}
+</body>
+</html>

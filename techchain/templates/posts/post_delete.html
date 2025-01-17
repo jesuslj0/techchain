@@ -1,0 +1,17 @@
+{% extends 'layout/layout_basic.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Publicaciones{% endblock %}
+{% block title_h1 %}Elimina tu publicación{% endblock %}
+{% block search_bar %}{% endblock %}
+{% block form %}
+    <form method='post' class='form-control p-3'>
+        {% csrf_token %}
+        <h3>¿Estás seguro de eliminar esta publicación?</h3>
+        <p class='alert alert-danger'>No podrás recuperarla de ninguna forma</p>
+        <button type='submit' class='btn btn-primary'>Eliminar</button>
+        <a href="{% url 'posts:list' user_id %}" class='btn btn-secondary'>Salir</a>
+    </form>
+{% endblock %}
+
+

@@ -1,0 +1,14 @@
+{% extends 'layout/layout_basic.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Register{% endblock %}
+{% block title_h1 %}Regístrate{% endblock %}
+{% block search_bar %}{% endblock %}
+
+{% block form %}
+    <form method='post' action="{% url 'home'%}">
+        {% csrf_token %}
+        {{ form|crispy}}
+        <button class='btn btn-secondary' type='submit'>Confirmar</button>
+    </form>
+{% endblock %}

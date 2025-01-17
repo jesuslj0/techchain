@@ -1,0 +1,21 @@
+{% extends 'layout/layout_basic.html' %}
+{% block title %}Seguidores{% endblock %}
+{% block title_h1 %}Mis seguidores{% endblock %}
+{% block content %}
+    <div class='container'>
+        <ul class='list-group list-group-flush'>
+            {% for follow in followers %}
+                <li class='list-group-item'>
+                    <img 
+                        src="../..{{follow.follower.profile_picture.url}}" 
+                        class="rounded-circle" 
+                        style="width: 60px; height: 60px; object-fit: cover;" 
+                        alt="imagen de perfil">
+                    <a href="{% url 'profiles:detail' follow.follower.id %}"><strong>{{ follow.follower.user.username }}</strong></a>
+                    {{ follow.follower.username }} Te sigue desde {{ follow.follow_up_date|date }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+

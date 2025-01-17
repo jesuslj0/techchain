@@ -1,0 +1,32 @@
+{% extends 'layout/layout_basic.html' %}
+
+{% block title %}Logout{% endblock %}
+{% block title_h1 %}Hasta pronto!{% endblock %}
+{% block search_bar %}{% endblock %}
+
+{% block menu%} 
+<ul class="navbar-nav">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'home'%}">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'register'%}">Registrarse</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contact' %}">Contacto</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'legal' %}">Aviso Legal</a>
+    </li>
+{% endblock %}
+{% block form %}
+<div class='container'>
+    <form method='post' class=''>
+        {% csrf_token %}
+        <h2 class="display-5">Quieres volver a entrar?</h2>
+        <p class='h3 primary-link'>
+            <a href='{% url 'login'%}'>Iniciar sesion</a>
+        </p>
+    </form>
+</div>
+{% endblock %}
