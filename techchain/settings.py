@@ -27,16 +27,16 @@ SECRET_KEY = "django-insecure-51ds0d_l0u*boushf!o$8=op&8v*0*!1*+^x$d22u=yy%%v2q)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['techchain.live', 'www.techchain.live']
+ALLOWED_HOSTS = [ "127.0.0.1", "localhost", "techchain.live", "www.techchain.live"]
 
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
 # Forzar HTTPS
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 # Application definition
 

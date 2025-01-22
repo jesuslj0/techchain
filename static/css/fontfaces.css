@@ -1,0 +1,20 @@
+@font-face {
+    font-family: "Goldman-Bold";
+    src: url("/static/fonts/Goldman-Bold.woff");
+}
+
+@font-face {
+    font-family: "Goldman-Regular";
+    src: url("/static/fonts/Goldman-Regular.woff");
+}
+
+@font-face {
+    font-family: "Newsreader-Italic-Variable";
+    src: url("/static/fonts/Newsreader-Italic-VariableFont_opsz_wght.woff");
+}
+
+@font-face {
+    font-family: "Newsreader-Variable";
+    src: url("/static/fonts/Newsreader-VariableFont_opsz_wght.woff");
+}
+

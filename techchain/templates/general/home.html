@@ -1,7 +1,13 @@
 {% extends 'layout/layout_basic.html' %}
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/home.css" %}">
+    <link rel="stylesheet" href="{% static "css/fontfaces.css" %}">
+{% endblock %}
 {% block title %}Home{% endblock %}
 {% block title_h1 %}
-    <i class="bi bi-instagram me-2"></i></i><span>Inicio</span>
+    <img src="/static/icons/android-chrome-192x192.png" alt="logo" class="logo">
+    <span class="title">TechChain</span>
 {% endblock %}
 {% block content %}
     <div class='container'>
@@ -27,7 +33,7 @@
                 </ul> 
             </div>
             <div class="col-9">
-                <h2>Publicaciones recientes</h2>
+                <h2 class="subtitle">Publicaciones recientes</h2>
                 <ul class="list-group">
                     {% for post in recent_posts %}
                     <div class="list-group-item mb-3 p-3 shadow-sm border rounded">
@@ -66,7 +72,6 @@
                 </ul>
             </div>
         </div>
-        <h2>Bienvenido</h2>
         </div>
 {% endblock%}
 
