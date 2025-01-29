@@ -1,5 +1,8 @@
 {% extends 'layout/layout_basic.html' %}
-
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/logout.css" %}">
+{% endblock %}
 {% block title %}Logout{% endblock %}
 {% block title_h1 %}Hasta pronto!{% endblock %}
 {% block search_bar %}{% endblock %}
@@ -21,12 +24,10 @@
 {% endblock %}
 {% block form %}
 <div class='container'>
-    <form method='post' class=''>
-        {% csrf_token %}
-        <h2 class="display-5">Quieres volver a entrar?</h2>
-        <p class='h3 primary-link'>
-            <a href='{% url 'login'%}'>Iniciar sesion</a>
-        </p>
-    </form>
+    {% csrf_token %}
+    <h2>Quieres volver a entrar?</h2>
+    <p class='h3 primary-link'>
+        <a href='{% url 'login'%}'>Iniciar sesion</a>
+    </p>
 </div>
 {% endblock %}

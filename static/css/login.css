@@ -1,0 +1,77 @@
+
+img {
+    width: 400px;
+    animation: rotate 6s linear infinite; /* Ajusta la duración y el tipo de animación */
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+h1 {
+    font-family: "Goldman-Regular";
+    font-size: 50px;
+}
+
+h2 {
+    font-family: "Goldman-Bold";
+    font-size: 40px;
+}
+
+h3 {
+    font-family: "Newsreader-Variable";
+    font-size: 36px;
+}
+
+.register {
+    font-family: "Newsreader-Variable";
+    font-size: 22px;
+    margin-top: 40px;
+}
+
+p > a {
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: black;
+}
+
+.main-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    padding: 50px;
+    margin-bottom: 100px;
+}
+
+.content-container {
+    max-width: 700px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: start;
+    justify-content: space-between;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+}
+
+.btn-primary {
+    max-width: 100px;
+}
+
+.form-label {
+    font-weight: bold;
+}
+

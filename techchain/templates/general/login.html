@@ -1,14 +1,28 @@
 {% extends 'layout/layout_basic.html' %}
 {% load crispy_forms_tags %}
-
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/login.css" %}">
+{% endblock %}
 {% block title %}Login{% endblock %}
-{% block title_h1 %}Iniciar Sesión{% endblock %}
+{% block title_h1 %}Bienvenido a TechChain{% endblock %}
 {% block search_bar %}{% endblock %}
 
-{% block form %}
-    <form method='post'>
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button class='btn btn-secondary' type='submit'>Entrar</button>
-    </form>
+{% block content %}
+    <div class="main-container">
+        <img src="/static/icons/android-chrome-512x512.png" alt="logo" />
+        <div class="content-container">
+            <h2>La red social del futuro</h2>
+            <h3>Únete ahora</h3>
+            <form method='post'>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button class='btn btn-primary bg-dark' type='submit'>Entrar</button>
+            </form>   
+            <p class="register">¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate</a></p>
+        </div>
+               
+    </div>
+    
+    
 {% endblock %}
