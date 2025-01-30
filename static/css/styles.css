@@ -26,3 +26,13 @@ details>summary::marker {
     content: ""; 
 }
 
+/* Estilos del cursor para toda la web */
+body {
+    cursor: url('/static/cursor/Aero.cur'), auto;
+}
+
+form.d-flex {
+    width: auto;
+    height: 48px;
+    align-self: center;
+}

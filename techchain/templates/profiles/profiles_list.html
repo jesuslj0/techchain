@@ -1,8 +1,12 @@
 {% extends 'layout/layout_basic.html' %}
+
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/profiles_list.css" %}">
+{% endblock %}
 {% block title %}Seguidores{% endblock %}
 {% block title_h1 %}Mis seguidores{% endblock %}
 {% block content %}
-    <div class='container'>
         <ul class='list-group list-group-flush'>
             {% for follow in followers %}
                 <li class='list-group-item'>
@@ -16,6 +20,5 @@
                 </li>
             {% endfor %}
         </ul>
-    </div>
 {% endblock %}
 

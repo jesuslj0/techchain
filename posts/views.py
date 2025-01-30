@@ -13,7 +13,7 @@ from django.utils.decorators import method_decorator
 @method_decorator(login_required, 'dispatch')
 class PostsListView(ListView):
     model = Post
-    template_name = 'posts/posts_list.html'
+    template_name = 'posts/post_list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -48,7 +48,7 @@ class PostDetailView(DetailView, CreateView):
 @method_decorator(login_required, 'dispatch')
 class PostsCreateView(CreateView):
     model = Post
-    template_name = 'posts/posts_create.html'
+    template_name = 'posts/post_create.html'
     form_class = PostCreateForm
 
     def form_valid(self, form):

@@ -1,6 +1,10 @@
 {% extends 'layout/layout_basic.html' %}
 {% load crispy_forms_tags %}
 
+{% block styles %}
+    {% load static%}
+    <link rel="stylesheet" href="{% static 'css/post_detail.css' %}">
+{% endblock %}
 {% block title %}Publicacion{% endblock %}
 {% block title_h1 %}Detalle de publicacion{% endblock %}
 
@@ -8,7 +12,7 @@
 <div class="container">
     <div class="row">
         <div class="col-3 ">
-            <ul class="list-unstyled d-flex flex-column p-2 bg-light" style="width: 250px;">
+            <ul class="list-unstyled d-flex flex-column p-2">
                 <li class='p-2'>
                     <i class="bi bi-house"></i>
                     <a class="mb-5 text-decoration-none text-dark " href="{% url 'home' %}">Inicio</a>

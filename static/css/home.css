@@ -5,8 +5,33 @@
 
 .title {
     font-family: "Goldman-Regular";
+    align-self: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+.title > span {
+    font-family: "Goldman-Regular";
+}
+
+.title > img {
+    animation: rotate 6s linear infinite; /* Ajusta la duración y el tipo de animación */
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .subtitle {
     font-family: "Newsreader-Variable";
+}
+
+.list-unstyled {
+    width: 200px;
+    background-color: #fff;
 }
