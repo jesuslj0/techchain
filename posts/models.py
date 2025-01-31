@@ -3,10 +3,29 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class Tag(models.Model):
+    class TagChoices(models.TextChoices):
+        TECNOLOGIA = "tecnologia", "Tecnología"
+        SOFTWARE = "software", "Software"
+        IA = "ia", "Inteligencia Artificial"
+        DESARROLLO_WEB = "desarrollo_web", "Desarrollo Web"
+        BACKEND = "backend", "Backend"
+        FRONTEND = "frontend", "Frontend"
+        BLOCKCHAIN = "blockchain", "Blockchain"
+        BITCOIN = "BTC", "Bitcoin"
+
+    name = models.CharField(
+        max_length=20,
+        choices=TagChoices.choices,
+        unique=True
+    )
+
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', verbose_name='Usuario')
     image = models.ImageField(upload_to='posts/posts_images/', verbose_name='Imagen')
-    caption = models.TextField(max_length=500, blank=True, verbose_name='Descripción')
+    title = models.TextField(max_length=500, blank=True, verbose_name='Titulo')
+    content = models.TextField(blank=True, verbose_name='Contenido')
+    tags = models.ManyToManyField(Tag, related_name="posts")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True, verbose_name='Nº de Likes')
 
@@ -36,3 +55,5 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Coméntó {self.user.username} en {self.post}"
+    
+

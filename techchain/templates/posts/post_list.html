@@ -24,7 +24,11 @@
             <!-- Contenido del post -->
             <div class="col-md-8">
                 <p class="mb-2 text-muted small"><strong>{{post.user.username}}</strong> {{post.created_at|date}}</p>
-                <p class="mb-3 text-truncate text-wrap">{{post.caption}}</p>
+                <p class="mb-3 text-truncate text-wrap">{{post.title}}</p>
+                <p class="mb-3">{{post.content}}</p>
+                <p class="mb-3">
+                        <span>{{tags}}</span>
+                </p>
                 <p class="mb-3 text-muted">
                     <a 
                         href="{% url 'posts:like_ajax' post.pk %}" 

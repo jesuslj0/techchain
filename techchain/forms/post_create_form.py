@@ -1,11 +1,12 @@
 from django import forms
-from posts.models import Post
+from posts.models import Post, Tag
 
 class PostCreateForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['image', 'caption']
+        fields = ['image', 'tags','title', 'content',]
         widgets = {
-            'image': forms.FileInput(attrs={'class': 'form-control', 'id': 'imageInput'}),
-            'caption': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'image': forms.FileInput(attrs={'id': 'imageInput'}),
+            'title': forms.TextInput(),
+            'content': forms.Textarea(attrs={ 'rows': 3})
         }
