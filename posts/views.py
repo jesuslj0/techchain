@@ -52,8 +52,10 @@ class PostsCreateView(CreateView):
     form_class = PostCreateForm
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+        form.instance.user = self.request.user  # Asigna el usuario actual al Post
+        response = super().form_valid(form)     # ✅ Guarda el Post en la base de datos
+        form.instance.tags.set(form.cleaned_data['tags'])  # ✅ Establece los tags después de guardar
+        return response
     
     def get_success_url(self):
         return reverse_lazy('posts:list', kwargs={'user_id': self.object.user_id})

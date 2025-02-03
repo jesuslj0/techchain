@@ -49,7 +49,13 @@
                                 <p class="mb-2"><img src="posts{{post.user.profile.profile_picture.url}}" 
                                     style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;"></p>
                                 <p class="mb-2 text-muted small"><strong>{{post.user.username}}</strong> {{post.created_at|date}}</p>
-                                <p class="caption mb-3 text-truncate text-wrap ">{{post.caption}}</p>
+                                <p class="mb-3 h5 text-primary">{{post.title}}</p>
+                                <p class="mb-3">
+                                    {% for tag in post.tags.all %}
+                                        <span class="badge bg-primary">{{tag.name}}</span>
+                                    {% endfor %}
+                                </p>
+                                <p class="mb-3">{{post.content|truncatewords:20}}</p>
                                     {% if request.user in post.likes.all %}
                                         <a href="{% url 'posts:like_ajax' post.pk %}" data-post-id="{{ post.pk }}" class="like-button">
                                             <i class="bi bi-heart-fill text-danger"></i><span class="sr-only">Unlike this post</span>

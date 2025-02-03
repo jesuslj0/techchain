@@ -1,16 +1,34 @@
 {% extends 'layout/layout_basic.html' %}
 {% load crispy_forms_tags %}
-
+{% block styles %}
+    {% load static%}
+    <link rel="stylesheet" href="{% static 'css/post_create.css' %}">
+{% endblock %}
 {% block title %}Publicaciones{% endblock %}
 {% block title_h1 %}Crear tu publicación{% endblock %}
 {% block form %}
-    <form method='post' enctype="multipart/form-data">
+    <form method='post' enctype="multipart/form-data" class="p-4 border rounded">
         {% csrf_token %}
         <div class='mb-3'>
             <img id="imagePreview" src="" alt="Vista previa"
                  style="display: none; max-width: 200px; max-height: 200px; margin-top: 10px;" />
         </div>
-        {{ form|crispy}}
+        <div class="mb-3">
+            {{ form.image.label_tag }} 
+            {{ form.image }}
+        </div>
+        <div class="mb-3">
+            {{ form.tags.label_tag }}
+            {{ form.tags }}
+        </div>
+        <div class="mb-3">
+            {{ form.title.label_tag }}
+            {{ form.title }}
+        </div>
+        <div class="mb-3">
+            {{ form.content.label_tag }}
+            {{ form.content }}
+        </div>
         <button type='submit' class='btn btn-primary'>Publicar</button>
         <a href="{% url 'profiles:detail' user_id %}" class='btn btn-secondary'>Salir</a>
     </form>

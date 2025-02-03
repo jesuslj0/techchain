@@ -7,6 +7,11 @@ class PostCreateForm(forms.ModelForm):
         fields = ['image', 'tags','title', 'content',]
         widgets = {
             'image': forms.FileInput(attrs={'id': 'imageInput'}),
+            'tags': forms.CheckboxSelectMultiple(),
             'title': forms.TextInput(),
-            'content': forms.Textarea(attrs={ 'rows': 3})
+            'content': forms.Textarea(attrs={ 'rows': 5, 'cols':80 })
         }
+
+    def __init__(self, *args, **kwargs):
+        super(PostCreateForm, self).__init__(*args, **kwargs)
+        self.fields['tags'].queryset = Tag.objects.all();

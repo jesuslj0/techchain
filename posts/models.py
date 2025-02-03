@@ -20,12 +20,15 @@ class Tag(models.Model):
         unique=True
     )
 
+    def __str__(self):
+        return self.get_name_display() 
+
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', verbose_name='Usuario')
     image = models.ImageField(upload_to='posts/posts_images/', verbose_name='Imagen')
     title = models.TextField(max_length=500, blank=True, verbose_name='Titulo')
     content = models.TextField(blank=True, verbose_name='Contenido')
-    tags = models.ManyToManyField(Tag, related_name="posts")
+    tags = models.ManyToManyField('Tag', related_name="posts")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True, verbose_name='Nº de Likes')
 

@@ -1,6 +1,9 @@
 {% extends 'layout/layout_basic.html' %}
 {% load crispy_forms_tags %}
-
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/contact.css" %}">
+{% endblock %}
 {% block title %}Contact{% endblock %}
 {% block title_h1 %}Contacta con nosotros{% endblock %}
 
@@ -8,6 +11,6 @@
     <form method='post'>
         {% csrf_token %}
         {{ form|crispy }}
-        <button class='btn btn-secondary' type='submit'>Enviar</button>
+        <button class='btn btn-secondary mb-3' type='submit'>Enviar</button>
     </form>
 {% endblock %}
