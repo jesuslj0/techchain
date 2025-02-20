@@ -1,5 +1,47 @@
 .title {
     font-family: "Goldman-Regular";
+    font-size: 50px;
     margin-bottom: 20px;
 }
 
+.form-title {
+    font-family: "Goldman-Bold";
+}
+
+.main-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    padding: 50px;
+    margin-bottom: 100px;
+}
+
+.content-container {
+    max-width: 700px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: start;
+    justify-content: space-between;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+img {
+    align-self: start;
+    width: 400px;
+    animation: rotate 6s linear infinite; /* Ajusta la duración y el tipo de animación */
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

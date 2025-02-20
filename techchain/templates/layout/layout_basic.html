@@ -10,7 +10,7 @@
         <link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16x16.png">
         {% load static %}
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'css/styles.css' %}?version=1.3">
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.4">
         <link rel="stylesheet" href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" >
         <link rel="stylesheet" href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" >
         <link rel="stylesheet" href="{% static "css/fontfaces.css" %}">
@@ -19,8 +19,8 @@
     <title>{% block title %}Title Default{% endblock %}</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
+    {% include '_include/_header.html' %}
     <main class="container flex-grow-1">
-        {% include '_include/_header.html' %}
         
         <div class='container d-flex justify-content-between mt-3'>
             <h1 class='title'>{% block title_h1 %}Title default{% endblock %}</h1>
@@ -65,7 +65,7 @@
                 <div class="d-flex justify-content-between align-items-center bg-light p-3 border rounded shadow-sm mt-auto">
                     <!-- Información del usuario -->
                     <div>
-                        <strong>Sesión iniciada:</strong> <span class="text-primary">{{ user.username }}</span>
+                        <strong>Sesión iniciada:</strong> <span class="text-primary">{{ user }}</span>
                     </div>
             
                     <!-- Botón para salir -->
@@ -83,7 +83,6 @@
         
         {% block script %}
             <script>
-
                 document.addEventListener('DOMContentLoaded', function() {
                     const likeButtons = document.querySelectorAll('.like-button');
                     
@@ -132,8 +131,7 @@
                         }
                     }
                     return cookieValue;
-                }
-                      
+                }    
             </script>
         {% endblock %}
 

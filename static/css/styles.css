@@ -36,3 +36,9 @@ form.d-flex {
     height: 48px;
     align-self: center;
 }
+
+header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}

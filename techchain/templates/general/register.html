@@ -7,11 +7,16 @@
 {% block title %}Register{% endblock %}
 {% block title_h1 %}Regístrate{% endblock %}
 {% block search_bar %}{% endblock %}
-
 {% block form %}
-    <form method='post' action="{% url 'home'%}">
-        {% csrf_token %}
-        {{ form|crispy}}
-        <button class='btn btn-secondary mb-3' type='submit'>Confirmar</button>
-    </form>
+    <div class="main-container">
+        <img src="/static/icons/android-chrome-512x512.png" alt="logo" />
+        <div class="content-container"> 
+            <h3 class="form-title">Crea tu nueva cuenta</h3>
+            <form method='post' action="{% url 'home'%}">
+                {% csrf_token %}
+                {{ form|crispy}}
+                <button class='btn btn-secondary mb-3' type='submit'>Confirmar</button>
+            </form>
+        </div>  
+    </div>
 {% endblock %}

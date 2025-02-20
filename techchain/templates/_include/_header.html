@@ -1,39 +1,42 @@
-<header>
+<div class="header-hover-zone"></div>
+<header id="main-header" class="bg-dark">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         {% block menu %}
         <ul class="navbar-nav">
-            <li class="nav-item  ps-3">
-                <a class="nav-link" href="{% url 'home'%}">Home</a>
+            <li class="nav-item ps-3">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
             </li>
+            {% comment %} <li class="nav-item ps-3">
+                <a class="nav-link" href="{% url 'explore' %}">Explorar</a>
+            </li> {% endcomment %}
             {% if not request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register'%}">Registrarse</a>
+                    <a class="nav-link" href="{% url 'register' %}">Registrarse</a>
                 </li>
-            {% endif%}
+            {% endif %}
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'contact' %}">Contacto</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'legal' %}">Aviso Legal</a>
             </li>
-            
-            {% comment %} <form action="{% url 'set_language' %}" method="post">
-                {% csrf_token %}
-                <select name="language">
-                    {% get_current_language as LANGUAGE_CODE %}
-                    {% for lang_code, lang_name in LANGUAGES %}
-                    <option value="{{lang_code}}" {% if LANGUAGE_CODE == lang_code %}selected{% endif %}>
-                        {{lang_name}} ({{lang_code}})
-                        </option>
-                        {% endfor %}
-                        </select>
-                        <input type="hidden" name="next" value="{{ request.path }}">
-                        <button type="submit">Cambiar idioma</button>
-                        </form> {% endcomment %}
-        </ul> 
+        </ul>
         {% endblock %}
     </nav>
 </header>
+{% comment %} <form action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    <select name="language">
+        {% get_current_language as LANGUAGE_CODE %}
+        {% for lang_code, lang_name in LANGUAGES %}
+        <option value="{{lang_code}}" {% if LANGUAGE_CODE == lang_code %}selected{% endif %}>
+            {{lang_name}} ({{lang_code}})
+            </option>
+            {% endfor %}
+            </select>
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button type="submit">Cambiar idioma</button>
+            </form> {% endcomment %}

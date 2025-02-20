@@ -2,3 +2,11 @@
     font-family: "Goldman-Regular";
     margin-bottom: 20px;
 }
+
+input#id_title {
+    width: 100%;
+}
+
+label.form-label{
+    font-weight: bold;
+}

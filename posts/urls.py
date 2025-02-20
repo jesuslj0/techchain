@@ -4,8 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import PostsListView, PostsCreateView, PostDeleteView, PostDetailView, like_post_ajax
 
-#Profiles urls
-
+#Posts urls
 app_name = 'posts'
 
 urlpatterns = [

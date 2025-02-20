@@ -19,5 +19,7 @@ urlpatterns = [
     path('profiles/', include('profiles.urls', namespace='profiles')),
 
     path('posts/', include('posts.urls', namespace='posts')),
+
+    path("prose/", include("prose.urls")),
 ] + debug_toolbar_urls()
 

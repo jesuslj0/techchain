@@ -70,7 +70,7 @@ class ProfilesSearch(ListView):
 
 class FollowersView(ListView):
     model = Follow
-    template_name = 'profiles/profiles_list.html'
+    template_name = 'profiles/profiles_list_followers.html'
     context_object_name = 'followers'
 
     def get_queryset(self):
@@ -83,9 +83,32 @@ class FollowersView(ListView):
         context = super().get_context_data(**kwargs)
         # Añadir el usuario actual al contexto
         user_id = self.kwargs.get('user_id')
-        context['user'] = User.objects.get(id=user_id)
+        context['user'] = UserProfile.objects.get(id=user_id)
         return context
     
+class FollowingView(ListView):
+    model = Follow
+    template_name = 'profiles/profiles_list_following.html'
+    context_object_name = 'following'
+
+    def get_queryset(self):
+        # Obtener el usuario actual a través del parámetro de la URL
+        user_id = self.kwargs.get('user_id')
+        # Filtrar los seguidos por ese usuario
+        following = Follow.objects.filter(follower__id=user_id).select_related('followed')
+        return following
+        # Envia directamente los objetos de following al contexto
+        #Debugg
+                # for i in context['following']:
+                #     print(i.followed.user.username)
+                #     print('le sigues desde')
+                #     print(i.follow_up_date)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Añadir el usuario actual al contexto
+        user_id = self.kwargs.get('user_id')
+        context['user'] = UserProfile.objects.get(id=user_id)
+        return context
 
 @login_required
 def toggle_follow(request, user_id):

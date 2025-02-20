@@ -13,7 +13,11 @@
                     </li>
                     <li class='p-2'>
                         <i class="bi bi-people-fill"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Mis seguidores</a>
+                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                    </li>
+                    <li class='p-2'>
+                        <i class="bi bi-people"></i>
+                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:following' user_id %}">Seguidos</a>
                     </li>
                     <li class='p-2'>
                         <i class="bi bi-postcard-heart"></i>
