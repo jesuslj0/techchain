@@ -1,12 +1,13 @@
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, ListView
 from django.contrib.auth.views import LoginView, LogoutView
 from techchain import forms
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from posts.models import Post
-from profiles.models import Follow
+from profiles.models import Follow, UserProfile
 from django.contrib import messages
+from .forms import RegisterForm
 
 
 # General Views
@@ -64,13 +65,13 @@ class LogoutView(LogoutView):
 
 class RegisterView(FormView): 
     template_name = 'general/register.html'
-    form_class = forms.RegisterForm
+    form_class = RegisterForm
     success_url = reverse_lazy('login')  # Redirige a la página de inicio de sesión después de un registro exitoso
 
     def form_valid(self, form):
         # Guarda el usuario pero no lo confirma aún
         user = form.save(commit=False)
-        user.set_password(form.cleaned_data['password'])  # Encripta la contraseña
+        user.set_password(form.cleaned_data['password2'])  # Encripta la contraseña
         user.save()  # Guarda el usuario en la base de datos
         messages.success(self.request, '¡Registro completado con éxito!')
         return super().form_valid(form)
@@ -79,4 +80,21 @@ class RegisterView(FormView):
         messages.error(self.request, 'Por favor, corrige los errores del formulario.')
         return super().form_invalid(form)
         
+# Vista de exploración
+class ExploreView(ListView):
+    template_name = "general/explore.html"
+    context_object_name = "posts" #Solo para posts (Queryset principal)
+    
+    def get_queryset(self):
+        latest_posts = Post.objects.exclude(user=self.request.user).order_by('-created_at')
+        return latest_posts
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        followed_users = Follow.objects.filter(follower=self.request.user.profile).values_list('followed', flat=True)
+        new_users = UserProfile.objects.exclude(id__in=followed_users).exclude(user=self.request.user)  # Excluir al usuario actual
+
+        context["users"] = new_users
+        return context
     

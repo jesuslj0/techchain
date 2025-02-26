@@ -1,13 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-from posts.models import Tag
 
 # Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     profile_picture = models.ImageField('Imagen de perfil', upload_to='profiles/profile_pictures/', blank=True, null=True)
     bio = models.TextField('Biografía', max_length=500, blank=True, null=True)
-    interests = models.ManyToManyField(Tag, related_name="interests")
     birth_date = models.DateField('Fecha de nacimiento', blank=True, null=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following', through='Follow')
     

@@ -1,0 +1,17 @@
+.logo {
+    width: 90px;
+    height: auto;
+}
+
+.title > img {
+    animation: rotate 6s linear infinite; /* Ajusta la duración y el tipo de animación */
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

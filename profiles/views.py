@@ -83,7 +83,7 @@ class FollowersView(ListView):
         context = super().get_context_data(**kwargs)
         # Añadir el usuario actual al contexto
         user_id = self.kwargs.get('user_id')
-        context['user'] = UserProfile.objects.get(id=user_id)
+        context['user'] = get_object_or_404(UserProfile, id=user_id)
         return context
     
 class FollowingView(ListView):
@@ -107,7 +107,7 @@ class FollowingView(ListView):
         context = super().get_context_data(**kwargs)
         # Añadir el usuario actual al contexto
         user_id = self.kwargs.get('user_id')
-        context['user'] = UserProfile.objects.get(id=user_id)
+        context['user'] = get_object_or_404(UserProfile, id=user_id)
         return context
 
 @login_required

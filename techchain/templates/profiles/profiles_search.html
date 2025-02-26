@@ -1,37 +1,40 @@
 {% extends 'layout/layout_basic.html' %}
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/profiles_search.css" %}">
+{% endblock %}
 {% block title %}Busqueda{% endblock %}
 {% block title_h1 %}Búsqueda de usuarios{% endblock %}
 {% block content %}
     <div class='container m-auto'>
         <div class="row">
-            <div class="col-3 menu-container">
-                <h4>Menú</h4>
-                <ul class="list-unstyled d-flex flex-column p-2 bg-light " style="width: 250px;">
+            <div class='col-2'>
+                <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
                         <i class="bi bi-house"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'home' %}">Inicio</a>
+                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'home' %}">Inicio</a>
+                    </li>
+                    <li class='p-2'>
+                        <i class="bi bi-person-circle"></i>
+                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:detail' user_id %}">Mi Perfil</a>
                     </li>
                     <li class='p-2'>
                         <i class="bi bi-people-fill"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Seguidores</a>
                     </li>
                     <li class='p-2'>
                         <i class="bi bi-people"></i>
                         <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:following' user_id %}">Seguidos</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-postcard-heart"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:list' user_id %}">Publicaciones</a>
-                    </li>
-                    <li class='p-2'>
                         <i class="bi bi-file-earmark-plus"></i>
                         <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:create' user_id %}">Crear</a>
                     </li>
-                    </ul>
+                </ul> 
             </div>
-            <ul class='list-group list-group-flush col-9'>
+            <ul class='list-group list-group-flush col-10'>
                 {% if profiles %}
-                <p class="h4 text-muted">Resultados para <strong>{{request.GET.query}}</strong>
+                <p class="h4 text-muted results">Resultados para <strong>{{request.GET.query}}</strong>
                     {% for item in profiles %}
                         <li class='list-group-item'>
                             <img 
@@ -48,7 +51,7 @@
                         </li>
                     {% endfor %}
                 {% else %}
-                    <p class="h4">No se encuentraron resultados para <strong>{{request.GET.query}}</strong></p>
+                    <p class="h4 results">No se encuentraron resultados para <strong>{{request.GET.query}}</strong></p>
                 {% endif %}
             </ul>
         </div>
