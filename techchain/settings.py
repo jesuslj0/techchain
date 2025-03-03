@@ -52,11 +52,20 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'prose',
+    'rest_framework',
+    'rest_framework_simplejwt',
     
     'profiles',
     'posts',
     'notifications',
 ]
+
+#Rest framework para implementación de chats a tiempo real
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 # Form Styles
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -155,3 +164,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Email configuration Zoho Mail
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.zoho.eu"
+EMAIL_PORT = 587  # Puerto correcto para TLS
+EMAIL_USE_TLS = True  # Usa TLS para la seguridad
+EMAIL_HOST_USER = os.environ["ZOHO_MAIL_SERVICE"] # Tu dirección de correo Zoho
+EMAIL_HOST_PASSWORD = os.environ["ZOHO_MAIL_PASSWORD"]  # Usa tu contraseña o la contraseña de aplicación si tienes 2FA activado
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

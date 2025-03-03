@@ -8,7 +8,8 @@ from posts.models import Post
 from profiles.models import Follow, UserProfile
 from django.contrib import messages
 from .forms import RegisterForm
-
+from .email import register_message
+from django.core.mail import send_mail
 
 # General Views
 class HomeView(TemplateView):
@@ -74,11 +75,23 @@ class RegisterView(FormView):
         user.set_password(form.cleaned_data['password2'])  # Encripta la contraseña
         user.save()  # Guarda el usuario en la base de datos
         messages.success(self.request, '¡Registro completado con éxito!')
+
+        #Enviar correo de bienvenida
+        send_mail(
+            subject="Bienvenido a TechChain",
+            message="Gracias por registrarte en nuestra plataforma.",  # Fallback en texto plano
+            from_email="servicio.usuarios@techchain.live",
+            recipient_list=[user.email],
+            fail_silently=False,
+            html_message=register_message  # Correo en HTML
+        )
+        
         return super().form_valid(form)
 
     def form_invalid(self, form):
         messages.error(self.request, 'Por favor, corrige los errores del formulario.')
         return super().form_invalid(form)
+    
         
 # Vista de exploración
 class ExploreView(ListView):
@@ -93,7 +106,7 @@ class ExploreView(ListView):
         context = super().get_context_data(**kwargs)
 
         followed_users = Follow.objects.filter(follower=self.request.user.profile).values_list('followed', flat=True)
-        new_users = UserProfile.objects.exclude(id__in=followed_users).exclude(user=self.request.user)  # Excluir al usuario actual
+        new_users = UserProfile.objects.exclude(id__in=followed_users).exclude(user=self.request.user)[:5]  # Excluir al usuario actual
 
         context["users"] = new_users
         return context

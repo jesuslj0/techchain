@@ -84,10 +84,10 @@
                 </ul>
             </div>
             <div class="col-3">
-                <ul class="list-group">
+                <ul class="list-group display-flex gap-2">
                     <p class="h4" style="font-family: 'Newsreader-Regular'; ">Usuarios para ti</p>
                  {% for user in users %}
-                    <div class="list-group-item p-2 display-flex">
+                    <div class="list-group-item p-1 display-flex rounded-5">
                         <img 
                             src="../posts{{user.profile_picture.url}}" 
                             style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;"
