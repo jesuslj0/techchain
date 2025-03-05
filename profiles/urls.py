@@ -1,11 +1,12 @@
 from django.urls import path, include
 from .views import ProfileDetailView, FollowersView, FollowingView, ProfileUpdateView, ProfilesSearch, toggle_follow
+from .views import CustomPasswordChangeView, CustomPasswordChangeDoneView
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import reverse_lazy
 
 #Profiles urls
-
 app_name = 'profiles'
 
 urlpatterns = [
@@ -14,7 +15,9 @@ urlpatterns = [
     path('<int:user_id>/followers/', login_required(FollowersView.as_view()), name='followers'),
     path('<int:user_id>/following/', login_required(FollowingView.as_view()), name="following"),
     path('<int:user_id>/follow/', toggle_follow, name='toggle_follow'),
-    path('search/', login_required(ProfilesSearch.as_view()), name='search')
+    path('search/', login_required(ProfilesSearch.as_view()), name='search'),
+    path('password_change/', login_required(CustomPasswordChangeView.as_view()), name='password_change'),
+    path('password_change/done/', login_required(CustomPasswordChangeDoneView.as_view()), name='password_change_done'),
 ]
 
 if settings.DEBUG:  # Solo durante el desarrollo

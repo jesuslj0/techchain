@@ -1,4 +1,5 @@
 from django.views.generic import DetailView, ListView, UpdateView
+from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from .models import UserProfile, Follow
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
@@ -126,3 +127,10 @@ def toggle_follow(request, user_id):
 
     return redirect('profiles:detail', user_id=user_id)
 
+#Cambio de contraseña
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'profiles/password_change.html'
+    success_url = reverse_lazy('profiles:password_change_done')
+
+class CustomPasswordChangeDoneView(PasswordChangeDoneView):
+    template_name = 'profiles/password_change_done.html'
