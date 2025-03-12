@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     
     'profiles',
     'posts',
-    'notifications',
+    'chat',
 ]
 
 #Rest framework para implementación de chats a tiempo real

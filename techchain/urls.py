@@ -2,8 +2,6 @@
 from django.contrib import admin
 from django.urls import path, include
 from debug_toolbar.toolbar import debug_toolbar_urls
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
 from .views import HomeView, ContactView, LoginView, LogoutView, RegisterView, LegalView, ExploreView
 
 urlpatterns = [
@@ -16,12 +14,11 @@ urlpatterns = [
     path('legal/', LegalView.as_view(), name='legal'),
     path('explore/', ExploreView.as_view(), name='explore'),
 
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
     path('profiles/', include('profiles.urls', namespace='profiles')),
 
     path('posts/', include('posts.urls', namespace='posts')),
+
+    path('chat/', include('chat.urls')),
 
     path("prose/", include("prose.urls")),
 ] + debug_toolbar_urls()

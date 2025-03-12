@@ -8,6 +8,11 @@ from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile, Follow
 from posts.models import Post
+from django.utils.timezone import now
+from datetime import timedelta
+from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Create your views here.
 class ProfileDetailView(DetailView):
@@ -25,12 +30,10 @@ class ProfileDetailView(DetailView):
 class ProfileUpdateView(UpdateView):
     model = UserProfile
     template_name = 'profiles/profile_update.html'
-    slug_field = 'user_id'
-    slug_url_kwarg = 'user_id'
     form_class = UserProfileForm
     
     def get_success_url(self):
-        return reverse_lazy('profiles:detail', kwargs={'user_id': self.object.user_id})
+        return reverse_lazy('profiles:detail', kwargs={'user_id': self.request.user.id})
 
 class ProfilesSearch(ListView):
     model = UserProfile
@@ -67,8 +70,7 @@ class ProfilesSearch(ListView):
                 })
 
         return profiles_with_follow_date
-        
-
+    
 class FollowersView(ListView):
     model = Follow
     template_name = 'profiles/profiles_list_followers.html'
@@ -111,6 +113,42 @@ class FollowingView(ListView):
         context['user'] = get_object_or_404(UserProfile, id=user_id)
         return context
 
+
+#Cambio de contraseña
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'profiles/password_change.html'
+    success_url = reverse_lazy('profiles:password_change_done')
+
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        
+        # Obtener la fecha del último cambio de contraseña
+        last_change = user.profile.last_password_change
+        
+        if last_change and (now() - last_change) < timedelta(days=15):
+            messages.warning(request, "Solo puedes cambiar tu contraseña cada 15 días. Último cambio realizado el {}".format(last_change.strftime('%d/%m/%Y')))
+            return redirect('profiles:update', user.id)  # O redirigir a otro lado
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        # Guardar la nueva fecha del cambio de contraseña
+        self.request.user.profile.last_password_change = now()
+        self.request.user.profile.save()
+
+        return response
+
+class CustomPasswordChangeDoneView(PasswordChangeDoneView):
+    template_name = 'profiles/password_change_done.html'
+
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
 @login_required
 def toggle_follow(request, user_id):
     user_profile = get_object_or_404(UserProfile, user_id=user_id)
@@ -127,10 +165,12 @@ def toggle_follow(request, user_id):
 
     return redirect('profiles:detail', user_id=user_id)
 
-#Cambio de contraseña
-class CustomPasswordChangeView(PasswordChangeView):
-    template_name = 'profiles/password_change.html'
-    success_url = reverse_lazy('profiles:password_change_done')
-
-class CustomPasswordChangeDoneView(PasswordChangeDoneView):
-    template_name = 'profiles/password_change_done.html'
+@login_required
+@csrf_exempt  # 🔹 Permitir solicitudes AJAX sin CSRF manual
+def toggle_privacy(request):
+    if request.method == "POST":
+        profile = request.user.profile
+        profile.private = not profile.private  # 🔹 Alternar estado
+        profile.save()
+        return JsonResponse({"status": "private" if profile.private else "public"})
+    return JsonResponse({"error": "Método no permitido"}, status=405)

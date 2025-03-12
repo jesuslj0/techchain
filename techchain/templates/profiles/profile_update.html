@@ -40,9 +40,9 @@
             <div class='col-9'>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% if object.profile_picture %}
+                    {% if request.user.profile.profile_picture %}
                     <div class="mb-3">
-                        <img src="..{{ object.profile_picture.url }}" alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;">
+                        <img src="..{{ request.user.profile.profile_picture.url }}" alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;">
                     </div>
                     {% endif %}
                     {{ form|crispy}}
@@ -53,9 +53,48 @@
                         </div>
                     </div>
                     <button class='btn btn-primary' type='submit'>Guardar</button>
-                    <a href="{% url 'profiles:detail' user_id %}" class='btn btn-secondary'>Salir</a>
+                    <a href="{% url 'profiles:detail' request.user.id%}" class='btn btn-secondary'>Salir</a>
                 </form>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const privacyButton = document.querySelector([data-id="privateButton"]);
+            privacyButton.addEventListener('click', togglePrivacy);
+        });
+
+        async function togglePrivacy() {
+            const csrftoken = getCSRFToken();
+            const response = await fetch('{% url "profiles:toggle_privacy" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+            });
+
+            /*const data = await response.json();
+            console.log('Estado de la cuenta: ', data.status);*/
+        };
+        
+        function getCSRFToken() {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // ¿Esta cookie comienza con el prefijo CSRF?
+                    if (cookie.substring(0, 10) === 'csrftoken=') {
+                        cookieValue = decodeURIComponent(cookie.substring(10));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
 {% endblock %}

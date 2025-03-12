@@ -16,7 +16,7 @@
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
                         <i class="bi bi-person-circle"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:detail' user_id %}">Mi Perfil</a>
+                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
                     </li>
                     <li class='p-2'>
                         <i class="bi bi-people-fill"></i>

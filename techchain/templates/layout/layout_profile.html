@@ -29,7 +29,9 @@
         {% block messages %}
             {% if messages %} 
                 {% for message in messages %} 
-                    <div{% if message.tags %} class="{{ message.tags }}"{% endif %}><span>{{ message }}</span></div> 
+                    <div{% if message.tags %} class="alert alert-{{ message.tags }} m-3"{% endif %}>
+                        <span>{{ message }}</span>
+                    </div> 
                 {% endfor %} 
             {% endif %}
         {% endblock %}

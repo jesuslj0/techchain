@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 
 # Create your models here.
 class UserProfile(models.Model):
@@ -8,7 +9,9 @@ class UserProfile(models.Model):
     bio = models.TextField('Biografía', max_length=500, blank=True, null=True)
     birth_date = models.DateField('Fecha de nacimiento', blank=True, null=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following', through='Follow')
-    
+    last_password_change = models.DateTimeField('Último cambio de contraseña',  null=True, blank=True)  
+    private = models.BooleanField('Perfil privado', default=False)
+
     class Meta:
         managed = True
         verbose_name = 'Perfil'
@@ -30,3 +33,6 @@ class Follow(models.Model):
     def __str__(self):
         return f'{self.follower} follows {self.followed}'
 
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+from django.utils.timezone import now
