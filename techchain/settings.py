@@ -41,6 +41,8 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne', #Servidor ASGI
+    'channels', #Canal de comunicación
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,19 +55,18 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'prose',
     'rest_framework',
-    'rest_framework_simplejwt',
     
     'profiles',
     'posts',
     'chat',
 ]
 
-#Rest framework para implementación de chats a tiempo real
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-}
+# #Rest framework para implementación de chats a tiempo real
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     )
+# }
 
 # Form Styles
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -101,8 +102,18 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'techchain.wsgi.application'
+#Conexión que permite websockets
+ASGI_APPLICATION = 'techchain.asgi.application'
 
+# Configurar Redis como "message broker" para WebSockets
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],  # Servidor Redis local
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

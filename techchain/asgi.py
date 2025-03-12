@@ -8,9 +8,19 @@ https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
 """
 
 import os
-
 from django.core.asgi import get_asgi_application
+from channels.routing import ProtocolTypeRouter, URLRouter
+from chat.routing import websocket_urlpatterns  # Rutas de WebSockets
+from channels.auth import AuthMiddlewareStack
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'instagram.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "techchain.settings")
 
-application = get_asgi_application()
+application = ProtocolTypeRouter(
+    {
+        "http": get_asgi_application(),  # Peticiones HTTP normales
+        "websocket": AuthMiddlewareStack(
+            URLRouter(websocket_urlpatterns)  # Maneja WebSockets
+        ),
+    }
+)
+

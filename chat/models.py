@@ -5,6 +5,10 @@ class ChatRoom(models.Model):
     name = models.CharField(max_length=255)
     users = models.ManyToManyField(UserProfile)
 
+    class Meta:
+        verbose_name = 'Sala de Chat'
+        verbose_name_plural = 'Salas de Chat'
+
 class Message(models.Model):
     sender = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='sender')
     room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='room')
