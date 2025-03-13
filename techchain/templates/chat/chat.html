@@ -1,0 +1,90 @@
+{% extends 'layout/layout_basic.html' %}
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% endblock %}
+{% block title %}Chats{% endblock %}
+{% block title_h1 %}Tus Chats{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Chats recientes</h2>
+            <div class="list-group chatrooms">
+                {% for chatroom in chat_rooms %}
+                    <a href="{% url "chat:chat" chatroom.id %}" class="list-group">
+                        <div class="list-group-item">
+                            {{ chatroom.name }}
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-8 p-3">
+            <h4 class="m-2">{{ room_name }}</h4>
+            <div id="chat-box" class="chat-box">
+                {% for msg in chat_messages %}
+                    {% if msg.sender == user.profile %}
+                        <p class="message sent">{{ msg.content }}</p>
+                    {% else %}
+                        <p class="message received"><strong>{{ msg.sender }}</strong> {{ msg.content }}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="input-group m-2">
+                <input class="form-control" type="text" id="message-input" placeholder="Mensaje...">
+                <button class="btn btn-outline-primary" id="send-button">Enviar</button></input>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+    <script>
+        function getCSRFToken() {
+            return document.cookie.split('; ')
+                .find(row => row.startsWith('csrftoken='))
+                ?.split('=')[1];
+        }
+    </script>
+    <script>
+        const roomName = "{{ room_name }}";  // Pasado desde la vista
+        const username = "{{ user.username }}";  // Captura el usuario autenticado
+        const chatBox = document.getElementById("chat-box");
+        const messageInput = document.getElementById("message-input");
+        const sendButton = document.getElementById("send-button");
+
+        // Conectar WebSocket
+        const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${roomName}/`);
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (username == data.username) {
+                chatBox.innerHTML += `<p class="message sent">${data.message}</p>`;
+            } else {
+                chatBox.innerHTML += `<p class="message received"><strong>${data.username}</strong> ${data.message}</p>`;
+            }
+
+            chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll hacia abajo
+        };
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Enter") {
+                sendButton.click();
+            }
+        });
+        
+        sendButton.onclick = function() {
+            const message = messageInput.value.trim();
+            if (message) {
+                socket.send(JSON.stringify({ "message": message, "username": username }));
+                messageInput.value = "";  // Limpiar input
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll hacia abajo
+        });
+        
+    </script>
+{% endblock %}

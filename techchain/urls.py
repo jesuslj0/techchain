@@ -18,7 +18,7 @@ urlpatterns = [
 
     path('posts/', include('posts.urls', namespace='posts')),
 
-    path('chat/', include('chat.urls')),
+    path('chat/', include('chat.urls', namespace='chat')),
 
     path("prose/", include("prose.urls")),
 ] + debug_toolbar_urls()

@@ -22,7 +22,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-51ds0d_l0u*boushf!o$8=op&8v*0*!1*+^x$d22u=yy%%v2q)"
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -108,10 +108,11 @@ ASGI_APPLICATION = 'techchain.asgi.application'
 # Configurar Redis como "message broker" para WebSockets
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],  # Servidor Redis local
-        },
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Para desarrollo, reemplaza con Redis en producción
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        # "CONFIG": {
+        #     "hosts": [("127.0.0.1", 6379)],  # Servidor Redis local
+        # },
     },
 }
 

@@ -1,0 +1,37 @@
+.title {
+    font-family: "Goldman-Regular";
+    padding: 20px 0px;
+}
+
+.list-unstyled {
+    background-color: #fff;
+    width: 250px;
+}
+
+.chat-box {
+    height: 400px; /* Altura del chat */
+    overflow-y: auto; /* Scroll para mensajes largos */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    max-width: 75%;
+}
+
+.received {
+    background: #e9ecef;
+    align-self: flex-start;
+}
+.sent {
+    background: #0d6efd;
+    color: white;
+    align-self: flex-end;
+}
