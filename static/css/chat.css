@@ -8,6 +8,10 @@
     width: 250px;
 }
 
+h4 {
+    font-family: "Goldman-Regular";
+}
+
 .chat-box {
     height: 400px; /* Altura del chat */
     overflow-y: auto; /* Scroll para mensajes largos */
@@ -34,4 +38,10 @@
     background: #0d6efd;
     color: white;
     align-self: flex-end;
+}
+
+.timestamp {
+    margin: 5px;
+    font-size: 0.8em;
+    opacity: 0.8;
 }

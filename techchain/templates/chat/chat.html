@@ -1,7 +1,7 @@
 {% extends 'layout/layout_basic.html' %}
 {% block styles %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}?v=1.2">
 {% endblock %}
 {% block title %}Chats{% endblock %}
 {% block title_h1 %}Tus Chats{% endblock %}
@@ -9,26 +9,46 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <h2>Chats recientes</h2>
+            <h4>Chats recientes</h4>
             <div class="list-group chatrooms">
                 {% for chatroom in chat_rooms %}
-                    <a href="{% url "chat:chat" chatroom.id %}" class="list-group">
+                    <a href="{% url 'chat:chat' chatroom.id %}" class="list-group">
                         <div class="list-group-item">
-                            {{ chatroom.name }}
+                            {% for user in chatroom.users.all %}
+                                {% if user != request.user.profile %}
+                                    {{ user|capfirst }}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </a>
                 {% endfor %}
             </div>
         </div>
         <div class="col-md-8 p-3">
-            <h4 class="m-2">{{ room_name }}</h4>
+            <h3 class="m-2">{{ room_name|first }}</h3> <!-- Elegir el primer nombre de la lista para chat privado -->
             <div id="chat-box" class="chat-box">
                 {% for msg in chat_messages %}
-                    {% if msg.sender == user.profile %}
-                        <p class="message sent">{{ msg.content }}</p>
-                    {% else %}
-                        <p class="message received"><strong>{{ msg.sender }}</strong> {{ msg.content }}</p>
-                    {% endif %}
+                    {% for profile in profiles %}
+                        {% if msg.sender == profile %}
+                           {% if msg.sender == user.profile %}
+                                <div class="message sent">
+                                    {{ msg.content }} 
+                                    <span class="timestamp">{{ msg.timestamp|date:"H:i" }}</span>
+                                </div>
+                            {% else %}
+                                <div class="message received">
+                                    <img 
+                                    src="../../../profiles{{ profile.profile_picture.url }}" 
+                                    alt="{{ msg.sender }}"
+                                    class="rounded-circle mr-3"
+                                    width="25" height="25">
+                                    {{ msg.content }}
+                                    <span class="timestamp">{{ msg.timestamp|date:"H:i" }}</span>
+                                </div>
+                            {% endif %} 
+                        {% endif %}
+                    {% endfor %}
+                    
                 {% endfor %}
             </div>
             <div class="input-group m-2">
@@ -59,10 +79,33 @@
 
         socket.onmessage = function(event) {
             const data = JSON.parse(event.data);
+            
+
+            //Formatea la hora a un formato legible
+            const formatedTimestamp = new Date(data.timestamp).toLocaleTimeString(
+                'es-ES', 
+                { hour: '2-digit', minute: '2-digit', hour12: false }
+            );  
+
             if (username == data.username) {
-                chatBox.innerHTML += `<p class="message sent">${data.message}</p>`;
+                chatBox.innerHTML += 
+                `<div class="message sent">
+                    
+                    ${data.message} 
+                    <span class="timestamp">${formatedTimestamp}</span>
+                </div>`;
             } else {
-                chatBox.innerHTML += `<p class="message received"><strong>${data.username}</strong> ${data.message}</p>`;
+                chatBox.innerHTML += 
+                `<div class="message received">
+                    <img 
+                    src="../../../profiles/media/" 
+                    alt="{{ msg.sender }}"
+                    class="rounded-circle mr-3"
+                    width="25" height="25"
+                    >
+                    ${data.message} 
+                    <span class="timestamp">${formatedTimestamp}</span>
+                </div>`;
             }
 
             chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll hacia abajo
@@ -77,14 +120,21 @@
         sendButton.onclick = function() {
             const message = messageInput.value.trim();
             if (message) {
-                socket.send(JSON.stringify({ "message": message, "username": username }));
-                messageInput.value = "";  // Limpiar input
+                // Verifica si el socket está conectado antes de enviar
+                if (socket.readyState === WebSocket.OPEN) {
+                    const timestamp = new Date().toISOString(); // O usa el formato que prefieras
+                    socket.send(JSON.stringify({ message, username, timestamp }));
+                    messageInput.value = "";  // Limpiar input
+                } else {
+                    console.error("El socket no está conectado. Intenta nuevamente más tarde.");
+                }
             }
         };
+        
 
         document.addEventListener('DOMContentLoaded', function() {
             chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll hacia abajo
         });
-        
+
     </script>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends "layout/layout_basic.html" %}
 {% block styles %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/chatrooms.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chatrooms.css' %}?v=1.2">
 {% endblock%}
 {% block title %}Chats{% endblock %}
 {% block title_h1%}Tus Chats{% endblock %}
@@ -9,19 +9,48 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <h2>Chats recientes</h2>
-            <div class="list-group chatrooms">
-                {% for chatroom in chat_rooms %}
-                    <a href="{% url 'chat:chat' chatroom.id %}" class="list-group">
-                        <div class="list-group-item">
-                            {{ chatroom.name }}
-                        </div>
-                    </a>
-                {% endfor %}
-            </div>
+            <h4>Chats recientes</h4>
+            {% if chat_rooms %}
+                <div class="list-group chatrooms">
+                    {% for chatroom in chat_rooms %}
+                        <a href="{% url 'chat:chat' chatroom.id %}" class="list-group">
+                            <div class="list-group-item">
+                                {% for user in chatroom.users.all %}
+                                    {% if user != request.user.profile %}
+                                        {{ user|capfirst }}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    No tienes chats recientes
+                </div>
+            {% endif %}
         </div>
         <div class="col-md-8 p-3">
-            <p>Toca un chat para comenzar una conversación.</p>
+            <h3>Inicia una conversación</h3>
+            <div class="list-group followers">
+                {% for profile in no_chatted_profiles %}
+                    <div class="list-group-item d-flex p-2 justify-content-between align-items-center">
+                        <div>
+                            <img 
+                            class="rounded-circle" 
+                            src="../../../profiles{{profile.profile_picture.url}}" 
+                            alt="{{profile.user.username}}" 
+                            width="50" 
+                            height="50"
+                            >
+                            <span class="m-2"><strong>{{profile.user.username}}</strong></span>   
+                        </div>
+                        <div>
+                            <a href="{% url 'chat:new_chat' profile.id %}" class="btn btn-primary">
+                                Enviar mensaje <i class="bi bi-send"></i></a>
+                        </div>
+                    </div>
+                {% endfor %}
         </div>
     </div>
 </div>

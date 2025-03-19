@@ -7,6 +7,14 @@
     animation: rotate 6s linear infinite; /* Ajusta la duración y el tipo de animación */
 }
 
+.title {
+    font-family: "Goldman-Regular";
+}
+
+.subtitle {
+    font-family: "Newsreader-Variable";
+}
+
 @keyframes rotate {
     from {
         transform: rotate(0deg);
