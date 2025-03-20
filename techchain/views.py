@@ -7,9 +7,10 @@ from django.shortcuts import redirect
 from posts.models import Post
 from profiles.models import Follow, UserProfile
 from django.contrib import messages
-from .forms import RegisterForm
+from .forms import ContactForm, LoginForm, RegisterForm
 from .email import register_message
 from django.core.mail import send_mail
+from django.contrib.auth import login
 
 # General Views
 class HomeView(TemplateView):
@@ -36,7 +37,7 @@ class HomeView(TemplateView):
 
 class ContactView(FormView):
     template_name = 'general/contact.html'
-    form_class = forms.ContactForm
+    form_class = ContactForm
     success_url = reverse_lazy('contact/')
 
 
@@ -46,19 +47,16 @@ class LegalView(TemplateView):
 
 class LoginView(LoginView): 
     template_name = 'general/login.html'
-    authentication_form = forms.LoginForm
+    authentication_form = LoginForm
     redirect_authenticated_user = True
 
-    def dispatch(self, request, *args, **kwargs):
-        if self.redirect_authenticated_user and self.request.user.is_authenticated:
-            redirect_to = self.get_success_url()
-            if redirect_to == self.request.path:
-                raise ValueError(
-                    "Redirection loop for authenticated user detected. Check that "
-                    "your LOGIN_REDIRECT_URL doesn't point to a login page."
-                )
-            return HttpResponseRedirect(redirect_to)
-        return super().dispatch(request, *args, **kwargs)
+    def form_valid(self, form):
+        user = form.get_user()
+        if user is not None:
+            login(self.request, user)
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            return self.form_invalid(form)  # Si el usuario no se autentica, mostrar error
 
 class LogoutView(LogoutView):
     template_name = 'general/logout.html'
