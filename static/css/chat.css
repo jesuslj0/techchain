@@ -24,10 +24,22 @@ h4 {
 }
 
 .message {
+    max-width: 80%; 
     padding: 8px 12px;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    max-width: 75%;
+    padding-right: 40px; 
+    border-radius: 8px; 
+    word-wrap: break-word; /* Permite que las palabras largas se dividan */
+    overflow-wrap: break-word; /* Asegura que las palabras se dividan si son demasiado largas */
+    margin-bottom: 10px;
+    position: relative; /* Necesario si usas un pseudo-elemento para la timestamp */
+}
+
+.timestamp {
+    font-size: 0.6em; /* Tamaño de fuente más pequeño para la timestamp */
+    opacity: 0.8;
+    position: absolute; /* Permite que se coloque en la esquina */
+    bottom: 4px; 
+    right: 8px; 
 }
 
 .received {
@@ -38,10 +50,4 @@ h4 {
     background: #0d6efd;
     color: white;
     align-self: flex-end;
-}
-
-.timestamp {
-    margin: 5px;
-    font-size: 0.8em;
-    opacity: 0.8;
 }

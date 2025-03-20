@@ -27,11 +27,6 @@ class ChatRoomsView(TemplateView):
 
         # Paso 2: Obtener todos los perfiles de usuario que no están en `chatted_profiles` y no incluir el propio perfil
         no_chatted_profiles = UserProfile.objects.exclude(id__in=chatted_profiles).exclude(id=self.request.user.profile.id)
-
-        # Ver los perfiles sin chat
-        for profile in no_chatted_profiles:
-            print("Usuario sin chat:", profile.user.username)
-        
         return chatrooms, no_chatted_profiles
     
     def get_context_data(self, **kwargs):
@@ -59,7 +54,8 @@ class ChatView(TemplateView):
             id=self.request.user.profile.id
         ).values_list('user__username', flat=True)
 
-        context['room_name'] = list(usernames) # Convertir a lista el queryset
+        context['room_name'] = room.name # Nombre para conectar el websocket
+        context['room_usernames'] = list(usernames) # Lista de usuarios del chat
 
         context['chat_messages'], context['chat_rooms'], context['profiles'] = self.get_queryset()
         return context

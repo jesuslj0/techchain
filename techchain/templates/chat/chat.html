@@ -1,7 +1,7 @@
 {% extends 'layout/layout_basic.html' %}
 {% block styles %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/chat.css' %}?v=1.2">
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}?v=1.4">
 {% endblock %}
 {% block title %}Chats{% endblock %}
 {% block title_h1 %}Tus Chats{% endblock %}
@@ -25,7 +25,14 @@
             </div>
         </div>
         <div class="col-md-8 p-3">
-            <h3 class="m-2">{{ room_name|first }}</h3> <!-- Elegir el primer nombre de la lista para chat privado -->
+            <div class="m-2 d-flex gap-2">
+                {% for user in room_usernames %}
+                    <div class="m-2">
+                        <span class="h4">{{ user }}</span> 
+                        <span class="text-muted" id="status-{{ user }}"></span>
+                    </div>
+                {% endfor %}
+            </div>
             <div id="chat-box" class="chat-box">
                 {% for msg in chat_messages %}
                     {% for profile in profiles %}
@@ -73,40 +80,64 @@
         const chatBox = document.getElementById("chat-box");
         const messageInput = document.getElementById("message-input");
         const sendButton = document.getElementById("send-button");
+        
 
         // Conectar WebSocket
         const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${roomName}/`);
 
         socket.onmessage = function(event) {
             const data = JSON.parse(event.data);
-            
 
-            //Formatea la hora a un formato legible
-            const formatedTimestamp = new Date(data.timestamp).toLocaleTimeString(
-                'es-ES', 
-                { hour: '2-digit', minute: '2-digit', hour12: false }
-            );  
-
-            if (username == data.username) {
-                chatBox.innerHTML += 
-                `<div class="message sent">
-                    
-                    ${data.message} 
-                    <span class="timestamp">${formatedTimestamp}</span>
-                </div>`;
-            } else {
-                chatBox.innerHTML += 
-                `<div class="message received">
-                    <img 
-                    src="../../../profiles/media/" 
-                    alt="{{ msg.sender }}"
-                    class="rounded-circle mr-3"
-                    width="25" height="25"
-                    >
-                    ${data.message} 
-                    <span class="timestamp">${formatedTimestamp}</span>
-                </div>`;
+            if (data.type === "online_users") {
+                // Cargar todos los usuarios online al abrir el chat
+                data.users.forEach(user => {
+                    const userStatusElement = document.getElementById(`status-${user}`);
+                    if (userStatusElement) {
+                        userStatusElement.innerText = "En línea";
+                    }
+                });
             }
+
+            else if (data.type == 'user_status') {
+                const userStatusElement = document.getElementById(`status-${data.user}`);
+                if (data.is_online) {
+                  userStatusElement.innerText = 'En línea'
+                } else if (data.is_online == false) {
+                    userStatusElement.innerText = 'Desconectado'
+                }
+            } 
+            
+            else if (data.type = 'chat_message') {
+                //Formatea la hora a un formato legible
+                const formatedTimestamp = new Date(data.timestamp).toLocaleTimeString(
+                    'es-ES', 
+                    { hour: '2-digit', minute: '2-digit', hour12: false }
+                );  
+    
+                if (username == data.username) {
+                    chatBox.innerHTML += 
+                    `<div class="message sent">
+                        ${data.message} 
+                        <span class="timestamp">${formatedTimestamp}</span>
+                    </div>`;
+                } else {
+                    chatBox.innerHTML += 
+                    `<div class="message received">
+                        <img 
+                        src="../../../profiles/media/" 
+                        alt="{{ msg.sender }}"
+                        class="rounded-circle mr-3"
+                        width="25" height="25"
+                        >
+                        ${data.message} 
+                        <span class="timestamp">${formatedTimestamp}</span>
+                    </div>`;
+                }
+
+
+
+            }
+            
 
             chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll hacia abajo
         };
