@@ -9,12 +9,12 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <h4>Chats recientes</h4>
+            <h4>Chats</h4>
             {% if chat_rooms %}
-                <div class="list-group chatrooms">
+                <div class="list-group chatrooms mb-3">
                     {% for chatroom in chat_rooms %}
-                        <a href="{% url 'chat:chat' chatroom.id %}" class="list-group">
-                            <div class="list-group-item">
+                        <a href="{% url 'chat:chat' chatroom.id %}" class="list-group-item">
+                            <div>
                                 {% for user in chatroom.users.all %}
                                     {% if user != request.user.profile %}
                                         {{ user|capfirst }}
@@ -29,7 +29,27 @@
                     No tienes chats recientes
                 </div>
             {% endif %}
+            
+            <h4>Grupos</h4>
+            {% if group_chats %}
+                <div class="list-group chatrooms mb-2">
+                    {% for group in group_chats %}
+                        <a href="{% url 'chat:chat' group.id %}" class="list-group-item">
+                            {{ group.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    No tienes grupos recientes    
+                </div>
+            {% endif %}
+            <!-- Botón de crear grupo -->
+            <a href="{% url 'chat:new_group_chat' %}" class="btn btn-primary">
+                Crear grupo <i class="bi bi-plus-lg"></i>
+            </a>
         </div>
+
         <div class="col-md-8 p-3">
             <h3>Inicia una conversación</h3>
             <div class="list-group followers">
@@ -37,22 +57,25 @@
                     <div class="list-group-item d-flex p-2 justify-content-between align-items-center">
                         <div>
                             <img 
-                            class="rounded-circle" 
-                            src="../../../profiles{{profile.profile_picture.url}}" 
-                            alt="{{profile.user.username}}" 
-                            width="50" 
-                            height="50"
+                                class="rounded-circle" 
+                                src="../../../profiles{{profile.profile_picture.url}}" 
+                                alt="{{profile.user.username}}" 
+                                width="50" 
+                                height="50"
                             >
                             <span class="m-2"><strong>{{profile.user.username}}</strong></span>   
                         </div>
                         <div>
                             <a href="{% url 'chat:new_chat' profile.id %}" class="btn btn-primary">
-                                Enviar mensaje <i class="bi bi-send"></i></a>
+                                Enviar mensaje <i class="bi bi-send"></i>
+                            </a>
                         </div>
                     </div>
                 {% endfor %}
+            </div>
         </div>
     </div>
 </div>
 {% endblock %}
+
             

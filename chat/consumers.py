@@ -6,13 +6,15 @@ from django.contrib.auth import get_user_model
 from asgiref.sync import sync_to_async
 from django.core.cache import cache
 import aioredis
+import re #Expresiones regulares
 
 REDIS_URL = "redis://127.0.0.1:6379"
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        self.room_group_name = f"chat_{self.room_name}"
+        # Convertir a minúsculas y reemplazar espacios y caracteres especiales por "_"
+        self.room_group_name = f"chat_{re.sub(r'[^a-zA-Z0-9]', '_', self.room_name.lower())}"
         self.user = self.scope['user']
 
         if self.user.is_authenticated:

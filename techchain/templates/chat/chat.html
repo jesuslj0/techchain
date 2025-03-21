@@ -8,13 +8,13 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <h4>Chats recientes</h4>
-            <div class="list-group chatrooms">
-                {% for chatroom in chat_rooms %}
-                    <a href="{% url 'chat:chat' chatroom.id %}" class="list-group">
+            <div class="list-group chatrooms mb-3">
+                {% for chat in chat_rooms %}
+                    <a href="{% url 'chat:chat' chat.id %}" class="list-group">
                         <div class="list-group-item">
-                            {% for user in chatroom.users.all %}
+                            {% for user in chat.users.all %}
                                 {% if user != request.user.profile %}
                                     {{ user|capfirst }}
                                 {% endif %}
@@ -23,8 +23,18 @@
                     </a>
                 {% endfor %}
             </div>
+            <h4>Grupos recientes</h4>
+            <div class="list-group chatrooms">
+                {% for group in group_chats %}
+                    <a href="{% url 'chat:chat' group.id %}" class="list-group">
+                        <div class="list-group-item">
+                            {{ group.name }}
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
         </div>
-        <div class="col-md-8 p-3">
+        <div class="col-md-9 p-3">
             <div class="m-2 d-flex gap-2">
                 {% for user in room_usernames %}
                     <div class="m-2">

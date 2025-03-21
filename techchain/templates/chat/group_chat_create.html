@@ -1,0 +1,13 @@
+{% extends 'layout/layout_basic.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Crear chat grupal{% endblock %}
+{% block title_h1 %}Crea un grupo{% endblock %}
+{% block content %}
+    <form method="post" action="{% url 'chat:new_group_chat' %}">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Crear</button>    
+        </div>
+    </form>
+{% endblock %}

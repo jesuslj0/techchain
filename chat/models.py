@@ -11,6 +11,14 @@ class ChatRoom(models.Model):
         verbose_name = 'Sala de Chat'
         verbose_name_plural = 'Salas de Chat'
 
+class GroupChatRoom(ChatRoom):
+    description = models.TextField(max_length=500)
+    admins = models.ManyToManyField(UserProfile)
+
+    class Meta:
+        verbose_name = 'Grupo de Chat'
+        verbose_name_plural = 'Grupos de Chat'
+
 class Message(models.Model):
     sender = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='sender')
     room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='room')

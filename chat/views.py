@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import viewsets
-from .models import ChatRoom, Message
+from .models import ChatRoom, Message, GroupChatRoom
 from .serializers import ChatRoomSerializer, MessageSerializer
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, CreateView
 from profiles.models import UserProfile
 from django.core.serializers import serialize
+from django.urls import reverse_lazy
+from django.contrib import messages
 
 class ChatRoomViewSet(viewsets.ModelViewSet):
     queryset = ChatRoom.objects.all()
@@ -19,19 +21,27 @@ class ChatRoomsView(TemplateView):
     template_name = 'chat/chat_rooms.html'
 
     def get_queryset(self):
-        # Obtener todos los chats en los que participa el usuario actual
-        chatrooms = ChatRoom.objects.filter(users=self.request.user.profile)
-
+        # Obtener solo los chats individuales en los que participa el usuario actual
+        chat_rooms = ChatRoom.objects.filter(users=self.request.user.profile).exclude(
+            id__in=GroupChatRoom.objects.values_list("id", flat=True)
+            )
+        
         # Paso 1: Obtener los IDs de los perfiles de usuario que están en los chats del usuario actual
         chatted_profiles = UserProfile.objects.filter(chatroom__users=self.request.user.profile).values_list('id', flat=True)
 
         # Paso 2: Obtener todos los perfiles de usuario que no están en `chatted_profiles` y no incluir el propio perfil
         no_chatted_profiles = UserProfile.objects.exclude(id__in=chatted_profiles).exclude(id=self.request.user.profile.id)
-        return chatrooms, no_chatted_profiles
+
+        # Obtener los chats grupales
+        group_chats = GroupChatRoom.objects.filter(users=self.request.user.profile)
+
+        return chat_rooms, no_chatted_profiles, group_chats
+    
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['chat_rooms'], context['no_chatted_profiles'] = self.get_queryset()
+        
+        context['chat_rooms'], context['no_chatted_profiles'], context['group_chats'] = self.get_queryset()
         return context
         
 class ChatView(TemplateView):
@@ -41,10 +51,11 @@ class ChatView(TemplateView):
     
     def get_queryset(self):
         messages = Message.objects.filter(room=self.kwargs['room_id'])
-        chatrooms = ChatRoom.objects.filter(users=self.request.user.profile)
+        chat_rooms = ChatRoom.objects.filter(users=self.request.user.profile).exclude(id__in=GroupChatRoom.objects.values_list("id", flat=True))
+        group_chats = GroupChatRoom.objects.filter(users=self.request.user.profile)
         profiles = UserProfile.objects.filter(user__profile__in=ChatRoom.objects.get(id=self.kwargs['room_id']).users.all())
 
-        return messages, chatrooms, profiles
+        return messages, chat_rooms, profiles, group_chats
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,8 +68,28 @@ class ChatView(TemplateView):
         context['room_name'] = room.name # Nombre para conectar el websocket
         context['room_usernames'] = list(usernames) # Lista de usuarios del chat
 
-        context['chat_messages'], context['chat_rooms'], context['profiles'] = self.get_queryset()
+        context['chat_messages'], context['chat_rooms'], context['profiles'], context['group_chats'] = self.get_queryset()
         return context
+    
+class GroupChatCreateView(CreateView):
+    model = GroupChatRoom
+    template_name = 'chat/group_chat_create.html'
+    fields = ['name', 'description', 'users']
+    success_url = reverse_lazy('chat:chat_rooms')
+
+    def form_valid(self, form):
+        form.fields['users'].queryset = self.request.user.profile.followers.all() | self.request.user.profile.following.all()
+        form.instance.creator = self.request.user.profile
+        
+        group_chat_room = form.save()
+
+        # Añadir el creador a los administradores
+        group_chat_room.admins.add(self.request.user.profile)
+
+        # Mensaje de creación
+        messages.add_message(self.request, messages.INFO, 'Grupo creado correctamente.')
+        return super().form_valid(form)
+
 
 def create_chat_room(request, profile_id):
     sender_profile = request.user.profile  # Perfil del usuario autenticado
@@ -73,3 +104,4 @@ def create_chat_room(request, profile_id):
         chatroom.users.add(sender_profile, receiver_profile)
 
     return redirect('chat:chat', room_id=chatroom.id)
+
