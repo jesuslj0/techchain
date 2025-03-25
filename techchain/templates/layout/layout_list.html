@@ -16,8 +16,17 @@
 <body class="d-flex flex-column min-vh-100">
     {% include '_include/_header.html' %}
     <main class="flex-grow-1">
-        <div class="container">
-            <h1 class='title'>{% block title_h1 %}{% endblock %}</h1>
+        <<div class='container d-flex justify-content-between mt-3 mb-3'>
+            <h1 class='title'>{% block title_h1 %}Title default{% endblock %}</h1>
+            {% block search_bar %}
+            <form class="d-flex" method="get" action="{% url 'profiles:search' %}">
+                <!-- Barra de búsqueda -->
+                <input class="form-control me-2" type="search" name="query" placeholder="Buscar usuarios" id="user-search" value="{{ request.GET.query }}">
+                <button class="btn btn-outline-primary" type="submit" id="search-btn">
+                  <i class="bi bi-search"></i>
+                </button>
+              </form>
+            {% endblock %}
         </div>
 
         {% block form %}
@@ -56,8 +65,10 @@
                 </div>
                 <div class="col-10">
                     <div class="list-group">
-                        {% block element %}Aquí va cada elemento{% endblock %}
+                        {% block element %}{% endblock %}
+                        {% block notifications %}{% endblock %}
                     </div>
+                    
                 </div>
             </div>
         </div>

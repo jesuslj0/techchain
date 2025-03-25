@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from notifications.utils import create_notification
 
 @method_decorator(login_required, 'dispatch')
 class PostsListView(ListView):
@@ -103,6 +104,12 @@ def like_post_ajax(request, pk):
         )
     else:
         post.likes.add(request.user)
+
+        if request.user != post.user: 
+            msg = f'A {request.user.username} le a gustado tu publicación'
+            link = reverse('posts:detail', args=[post.id])
+            create_notification(post.user.profile, 'like', msg, link)
+
         return JsonResponse(
             {
                 'message': 'Te gusta esta publicación',

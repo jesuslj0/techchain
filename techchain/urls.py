@@ -20,6 +20,8 @@ urlpatterns = [
 
     path('chat/', include('chat.urls', namespace='chat')),
 
+    path('notifications/', include('notifications.urls', namespace='notifications')),
+
     path("prose/", include("prose.urls")),
 ] + debug_toolbar_urls()
 
