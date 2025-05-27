@@ -1,5 +1,5 @@
 from django.db.models.query import QuerySet
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Post, Comment
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, DeleteView
@@ -10,6 +10,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from notifications.utils import create_notification
+from notifications.models import LikeLog
+from django.utils import timezone
+from datetime import timedelta
 
 @method_decorator(login_required, 'dispatch')
 class PostsListView(ListView):
@@ -91,29 +94,49 @@ class PostDeleteView(DeleteView):
 
 @login_required
 def like_post_ajax(request, pk):
-    post = Post.objects.get(pk=pk)
+    # Obtener el post o lanzar 404 si no existe
+    post = get_object_or_404(Post, pk=pk)
+    user = request.user
 
-    if request.user in post.likes.all():
-        post.likes.remove(request.user)
-        return JsonResponse (
-            {
-                'message': 'Ya no te gusta esta publicación',
-                'nLikes': post.likes.count(),
-                'liked': False,
-            }
-        )
-    else:
-        post.likes.add(request.user)
+    # Si el usuario ya dio like, eliminarlo (unlike)
+    if user in post.likes.all():
+        post.likes.remove(user)
+        LikeLog.objects.filter(user=user, post=post).delete()
+        return JsonResponse({
+            'message': 'Ya no te gusta esta publicación',
+            'nLikes': post.likes.count(),
+            'liked': False,
+        })
+    
+    # Si el usuario no ha dado like, añadirlo
+    post.likes.add(user)
 
-        if request.user != post.user: 
-            msg = f'A {request.user.username} le a gustado tu publicación'
-            link = reverse('posts:detail', args=[post.id])
-            create_notification(post.user.profile, 'like', msg, link)
+    cooldown_minutes = 10
+    like_log, created = LikeLog.objects.get_or_create(user=user, post=post)
 
-        return JsonResponse(
-            {
+    # Si ya existía el registro, comprobar cooldown
+    if not created:
+        time_since = timezone.now() - like_log.timestamp
+        if time_since < timedelta(minutes=cooldown_minutes):
+            # En cooldown, no enviar notificación ni actualizar timestamp
+            return JsonResponse({
                 'message': 'Te gusta esta publicación',
                 'nLikes': post.likes.count(),
                 'liked': True,
-            }
-        )
+            })
+
+    # Fuera de cooldown o es un nuevo like -> actualizar timestamp
+    like_log.timestamp = timezone.now()
+    like_log.save()
+
+    # Enviar notificación solo si no es auto-like
+    if user != post.user:
+        msg = f'A {user.username} le ha gustado tu publicación'
+        link = reverse('posts:detail', args=[post.id])
+        create_notification(post.user.profile, 'like', post, msg, link)
+
+    return JsonResponse({
+        'message': 'Te gusta esta publicación',
+        'nLikes': post.likes.count(),
+        'liked': True,
+    })

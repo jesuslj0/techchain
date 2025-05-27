@@ -12,17 +12,42 @@
     <div class="main-container">
         <img src="/static/icons/android-chrome-512x512.png" alt="logo" />
         <div class="content-container">
-            <h2>La red social del futuro</h2>
+            <h2>Conectando con el futuro.</h2>
             <h3>Únete ahora</h3>
             <form method='post'>
                 {% csrf_token %}
                 {{ form|crispy }}
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
+                    <label class="form-check-label" for="rememberMe">Recuérdame</label>
+                </div>
                 <button class='btn btn-primary bg-dark' type='submit'>Entrar</button>
             </form>   
             <p class="register">¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate</a></p>
         </div>
-               
-    </div>
-    
-    
 {% endblock %}
+
+{% block script %}
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedUser = localStorage.getItem('rememberedUser');
+    if (savedUser) {
+      document.getElementById('id_username').value = savedUser;
+      document.getElementById('rememberMe').checked = true;
+    }
+  });
+
+  document.querySelector('form').addEventListener('submit', () => {
+    const checkbox = document.getElementById('rememberMe');
+    const username = document.getElementById('id_username').value;
+
+    if (checkbox.checked) {
+      localStorage.setItem('rememberedUser', username);
+    } else {
+      localStorage.removeItem('rememberedUser');
+    }
+  });
+</script>
+
+{% endblock%}

@@ -35,6 +35,6 @@ class LoginForm(AuthenticationForm):
                 raise forms.ValidationError("Usuario no encontrado.")
 
         return self.cleaned_data
-
+    
     def get_user(self):
         return self.user_cache 

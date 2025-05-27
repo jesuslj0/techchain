@@ -111,9 +111,18 @@
             else if (data.type == 'user_status') {
                 const userStatusElement = document.getElementById(`status-${data.user}`);
                 if (data.is_online) {
-                  userStatusElement.innerText = 'En línea'
+                    try {
+                        userStatusElement.innerText = 'En línea';
+                    } catch (error) {
+                        console.error("Error al actualizar el estado del usuario:", error);
+                    }
+
                 } else if (data.is_online == false) {
-                    userStatusElement.innerText = 'Desconectado'
+                    try {
+                        userStatusElement.innerText = 'Desconectado';
+                    } catch (error) {
+                        console.error("Error al actualizar el estado del usuario:", error);
+                    }
                 }
             } 
             

@@ -42,7 +42,7 @@
                     {% csrf_token %}
                     {% if request.user.profile.profile_picture %}
                     <div class="mb-3">
-                        <img src="..{{ request.user.profile.profile_picture.url }}" alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;">
+                        <img src="../..{{ request.user.profile.profile_picture.url }}" alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;">
                     </div>
                     {% endif %}
                     {{ form|crispy}}

@@ -52,9 +52,17 @@ class LoginView(LoginView):
 
     def form_valid(self, form):
         user = form.get_user()
+        remember_me = self.request.POST.get('remember_me')
+
         if user is not None:
             login(self.request, user)
-            return HttpResponseRedirect(self.get_success_url())
+
+            if remember_me:
+                self.request.session.set_expiry(1209600)
+            else:
+                self.request.session.set_expiry(0)
+                messages
+            return HttpResponseRedirect(self.get_success_url())  # Redirige a la URL de éxito definida en el formulario
         else:
             return self.form_invalid(form)  # Si el usuario no se autentica, mostrar error
 

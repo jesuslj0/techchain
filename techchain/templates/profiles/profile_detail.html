@@ -81,7 +81,7 @@
                                 </form>                            
                             {% else %}
                                 <!-- Si es el propio perfil del usuario autenticado -->
-                                <a href="{% url 'profiles:update' %}" class="btn btn-primary mb-2">Editar Perfil</a>
+                                <a href="{% url 'profiles:update' user_id %}" class="btn btn-primary mb-2">Editar Perfil</a>
                             {% endif %}
                         {% endif %}
                     </div>

@@ -11,7 +11,7 @@ app_name = 'profiles'
 
 urlpatterns = [
     path('<int:user_id>/', login_required(ProfileDetailView.as_view()), name='detail',),
-    path('update/', login_required(ProfileUpdateView.as_view()), name='update'),
+    path('<int:user_id>/update/', login_required(ProfileUpdateView.as_view()), name='update'),
     path('<int:user_id>/followers/', login_required(FollowersView.as_view()), name='followers'),
     path('<int:user_id>/following/', login_required(FollowingView.as_view()), name="following"),
     path('<int:user_id>/follow/', toggle_follow, name='toggle_follow'),

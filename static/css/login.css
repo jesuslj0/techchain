@@ -75,3 +75,12 @@ form {
     font-weight: bold;
 }
 
+.m-0 {
+    list-style: none;
+}
+
+.m-0 > li::marker {
+    color: white;
+}
+
+

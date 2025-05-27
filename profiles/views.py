@@ -31,6 +31,8 @@ class ProfileUpdateView(UpdateView):
     model = UserProfile
     template_name = 'profiles/profile_update.html'
     form_class = UserProfileForm
+    pk_url_kwarg = 'user_id'
+    slug_field = 'user_id'
     
     def get_success_url(self):
         return reverse_lazy('profiles:detail', kwargs={'user_id': self.request.user.id})
