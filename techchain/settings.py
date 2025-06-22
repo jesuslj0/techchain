@@ -25,11 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = [ "127.0.0.1", "localhost", "techchain.live", "www.techchain.live"]
+ALLOWED_HOSTS = [ "techchain.live", "www.techchain.live", "188.166.96.144"]
 
-INTERNAL_IPS = [
+INTERNAL_IPS = [ 
     "127.0.0.1",
 ]
 
@@ -122,8 +122,12 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'techchain',
+        'USER': os.environ["MYSQL_USER"],
+        'PASSWORD': os.environ["MYSQL_PASSWORD"],
+        'HOST': 'localhost',
+        'PORT': os.environ["MYSQL_PORT"]
     }
 }
 
