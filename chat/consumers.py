@@ -5,7 +5,8 @@ from profiles.models import UserProfile
 from django.contrib.auth import get_user_model
 from asgiref.sync import sync_to_async
 from django.core.cache import cache
-import aioredis
+import redis.asyncio as aioredis
+
 import re #Expresiones regulares
 
 REDIS_URL = "redis://127.0.0.1:6379"
