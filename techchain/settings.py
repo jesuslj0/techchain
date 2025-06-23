@@ -63,11 +63,11 @@ INSTALLED_APPS = [
 ]
 
 # #Rest framework para implementación de chats a tiempo real
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     )
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 # Form Styles
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
