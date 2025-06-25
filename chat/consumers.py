@@ -1,10 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from .models import ChatRoom, Message 
-from profiles.models import UserProfile
 from django.contrib.auth import get_user_model
 from asgiref.sync import sync_to_async
-from django.core.cache import cache
 import redis.asyncio as aioredis
 
 import re #Expresiones regulares
@@ -92,12 +89,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     # Funciones para consultar la base de datos 
     async def get_room(self, room_name):
+        from .models import ChatRoom
         try:
             return await sync_to_async(ChatRoom.objects.get, thread_sensitive=True)(name=room_name)
         except ChatRoom.DoesNotExist:
             return None
         
     async def get_user_profile(self, username):
+        from .models import UserProfile
         User = get_user_model()
         try:
             user = await sync_to_async(User.objects.get, thread_sensitive=True)(username=username)
@@ -107,6 +106,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return None
         
     async def create_message(self, sender, room, content):
+        from .models import Message
         return await sync_to_async(Message.objects.create, thread_sensitive=True)(
             sender=sender, 
             room=room, 
