@@ -53,12 +53,12 @@
                             <!-- Imagen del post -->
                             <div class="col-md-4">
                                 <a href="{% url 'posts:detail' post.pk%}">
-                                    <img src="posts{{post.image.url}}" class="img-fluid" alt="Imagen del post">
+                                    <img src="{{post.image.url}}" class="img-fluid" alt="Imagen del post">
                                 </a>
                             </div>
                             <!-- Contenido del post -->
                             <div class="col-md-8">
-                                <p class="mb-2"><img src="posts{{post.user.profile.profile_picture.url}}" 
+                                <p class="mb-2"><img src="{{post.user.profile.profile_picture.url}}" 
                                     style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;"></p>
                                 <p class="mb-2 text-muted small"><strong>{{post.user.username}}</strong> Hace {{post.created_at|timesince|slice:":10"}}</p>
                                 <p class="mb-3 h5 text-primary">{{post.title}}</p>

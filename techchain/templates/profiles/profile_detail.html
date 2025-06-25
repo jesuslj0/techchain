@@ -3,7 +3,7 @@
 
 {% block styles %}
     {% load static %}
-    <link rel="stylesheet" href="{% static "css/profile_detail.css" %}">
+    <link rel="stylesheet" href="{% static 'css/profile_detail.css' %}" />
 {% endblock %}
 {% block title %}Perfil{% endblock %}
 {% block title_h1 %}
@@ -51,7 +51,7 @@
             <div class="col-10 profile-container">
                 <div class="profile-card">
                     <img 
-                    src="..{{object.profile_picture.url}}" 
+                    src="{{object.profile_picture.url}}" 
                     style="width: 100px;
                     height: 100px;
                     border-radius: 50%;
@@ -90,7 +90,7 @@
                     <h3 class="subtitle m-3">Publicaciones</h3>
                     {% for post in posts %}
                         <div class="list-group-item d-flex align-items-center p-3">
-                            <img src="..{{post.image.url}}" alt="Imagen" class="rounded me-3" style="max-width: 90px; height: auto;">
+                            <img src="{{post.image.url}}" alt="Imagen" class="rounded me-3" style="max-width: 90px; height: auto;">
                             <div>
                                 <p>
                                     <span class="mb-1">{{post.user.username}} <i class="bi bi-heart-fill text-danger"></i> {{post.likes.all.count}}</span>

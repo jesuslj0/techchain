@@ -55,7 +55,7 @@
                             {% else %}
                                 <div class="message received">
                                     <img 
-                                    src="../../../profiles{{ profile.profile_picture.url }}" 
+                                    src="{{ profile.profile_picture.url }}" 
                                     alt="{{ msg.sender }}"
                                     class="rounded-circle mr-3"
                                     width="25" height="25">

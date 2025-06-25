@@ -2,7 +2,7 @@
 
 {% block styles %}
     {% load static %}
-    <link rel="stylesheet" href="{% static "css/profile_update.css" %}">
+    <link rel="stylesheet" href="{% static 'css/profile_update.css' %}">
 {% endblock %}
 {% load crispy_forms_tags %}
 
@@ -42,7 +42,7 @@
                     {% csrf_token %}
                     {% if request.user.profile.profile_picture %}
                     <div class="mb-3">
-                        <img src="../..{{ request.user.profile.profile_picture.url }}" alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;">
+                        <img src="{{ request.user.profile.profile_picture.url }}" alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;" />
                     </div>
                     {% endif %}
                     {{ form|crispy}}
@@ -63,7 +63,7 @@
 {% block script %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const privacyButton = document.querySelector([data-id="privateButton"]);
+            const privacyButton = document.querySelector('[data-id="privateButton"]');
             privacyButton.addEventListener('click', togglePrivacy);
         });
 

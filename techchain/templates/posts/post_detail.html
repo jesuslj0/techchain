@@ -44,7 +44,7 @@
             <!-- Contenido del post -->
             <!-- imagen del post-->
             <p class="mb-2 text-muted small">
-                <img src="..{{post.user.profile.profile_picture.url}}" 
+                <img src="{{post.user.profile.profile_picture.url}}" 
                 style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;"
                 alt="Profile Image"
                 >
@@ -58,7 +58,7 @@
                 <span class="badge bg-primary">{{tag.name}}</span>
                 {% endfor %}
             </p>
-            <img src="..{{post.image.url}}" 
+            <img src="{{post.image.url}}" 
                 class="img rounded" 
                 alt="{{post.title}}"
             >
