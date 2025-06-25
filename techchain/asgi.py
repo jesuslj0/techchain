@@ -15,7 +15,7 @@ from chat.routing import websocket_urlpatterns  # Rutas de WebSockets
 from channels.auth import AuthMiddlewareStack
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "techchain.settings")
-django.set_up() # IMPORTANTE PARA CARGAR DJANGO EN ASWI
+django.setup() # IMPORTANTE PARA CARGAR DJANGO EN ASWI
 
 application = ProtocolTypeRouter(
     {
