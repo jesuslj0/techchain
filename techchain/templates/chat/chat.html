@@ -90,10 +90,11 @@
         const chatBox = document.getElementById("chat-box");
         const messageInput = document.getElementById("message-input");
         const sendButton = document.getElementById("send-button");
+        const protocol = document.location.protocol = 'https' ? 'wss:' : 'ws:';
         
 
         // Conectar WebSocket
-        const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${roomName}/`);
+        const socket = new WebSocket(`${protocol}//${window.location.host}/ws/chat/${roomName}/`);
 
         socket.onmessage = function(event) {
             const data = JSON.parse(event.data);
