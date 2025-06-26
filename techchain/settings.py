@@ -109,11 +109,11 @@ ASGI_APPLICATION = 'techchain.asgi.application'
 # Configurar Redis como "message broker" para WebSockets
 CHANNEL_LAYERS = {
     "default": {
-        # "BACKEND": "channels.layers.InMemoryChannelLayer",  # Para desarrollo, reemplaza con Redis en producción
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],  # Servidor Redis local
-        },
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Para desarrollo, reemplaza con Redis en producción
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        # "CONFIG": {
+        #     "hosts": [("127.0.0.1", 6379)],  # Servidor Redis local
+        # },
     },
 }
 
