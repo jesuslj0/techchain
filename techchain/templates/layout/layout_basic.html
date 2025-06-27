@@ -22,7 +22,7 @@
     {% include '_include/_header.html' %}
     <main class="container flex-grow-1">
         
-        <div class='container d-flex mt-3 mb-3'>
+        <div id='top-bar' class='container d-flex mt-3 mb-3'>
             <h1 class='title'>{% block title_h1 %}Title default{% endblock %}</h1>
             {% block search_bar %}
             <form class="d-flex" method="get" action="{% url 'profiles:search' %}">
@@ -132,6 +132,32 @@
                     }
                     return cookieValue;
                 }    
+
+                function toggleNavbar() {
+                    const toggleIcon = document.querySelector('.toggle-navbar-icon');
+                    const navbar = document.getElementById('navbar');
+
+                    navbar.toggleAttribute('hidden');
+                    if (toggleIcon.classList.contains('opened')) {
+                        toggleIcon.classList.remove('opened');
+                    } else {
+                        toggleIcon.classList.add('opened')
+                    }
+                }
+
+                const toggleBtn = document.getElementById('menuToggleBtn');
+                const sidebar = document.getElementById('sidebarMenu');
+
+                sidebar.addEventListener('show.bs.collapse', () => {
+                    toggleBtn.classList.remove('btn-outline-primary');
+                    toggleBtn.classList.add('btn-primary');
+                });
+
+                sidebar.addEventListener('hide.bs.collapse', () => {
+                    toggleBtn.classList.remove('btn-primary');
+                    toggleBtn.classList.add('btn-outline-primary');
+                });
+
             </script>
         {% endblock %}
 

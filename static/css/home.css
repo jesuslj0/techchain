@@ -35,3 +35,36 @@
     width: 200px;
     background-color: #fff;
 }
+
+/* Móvil */
+@media (max-width: 480px) {
+    #top-bar {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .title > img {
+        width: 56px;
+        height: auto;
+        margin: 20px 0px 20px 0px;
+    }
+
+    .subtitle {
+        margin-top: 30px;
+    }
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+
+    #top-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+
+}

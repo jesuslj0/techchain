@@ -9,42 +9,49 @@
     <span>TechChain</span>
 {% endblock %}
 {% block content %}
-    <hr />
+    <hr class="d-none d-xl-block"/>
     <div class='container'>
         <div class="row">
-            <div class="col-2">
+            <!-- Botón para mostrar el menú (solo visible en móvil) -->
+            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+            <i class="bi bi-list"></i> Menú
+            </button>
+
+            <!-- Menú colapsable -->
+            <div class="collapse d-lg-block col-12 col-lg-2" id="sidebarMenu">
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
-                        <i class="bi bi-person-circle"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
+                    <i class="bi bi-person-circle"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-bell"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'notifications:list' %}">Notificaciones</a>
+                    <i class="bi bi-bell"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-chat-square-text"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'chat:chat_rooms' %}">Chats</a>
+                    <i class="bi bi-chat-square-text"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people-fill"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                    <i class="bi bi-people-fill"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:following' user_id %}">Seguidos</a>
+                    <i class="bi bi-people"></i>
+                    <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_id %}">Seguidos</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-postcard-heart"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                    <i class="bi bi-postcard-heart"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_id %}">Publicaciones</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-file-earmark-plus"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:create' user_id %}">Crear</a>
+                    <i class="bi bi-file-earmark-plus"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
                     </li>
-                </ul> 
+                </ul>
             </div>
-            <div class="col-10">
+
+            <div class="col-12 col-md-12 col-lg-8">
                 <h2 class="subtitle">Publicaciones recientes</h2>
                 <ul class="list-group">
                     {% for post in recent_posts %}

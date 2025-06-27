@@ -41,6 +41,30 @@ header {
     width: 100%;
     display: flex;
     justify-content: center;
+    position: relative;
+}
+
+.toggle-navbar {
+    position: absolute;
+    bottom: -25px;
+}
+
+.toggle-navbar-button {
+    background-color: transparent;
+    border: 0px;
+}
+
+.toggle-navbar-icon {
+    width: 18px;
+    height: auto;
+}
+
+.toggle-navbar-icon.opened {
+    transform: rotate(180deg);
+}
+
+.icon-toggle-navbar{
+    transform: none;
 }
 
 footer {
