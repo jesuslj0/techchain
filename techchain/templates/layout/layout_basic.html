@@ -23,7 +23,7 @@
     <main class="container flex-grow-1">
         
         <div id='top-bar' class='container d-flex mt-3 mb-3'>
-            <h1 class='title'>{% block title_h1 %}Title default{% endblock %}</h1>
+            <h1 class='title text-center text-md-start text-lg-start'>{% block title_h1 %}Title default{% endblock %}</h1>
             {% block search_bar %}
             <form class="d-flex" method="get" action="{% url 'profiles:search' %}">
                 <!-- Barra de búsqueda -->

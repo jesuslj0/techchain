@@ -53,18 +53,18 @@
 
             <div class="col-12 col-md-12 col-lg-8">
                 <h2 class="subtitle">Publicaciones recientes</h2>
-                <ul class="list-group">
+                <ul class="list-group mb-3">
                     {% for post in recent_posts %}
                     <div class="list-group-item mb-3 p-3 shadow-sm border rounded">
                         <div class="row g-3">
                             <!-- Imagen del post -->
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <a href="{% url 'posts:detail' post.pk%}">
                                     <img src="posts{{post.image.url}}" class="img-fluid" alt="Imagen del post">
                                 </a>
                             </div>
                             <!-- Contenido del post -->
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <p class="mb-2"><img src="posts{{post.user.profile.profile_picture.url}}" 
                                     style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;"></p>
                                 <p class="mb-2 text-muted small"><strong>{{post.user.username}}</strong> Hace {{post.created_at|timesince|slice:":10"}}</p>

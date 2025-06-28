@@ -6,8 +6,8 @@ from django.contrib.auth.forms import UserCreationForm
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    bio = forms.CharField(widget=forms.Textarea, required=False)
-    profile_picture = forms.ImageField(required=False)
+    bio = forms.CharField(widget=forms.Textarea, required=True)
+    profile_picture = forms.ImageField(required=True)
 
     class Meta:
         model = User

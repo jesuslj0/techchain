@@ -35,6 +35,7 @@ class ProfileUpdateView(UpdateView):
     slug_field = 'user_id'
     
     def get_success_url(self):
+        messages.success(self.request, 'Perfil actualizado correctamente!');
         return reverse_lazy('profiles:detail', kwargs={'user_id': self.request.user.id})
 
 class ProfilesSearch(ListView):

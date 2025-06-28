@@ -17,7 +17,7 @@
     {% include '_include/_header.html' %}
     <main class="container flex-grow-1">
         <div class='container'>
-            <h1 class='title'>{% block title_h1 %}Profile default{% endblock %}</h1>
+            <h1 class='title text-center text-md-start text-lg-start'>{% block title_h1 %}Profile default{% endblock %}</h1>
         </div>
 
         {% block form %}
@@ -56,10 +56,35 @@
             </div>
             {% endif %}
         {% endblock %}
-
-        {% block script %}
-        {% endblock %}
     </main>
+    {% block script %}
+            <script>
+                function toggleNavbar() {
+                    const toggleIcon = document.querySelector('.toggle-navbar-icon');
+                    const navbar = document.getElementById('navbar');
+
+                    navbar.toggleAttribute('hidden');
+                    if (toggleIcon.classList.contains('opened')) {
+                        toggleIcon.classList.remove('opened');
+                    } else {
+                        toggleIcon.classList.add('opened')
+                    }
+                }
+
+                const toggleBtn = document.getElementById('menuToggleBtn');
+                const sidebar = document.getElementById('sidebarMenu');
+
+                sidebar.addEventListener('show.bs.collapse', () => {
+                    toggleBtn.classList.remove('btn-outline-primary');
+                    toggleBtn.classList.add('btn-primary');
+                });
+
+                sidebar.addEventListener('hide.bs.collapse', () => {
+                    toggleBtn.classList.remove('btn-primary');
+                    toggleBtn.classList.add('btn-outline-primary');
+                });
+            </script>
+        {% endblock %}
     {% include "_include/_footer.html" %}
 </body>
 </html>
