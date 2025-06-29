@@ -22,7 +22,7 @@
             <i class="bi bi-list"></i> Menú
             </button>
             <!-- Menú colapsable -->
-            <div class="collapse d-lg-block col-12 col-lg-2" id="sidebarMenu">
+            <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
                     <i class="bi bi-house"></i>
@@ -56,11 +56,11 @@
             </div>
 
             <!-- Información del perfil -->
-            <div class="col-12 col-md-12 col-lg-10">
+            <div class="col-12 col-md-12 col-lg-9">
                 <div class="row">
                    <div class="profile-card col-md-12 col-lg-6">
                     <img 
-                    src="..{{object.profile_picture.url}}" 
+                    src="{{object.profile_picture.url}}" 
                     alt="Foto de Perfil">
                     <div class="card-body text-center">
                         <h5 class="card-title">@{{object.user.username}}</h5>
@@ -76,7 +76,7 @@
                             {% if object.user != request.user %}
                                 <form action="{% url 'profiles:toggle_follow' user_id=object.user.id %}" method="post">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary btn-sm">
                                         {% if object.user.profile in request.user.profile.followers.all %}
                                             Dejar de seguir
                                         {% else %}
@@ -97,7 +97,7 @@
                     <h3 class="subtitle m-3">Publicaciones</h3>
                     {% for post in posts %}
                         <div class="list-group-item d-flex align-items-center p-3">
-                            <img src="..{{post.image.url}}" alt="Imagen" class="rounded me-3" style="max-width: 90px; height: auto;">
+                            <img src="{{post.image.url}}" alt="Imagen" class="rounded me-3" style="max-width: 90px; height: auto;">
                             <div>
                                 <p>
                                     <span class="mb-1">{{post.user.username}} <i class="bi bi-heart-fill text-danger"></i> {{post.likes.all.count}}</span>
@@ -106,7 +106,9 @@
                                 <p class="mb-3"><strong>{{post.title}}</strong></p>
                             </div>
                             <p class="m-3">
-                                <a class="btn btn-primary p-2" href="{% url 'posts:detail' post.pk %}">Ver</a>
+                                <button class="btn btn-outline-primary btn-sm">
+                                 <a class="text-decoration-none" href="{% url 'posts:detail' post.pk %}">Ver</a>   
+                                </button>
                             </p>
                         </div>
                     {% endfor %}

@@ -2,7 +2,6 @@ from django.urls import path, include
 from .views import ProfileDetailView, FollowersView, FollowingView, ProfileUpdateView, ProfilesSearch, toggle_follow
 from .views import CustomPasswordChangeView, CustomPasswordChangeDoneView, toggle_privacy
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import reverse_lazy
 
@@ -21,5 +20,3 @@ urlpatterns = [
     path('toggle_privacy/', toggle_privacy, name='toggle_privacy'),
 ]
 
-if settings.DEBUG:  # Solo durante el desarrollo
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

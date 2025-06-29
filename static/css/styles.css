@@ -54,17 +54,24 @@ header {
     border: 0px;
 }
 
-.toggle-navbar-icon {
-    width: 18px;
-    height: auto;
+#navbar-icon {
+  transition: opacity 0.5s ease;
+  width: 18px;
+  height: auto;
+  transform: none;
 }
 
-.toggle-navbar-icon.opened {
-    transform: rotate(180deg);
+#navbar-icon.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
-.icon-toggle-navbar{
-    transform: none;
+#navbar-icon.opened {
+  transform: rotate(180deg);
+}
+
+#navbar-icon.none {
+  display: none;
 }
 
 footer {

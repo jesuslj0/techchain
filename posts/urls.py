@@ -1,7 +1,5 @@
 from django.urls import path, include
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
-from django.conf.urls.static import static
 from .views import PostsListView, PostsCreateView, PostDeleteView, PostDetailView, like_post_ajax
 
 #Posts urls
@@ -14,6 +12,3 @@ urlpatterns = [
     path('<int:pk>/detail', login_required(PostDetailView.as_view()), name='detail'),
     path('<int:pk>/like', like_post_ajax, name='like_ajax'),
 ]
-
-if settings.DEBUG:  # Solo durante el desarrollo
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
