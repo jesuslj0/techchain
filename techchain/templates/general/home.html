@@ -1,4 +1,6 @@
 {% extends 'layout/layout_basic.html' %}
+{% load custom_filters %}
+
 {% block styles %}
     {% load static %}
     <link rel="stylesheet" href="{% static "css/home.css" %}">
@@ -77,7 +79,7 @@
                                             style="width: 60px; height: 60px; object-fit: cover;">
                                         <div>
                                             <p class="mb-0 text-muted small">
-                                                <strong>{{ post.user.username }}</strong> • Hace {{ post.created_at|timesince|slice:":10" }}
+                                                <strong>{{ post.user.username }}</strong> • Hace {{ post.created_at|timesince_short }}
                                             </p>
                                         </div>
                                     </div>

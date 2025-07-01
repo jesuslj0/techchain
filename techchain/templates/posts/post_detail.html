@@ -1,5 +1,6 @@
 {% extends 'layout/layout_basic.html' %}
 {% load crispy_forms_tags %}
+{% load custom_filters %}
 
 {% block styles %}
     {% load static%}
@@ -48,7 +49,7 @@
                 </li>
             </ul>
         </div>
-        <div class="col-12 col-md-12 col-lg-10 list-group-item mb-3 p-3 shadow-sm border rounded">
+        <div class="col-12 col-md-12 col-lg-9 list-group-item mb-3 p-3 shadow-sm border rounded">
             <div class="row g-3">
                 <!-- Usuario y fecha -->
                 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
@@ -62,7 +63,7 @@
                      <strong class="me-2">@{{ post.user.username }}</strong>
                     </div>
                 </div>
-                <p class="mb-0 text-muted small text-md-end">Hace {{ post.created_at|timesince|slice:":10" }}</p>
+                <p class="mb-0 text-muted small text-md-end">Hace {{ post.created_at|timesince_short}}</p>
                 </div>
 
                 <!-- Título -->

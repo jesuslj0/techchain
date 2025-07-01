@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'prose',
     'rest_framework',
     
+    'techchain',
     'profiles',
     'posts',
     'chat',
@@ -109,11 +110,11 @@ ASGI_APPLICATION = 'techchain.asgi.application'
 # Configurar Redis como "message broker" para WebSockets
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Para desarrollo, reemplaza con Redis en producción
-        # "BACKEND": "channels_redis.core.RedisChannelLayer",
-        # "CONFIG": {
-        #     "hosts": [("127.0.0.1", 6379)],  # Servidor Redis local
-        # },
+        # "BACKEND": "channels.layers.InMemoryChannelLayer",  # Para desarrollo, reemplaza con Redis en producción
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],  # Servidor Redis local
+        },
     },
 }
 
@@ -154,13 +155,13 @@ LOGOUT_REDIRECT_URL = 'logout'  # Redirige después del cierre de sesión
 
 LANGUAGE_CODE = 'es-ES'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Madrid'
+
+USE_TZ = True
 
 USE_I18N = True
 
 USE_L10N = True
-
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
