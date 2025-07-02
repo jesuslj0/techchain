@@ -3,6 +3,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import get_user_model
 from asgiref.sync import sync_to_async
 import redis.asyncio as aioredis
+from time import localtime
 
 import re #Expresiones regulares
 
@@ -79,7 +80,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     "type": "chat_message",
                     "message": message.content,
                     "username": message.sender.user.username,  
-                    "timestamp": message.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+                    "timestamp": localtime(message.timestamp).isoformat(),
+                    "profile_picture": sender_profile.profile_picture.url,
                 }
             )
 
