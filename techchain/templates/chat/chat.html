@@ -4,41 +4,16 @@
     <link rel="stylesheet" href="{% static 'css/chat.css' %}?v=1.4">
     <style>
         .day-label {
-    text-align: center;
-    background-color: #e2e2e2;
-    color: #555;
-    font-weight: 600;
-    padding: 6px 12px;
-    margin: 15px 0 10px;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    user-select: none;
-}
-
-.message {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-}
-
-.profile-img {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.message strong {
-    color: #222;
-}
-
-.time {
-    margin-left: auto;
-    font-size: 0.75rem;
-    color: #888;
-}
-
+        text-align: center;
+        background-color: #e2e2e2;
+        color: #555;
+        font-weight: 600;
+        padding: 6px 12px;
+        margin: 15px 0 10px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        user-select: none;
+    }
     </style>
 {% endblock %}
 {% block title %}Chats{% endblock %}
@@ -84,7 +59,7 @@
                 </li>
             </ul>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-lg-3">
             <h4>Chats recientes</h4>
             <div class="list-group chatrooms mb-3">
                 {% for chat in chat_rooms %}
@@ -110,7 +85,7 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="col-md-9 p-3">
+        <div class="col-md-9 p-3 col-lg-6">
             <div class="m-2 d-flex gap-2">
                 {% for user in room_usernames %}
                     <div class="m-2">
@@ -144,9 +119,11 @@
                     
                 {% endfor %}
             </div>
-            <div class="input-group m-2">
+            <div class="input-group mt-2">
                 <input class="form-control" type="text" id="message-input" placeholder="Mensaje...">
-                <button class="btn btn-outline-primary" id="send-button">Enviar</button></input>
+                <button class="btn btn-outline-primary" id="send-button" type="button" title="Enviar">
+                    <i class="bi bi-send"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -280,10 +257,9 @@
             if (event.key === "Enter" && !event.shiftKey) {
                 event.preventDefault();
                 sendButton.click();
-                console.log('boton pulsado')
             }
         });
-        
+
 
     </script>
     <script>
