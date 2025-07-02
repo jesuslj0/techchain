@@ -8,52 +8,75 @@
 {% block content %}
     <div class='container m-auto'>
         <div class="row">
-            <div class='col-2'>
+            <!-- Botón para mostrar el menú (solo visible en móvil) -->
+            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+            <i class="bi bi-list"></i> Menú
+            </button>
+
+            <!-- Menú colapsable -->
+            <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
-                        <i class="bi bi-house"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'home' %}">Inicio</a>
+                    <i class="bi bi-person-circle"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-person-circle"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:detail' user_id %}">Mi Perfil</a>
+                    <i class="bi bi-bell"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people-fill"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                    <i class="bi bi-chat-square-text"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:following' user_id %}">Seguidos</a>
+                    <i class="bi bi-people-fill"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-file-earmark-plus"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:create' user_id %}">Crear</a>
+                    <i class="bi bi-people"></i>
+                    <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_id %}">Seguidos</a>
                     </li>
-                </ul> 
+                    <li class='p-2'>
+                    <i class="bi bi-postcard-heart"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                    </li>
+                    <li class='p-2'>
+                    <i class="bi bi-file-earmark-plus"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
+                    </li>
+                </ul>
             </div>
-            <ul class='list-group list-group-flush col-10'>
-                {% if profiles %}
-                <p class="h4 text-muted results">Resultados para <strong>{{request.GET.query}}</strong>
+            <div class="col-12 col-md-12 col-lg-8">
+            {% if profiles %}
+                <p class="h5 text-muted m-3"><i class="bi bi-search"></i> Resultados para <strong>{{ request.GET.query }}</strong></p>
+                <ul class="list-group">
                     {% for item in profiles %}
-                        <li class='list-group-item'>
-                            <img 
-                            src="{{item.profile_picture.url}}" 
-                            class="rounded-circle" 
-                            style="width: 60px; height: 60px; object-fit: cover;" 
-                            alt="imagen de perfil">
-                            <a href="{% url 'profiles:detail' item.profile.user.id %}"><strong>{{ item.profile.user.username }}</strong></a>
-                            {% if item.profile.user == request.user %}
-                                <span><strong>Eres tú</strong></span>
-                            {% elif item.profile in request.user.profile.following.all%}
-                                <span><strong>Te sigue</strong></span>
-                            {% endif %}
+                        <li class="list-group-item d-flex align-items-center justify-content-between flex-wrap p-3">
+                            <div class="d-flex align-items-center">
+                                <img 
+                                    src="{{ item.profile_picture.url }}" 
+                                    alt="imagen de perfil"
+                                    class="rounded-circle me-3"
+                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                <div class="d-flex flex-column">
+                                    <a href="{% url 'profiles:detail' item.profile.user.id %}" class="fw-semibold text-decoration-none text-dark">
+                                        {{ item.profile.user.username }}
+                                    </a>
+                                    {% if item.profile.user == request.user %}
+                                        <small class="text-muted">Eres tú</small>
+                                    {% elif item.profile in request.user.profile.following.all %}
+                                        <small class="text-success">Te sigue</small>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </li>
                     {% endfor %}
-                {% else %}
-                    <p class="h4 results">No se encuentraron resultados para <strong>{{request.GET.query}}</strong></p>
-                {% endif %}
-            </ul>
+                </ul>
+            {% else %}
+                <p class="h5 text-muted">No se encontraron resultados para <strong>{{ request.GET.query }}</strong></p>
+            {% endif %}
+        </div>
+
         </div>
     </div>
 {% endblock %}

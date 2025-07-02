@@ -9,42 +9,70 @@
 {% block content %}
     <div class='container m-auto'>
         <div class='row'>
-            <div class='col-2'>
+            <!-- Botón para mostrar el menú (solo visible en móvil) -->
+            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+            <i class="bi bi-list"></i> Menú
+            </button>
+
+            <!-- Menú colapsable -->
+            <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
-                        <i class="bi bi-house"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'home' %}">Inicio</a>
+                    <i class="bi bi-person-circle"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-person-circle"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:detail' user_id %}">Mi Perfil</a>
+                    <i class="bi bi-bell"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people-fill"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                    <i class="bi bi-chat-square-text"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:following' user_id %}">Seguidos</a>
+                    <i class="bi bi-people-fill"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-file-earmark-plus"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:create' user_id %}">Crear</a>
+                    <i class="bi bi-people"></i>
+                    <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_id %}">Seguidos</a>
                     </li>
-                </ul> 
+                    <li class='p-2'>
+                    <i class="bi bi-postcard-heart"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                    </li>
+                    <li class='p-2'>
+                    <i class="bi bi-file-earmark-plus"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
+                    </li>
+                </ul>
             </div>
-            <div class="col-10">
+            <div class="col-12 col-md-10 col-lg-8">
                 <ul class="list-group list-group-flush">
                     {% block element %}
                         {% for follow in following %}
-                            <li class='list-group-item'>
-                                <img 
-                                    src="{{follow.followed.profile_picture.url}}" 
-                                    class="rounded-circle" 
-                                    style="width: 60px; height: 60px; object-fit: cover;" 
-                                    alt="imagen de perfil">
-                                <a href="{% url 'profiles:detail' follow.followed.user.id %}"><strong>{{ follow.followed.user.username }}</strong></a> 
-                                Le sigues desde {{ follow.follow_up_date|date }}
+                            <li class='list-group-item d-flex justify-content-between align-items-center'>
+                                <div class="d-flex gap-2">
+                                    <img 
+                                        src="{{follow.followed.profile_picture.url}}" 
+                                        class="rounded-circle" 
+                                        style="width: 60px; height: 60px; object-fit: cover;" 
+                                        alt="imagen de perfil">
+                                    <div class="d-flex flex-column">
+                                    <a href="{% url 'profiles:detail' follow.followed.user.id %}"><strong>{{ follow.followed.user.username }}</strong></a> 
+                                    <p class="small">Le sigues desde {{ follow.follow_up_date|date }}</p>  
+                                </div>     
+                                </div>
+                                <form action="{% url 'profiles:toggle_follow' user_id=follow.followed.user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">
+                                        {% if follow.followed in request.user.profile.followers.all %}
+                                            Dejar de seguir
+                                        {% else %}
+                                            Seguir
+                                        {% endif %}
+                                    </button>
+                                </form>
                             </li>
                         {% endfor %}
                     {% endblock %}

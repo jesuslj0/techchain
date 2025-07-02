@@ -1,7 +1,7 @@
 {% comment %} {% load i18n %} {% endcomment %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {% block styles %}{% endblock %}
@@ -16,62 +16,77 @@
 <body class="d-flex flex-column min-vh-100">
     {% include '_include/_header.html' %}
     <main class="flex-grow-1">
-        <<div class='container d-flex justify-content-between mt-3 mb-3'>
-            <h1 class='title'>{% block title_h1 %}Title default{% endblock %}</h1>
-            {% block search_bar %}
-            <form class="d-flex" method="get" action="{% url 'profiles:search' %}">
+        <div id="top-bar" class="container mt-3 mb-3">
+            <div class="row align-items-center">
+                <!-- Título -->
+                <div class="col-12 col-md-6 text-center text-md-start mb-2 mb-md-0">
+                <h1 class="title">{% block title_h1 %}Title default{% endblock %}</h1>
+                </div>
+
                 <!-- Barra de búsqueda -->
-                <input class="form-control me-2" type="search" name="query" placeholder="Buscar usuarios" id="user-search" value="{{ request.GET.query }}">
-                <button class="btn btn-outline-primary" type="submit" id="search-btn">
-                  <i class="bi bi-search"></i>
-                </button>
-              </form>
-            {% endblock %}
+                <div class="col-12 col-md-6">
+                {% block search_bar %}
+                <form class="d-flex justify-content-center justify-content-md-end" method="get" action="{% url 'profiles:search' %}">
+                    <input class="form-control me-2" type="search" name="query" placeholder="Buscar usuarios" id="user-search" value="{{ request.GET.query }}">
+                    <button class="btn btn-outline-primary" type="submit" id="search-btn">
+                    <i class="bi bi-search"></i>
+                    </button>
+                </form>
+                {% endblock %}
+                </div>
+            </div>
         </div>
 
         {% block form %}
         {% endblock %}
 
         {% block content %}
-        <div class='container m-auto'>
-            <div class='row'>
-                <div class='col-2'>
-                    <ul class="list-unstyled d-flex flex-column p-2">
-                        <li class='p-2'>
-                            <i class="bi bi-house"></i>
-                            <a class="mb-2 text-decoration-none text-dark " href="{% url 'home' %}">Inicio</a>
-                        </li>
-                        <li class='p-2'>
-                            <i class="bi bi-person-circle"></i>
-                            <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
-                        </li>
-                        <li class='p-2'>
-                            <i class="bi bi-chat-square-text"></i>
-                            <a class="mb-5 text-decoration-none text-dark " href="{% url 'chat:chat_rooms' %}">Chats</a>
-                        </li>
-                        <li class='p-2'>
-                            <i class="bi bi-people-fill"></i>
-                            <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Seguidores</a>
-                        </li>
-                        <li class='p-2'>
-                            <i class="bi bi-people"></i>
-                            <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:following' user_id %}">Seguidos</a>
-                        </li>
-                        <li class='p-2'>
-                            <i class="bi bi-file-earmark-plus"></i>
-                            <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:create' user_id %}">Crear</a>
-                        </li>
-                    </ul> 
-                </div>
-                <div class="col-10">
-                    <div class="list-group">
-                        {% block element %}{% endblock %}
-                        {% block notifications %}{% endblock %}
+            <div class='container mt-4'>
+                <div class="row">
+                        <!-- Botón para mostrar el menú (solo visible en móvil) -->
+                        <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+                        <i class="bi bi-list"></i> Menú
+                        </button>
+
+                        <!-- Menú colapsable -->
+                        <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
+                            <ul class="list-unstyled d-flex flex-column p-2">
+                                <li class='p-2'>
+                                <i class="bi bi-person-circle"></i>
+                                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
+                                </li>
+                                <li class='p-2'>
+                                <i class="bi bi-bell"></i>
+                                <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
+                                </li>
+                                <li class='p-2'>
+                                <i class="bi bi-chat-square-text"></i>
+                                <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
+                                </li>
+                                <li class='p-2'>
+                                <i class="bi bi-people-fill"></i>
+                                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                                </li>
+                                <li class='p-2'>
+                                <i class="bi bi-people"></i>
+                                <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_id %}">Seguidos</a>
+                                </li>
+                                <li class='p-2'>
+                                <i class="bi bi-postcard-heart"></i>
+                                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                                </li>
+                                <li class='p-2'>
+                                <i class="bi bi-file-earmark-plus"></i>
+                                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
+                                </li>
+                            </ul>
+                        </div>    
+                    <div class="list-group col-12 col-lg-9">
+                    {% block elements %}{% endblock %} 
+                    {% block notifications %}{% endblock %}   
                     </div>
-                    
                 </div>
             </div>
-        </div>
         {% endblock %}
         
         {% block messages %}
@@ -82,80 +97,104 @@
             {% endif %}
         {% endblock %}
         
-        {% block session %}
-            {% if request.user.is_authenticated %}
-            <div class="container mt-3">
-                <div class="d-flex justify-content-between align-items-center bg-light p-3 border rounded shadow-sm mt-auto">
-                    <!-- Información del usuario -->
-                    <div>
-                        <strong>Sesión iniciada:</strong> <span class="text-primary">{{ user.username }}</span>
-                    </div>
-            
-                    <!-- Botón para salir -->
-                    <div>
-                        <form action="{% url 'logout' %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm">Cerrar sesión</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-        {% endblock %}
-
-        {% block script %}
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const likeButtons = document.querySelectorAll('.like-button');
-            
-                likeButtons.forEach(button => {
-                    button.addEventListener('click', function(event) {
-                        event.preventDefault();
-            
-                        const postId = button.dataset.postId;
-                        const nLikesSpan = document.querySelector(`.n-likes[data-post-id="${postId}"]`);
-            
-                        fetch(button.href, {
-                            method: 'POST',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRFToken': getCSRFToken() // Asegúrate de incluir el token CSRF
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.liked) {
-                                button.innerHTML = '<i class="bi bi-heart-fill text-danger"></i>';
-                            } else {
-                                button.innerHTML = '<i class="bi bi-heart text-danger"></i>';
-                            }
-                            nLikesSpan.innerHTML = data.nLikes; // Actualiza el contador de likes
-                        })
-                        .catch(error => console.error('Error:', error));
-                    });
+    </main>
+    {% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const likeButtons = document.querySelectorAll('.like-button');
+        
+            likeButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+        
+                    const postId = button.dataset.postId;
+                    const nLikesSpan = document.querySelector(`.n-likes[data-post-id="${postId}"]`);
+        
+                    fetch(button.href, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': getCSRFToken() // Asegúrate de incluir el token CSRF
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.liked) {
+                            button.innerHTML = '<i class="bi bi-heart-fill text-danger"></i>';
+                        } else {
+                            button.innerHTML = '<i class="bi bi-heart text-danger"></i>';
+                        }
+                        nLikesSpan.innerHTML = data.nLikes; // Actualiza el contador de likes
+                    })
+                    .catch(error => console.error('Error:', error));
                 });
             });
-            
-            function getCSRFToken() {
-                let cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    const cookies = document.cookie.split(';');
-                    for (let i = 0; i < cookies.length; i++) {
-                        const cookie = cookies[i].trim();
-                        // ¿Esta cookie comienza con el prefijo CSRF?
-                        if (cookie.substring(0, 10) === 'csrftoken=') {
-                            cookieValue = decodeURIComponent(cookie.substring(10));
-                            break;
-                        }
+        });
+        
+        function getCSRFToken() {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // ¿Esta cookie comienza con el prefijo CSRF?
+                    if (cookie.substring(0, 10) === 'csrftoken=') {
+                        cookieValue = decodeURIComponent(cookie.substring(10));
+                        break;
                     }
                 }
-                return cookieValue;
             }
-                  
-        </script>
-        {% endblock %}
+            return cookieValue;
+        }
 
-    </main>
+        const navbarIcon = document.getElementById("navbar-icon");
+        let lastScrollY = window.scrollY;
+        let hideTimeout;
+
+        function showIcon() {
+            navbarIcon.classList.remove("hidden", "none");
+            clearTimeout(hideTimeout);
+        }
+
+        function hideIconWithDelay() {
+            navbarIcon.classList.add("hidden");
+            hideTimeout = setTimeout(() => {
+            navbarIcon.classList.add("none");
+            }, 2000); // esperar 2 segundos
+        }
+
+        window.addEventListener("scroll", () => {
+            const currentScroll = window.scrollY;
+
+            if (window.innerWidth < 768) {
+            if (currentScroll === 0) {
+                showIcon(); // solo si está en el top
+            } else if (currentScroll > lastScrollY) {
+                hideIconWithDelay(); // scroll hacia abajo
+            }
+            }
+
+            lastScrollY = currentScroll;
+        });            
+    </script>
+    {% endblock %}
+    {% block session %}
+        {% if request.user.is_authenticated %}
+        <div class="container mt-4">
+            <div class="session-bar d-flex flex-column flex-sm-row justify-content-between align-items-center p-3 rounded shadow-sm bg-light">
+                
+                <div class="text-muted mb-2 mb-sm-0 small">
+                Sesión iniciada como <span class="text-primary fw-semibold">{{ request.user.username }}</span>
+                </div>
+
+                <form action="{% url 'logout' %}" method="POST" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar sesión</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    {% endblock %}
     {% include "_include/_footer.html" %}
 </body>
 </html>

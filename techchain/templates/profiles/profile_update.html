@@ -2,11 +2,11 @@
 
 {% block styles %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/profile_update.css' %}">
+    <link rel="stylesheet" href="{% static "css/profile_update.css" %}">
 {% endblock %}
 {% load crispy_forms_tags %}
 
-{% block title %}Perfil{% endblock %}
+{% block title %}Editar Perfil{% endblock %}
 {% block title_h1 %}
         Edita tu perfil
 {% endblock %}
@@ -14,35 +14,51 @@
 {% block content %}
     <div class="container m-auto">
         <div class="row">
-            <!-- Menú vertical -->
-            <div class="col-3 menu-container">
-                <ul class="list-unstyled d-flex flex-column p-2 bg-white" style="width: 250px;">
+            <!-- Botón para mostrar el menú (solo visible en móvil) -->
+            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+            <i class="bi bi-list"></i> Menú
+            </button>
+            <!-- Menú colapsable -->
+            <div class="collapse d-lg-block col-12 col-lg-2" id="sidebarMenu">
+                <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
-                        <i class="bi bi-house"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'home' %}">Inicio</a>
+                    <i class="bi bi-person-circle"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people-fill"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                    <i class="bi bi-bell"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:following' user_id %}">Seguidos</a>
+                    <i class="bi bi-chat-square-text"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-postcard-heart"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                    <i class="bi bi-people-fill"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
                     </li>
-                    </ul>
+                    <li class='p-2'>
+                    <i class="bi bi-people"></i>
+                    <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_id %}">Seguidos</a>
+                    </li>
+                    <li class='p-2'>
+                    <i class="bi bi-postcard-heart"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                    </li>
+                    <li class='p-2'>
+                    <i class="bi bi-file-earmark-plus"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
+                    </li>
+                </ul>
             </div>
 
             <!-- Formulario del perfil -->
-            <div class='col-9'>
+            <div class='col-12 col-md-12 col-lg-10'>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% if request.user.profile.profile_picture %}
                     <div class="mb-3">
-                        <img src="{{ request.user.profile.profile_picture.url }}" alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;" />
+                        <img src="../..{{ request.user.profile.profile_picture.url }}" alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;">
                     </div>
                     {% endif %}
                     {{ form|crispy}}
@@ -96,5 +112,30 @@
             }
             return cookieValue;
         }
+
+        function toggleNavbar() {
+            const toggleIcon = document.querySelector('.toggle-navbar-icon');
+            const navbar = document.getElementById('navbar');
+
+            navbar.toggleAttribute('hidden');
+            if (toggleIcon.classList.contains('opened')) {
+                toggleIcon.classList.remove('opened');
+            } else {
+                toggleIcon.classList.add('opened')
+            }
+        }
+
+        const toggleBtn = document.getElementById('menuToggleBtn');
+        const sidebar = document.getElementById('sidebarMenu');
+
+        sidebar.addEventListener('show.bs.collapse', () => {
+            toggleBtn.classList.remove('btn-outline-primary');
+            toggleBtn.classList.add('btn-primary');
+        });
+
+        sidebar.addEventListener('hide.bs.collapse', () => {
+            toggleBtn.classList.remove('btn-primary');
+            toggleBtn.classList.add('btn-outline-primary');
+        });
     </script>
 {% endblock %}

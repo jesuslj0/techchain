@@ -41,4 +41,45 @@ header {
     width: 100%;
     display: flex;
     justify-content: center;
+    position: relative;
+}
+
+.toggle-navbar {
+    position: absolute;
+    bottom: -25px;
+}
+
+.toggle-navbar-button {
+    background-color: transparent;
+    border: 0px;
+}
+
+#navbar-icon {
+  transition: opacity 0.5s ease;
+  width: 18px;
+  height: auto;
+  transform: none;
+}
+
+#navbar-icon.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#navbar-icon.opened {
+  transform: rotate(180deg);
+}
+
+#navbar-icon.none {
+  display: none;
+}
+
+footer {
+    p:nth-of-type(1) {
+        color: white;
+    }
+
+    p {
+        color: rgba(255, 255, 255, 0.6)
+    }
 }

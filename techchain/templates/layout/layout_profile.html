@@ -17,7 +17,7 @@
     {% include '_include/_header.html' %}
     <main class="container flex-grow-1">
         <div class='container'>
-            <h1 class='title'>{% block title_h1 %}Profile default{% endblock %}</h1>
+            <h1 class='title text-center text-md-start text-lg-start'>{% block title_h1 %}Profile default{% endblock %}</h1>
         </div>
 
         {% block form %}
@@ -35,31 +35,82 @@
                 {% endfor %} 
             {% endif %}
         {% endblock %}
-        
-        {% block session %}
-            {% if request.user.is_authenticated %}
-            <div class="container mt-3">
-                <div class="d-flex justify-content-between align-items-center bg-light p-3 border rounded shadow-sm mt-auto">
-                    <!-- Información del usuario -->
-                    <div>
-                        <strong>Sesión iniciada:</strong> <span class="text-primary">{{ user.username }}</span>
-                    </div>
-            
-                    <!-- Botón para salir -->
-                    <div>
-                        <form action="{% url 'logout' %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm">Cerrar sesión</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-        {% endblock %}
-
-        {% block script %}
-        {% endblock %}
     </main>
+    {% block script %}
+        <script>
+            function toggleNavbar() {
+                const toggleIcon = document.querySelector('.toggle-navbar-icon');
+                const navbar = document.getElementById('navbar');
+
+                navbar.toggleAttribute('hidden');
+                if (toggleIcon.classList.contains('opened')) {
+                    toggleIcon.classList.remove('opened');
+                } else {
+                    toggleIcon.classList.add('opened')
+                }
+            }
+
+            const toggleBtn = document.getElementById('menuToggleBtn');
+            const sidebar = document.getElementById('sidebarMenu');
+
+            sidebar.addEventListener('show.bs.collapse', () => {
+                toggleBtn.classList.remove('btn-outline-primary');
+                toggleBtn.classList.add('btn-primary');
+            });
+
+            sidebar.addEventListener('hide.bs.collapse', () => {
+                toggleBtn.classList.remove('btn-primary');
+                toggleBtn.classList.add('btn-outline-primary');
+            });
+
+            const navbarIcon = document.getElementById("navbar-icon");
+            let lastScrollY = window.scrollY;
+            let hideTimeout;
+
+            function showIcon() {
+                navbarIcon.classList.remove("hidden", "none");
+                clearTimeout(hideTimeout);
+            }
+
+            function hideIconWithDelay() {
+                navbarIcon.classList.add("hidden");
+                hideTimeout = setTimeout(() => {
+                navbarIcon.classList.add("none");
+                }, 2000); // esperar 2 segundos
+            }
+
+            window.addEventListener("scroll", () => {
+                const currentScroll = window.scrollY;
+
+                if (window.innerWidth < 768) {
+                if (currentScroll === 0) {
+                    showIcon(); // solo si está en el top
+                } else if (currentScroll > lastScrollY) {
+                    hideIconWithDelay(); // scroll hacia abajo
+                }
+                }
+
+                lastScrollY = currentScroll;
+            });
+        </script>
+    {% endblock %}
+        {% block session %}
+        {% if request.user.is_authenticated %}
+        <div class="container mt-4">
+            <div class="session-bar d-flex flex-column flex-sm-row justify-content-between align-items-center p-3 rounded shadow-sm bg-light">
+                
+                <div class="text-muted mb-2 mb-sm-0 small">
+                Sesión iniciada como <span class="text-primary fw-semibold">{{ request.user.username }}</span>
+                </div>
+
+                <form action="{% url 'logout' %}" method="POST" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar sesión</button>
+                </form>
+            </div>
+            </div>
+        {% endif %}
+    {% endblock %}
     {% include "_include/_footer.html" %}
 </body>
 </html>

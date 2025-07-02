@@ -1,4 +1,6 @@
 {% extends 'layout/layout_basic.html' %}
+{% load custom_filters %}
+
 {% block styles %}
     {% load static %}
     <link rel="stylesheet" href="{% static "css/home.css" %}">
@@ -9,83 +11,113 @@
     <span>TechChain</span>
 {% endblock %}
 {% block content %}
-    <hr />
+    <hr class="d-none d-xl-block"/>
     <div class='container'>
         <div class="row">
-            <div class="col-2">
+            <!-- Botón para mostrar el menú (solo visible en móvil) -->
+            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+            <i class="bi bi-list"></i> Menú
+            </button>
+
+            <!-- Menú colapsable -->
+            <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
-                        <i class="bi bi-person-circle"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
+                    <i class="bi bi-person-circle"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-bell"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'notifications:list' %}">Notificaciones</a>
+                    <i class="bi bi-bell"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-chat-square-text"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'chat:chat_rooms' %}">Chats</a>
+                    <i class="bi bi-chat-square-text"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people-fill"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                    <i class="bi bi-people-fill"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:following' user_id %}">Seguidos</a>
+                    <i class="bi bi-people"></i>
+                    <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_id %}">Seguidos</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-postcard-heart"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                    <i class="bi bi-postcard-heart"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_id %}">Publicaciones</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-file-earmark-plus"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:create' user_id %}">Crear</a>
+                    <i class="bi bi-file-earmark-plus"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
                     </li>
-                </ul> 
+                </ul>
             </div>
-            <div class="col-10">
-                <h2 class="subtitle">Publicaciones recientes</h2>
-                <ul class="list-group">
-                    {% for post in recent_posts %}
-                    <div class="list-group-item mb-3 p-3 shadow-sm border rounded">
-                        <div class="row g-3">
-                            <!-- Imagen del post -->
-                            <div class="col-md-4">
-                                <a href="{% url 'posts:detail' post.pk%}">
-                                    <img src="{{post.image.url}}" class="img-fluid" alt="Imagen del post">
-                                </a>
-                            </div>
-                            <!-- Contenido del post -->
-                            <div class="col-md-8">
-                                <p class="mb-2"><img src="{{post.user.profile.profile_picture.url}}" 
-                                    style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;"></p>
-                                <p class="mb-2 text-muted small"><strong>{{post.user.username}}</strong> Hace {{post.created_at|timesince|slice:":10"}}</p>
-                                <p class="mb-3 h5 text-primary">{{post.title}}</p>
-                                <p class="mb-3">
-                                    {% for tag in post.tags.all %}
-                                        <span class="badge bg-primary">{{tag.name}}</span>
-                                    {% endfor %}
-                                </p>
-                                {% if request.user in post.likes.all %}
-                                    <a href="{% url 'posts:like_ajax' post.pk %}" data-post-id="{{ post.pk }}" class="like-button">
-                                        <i class="bi bi-heart-fill text-danger"></i><span class="sr-only">Unlike this post</span>
-                                        <span data-post-id="{{ post.pk }}" class="n-likes">{{post.likes.count}}</span>
+
+            <div class="col-12 col-md-12 col-lg-8">
+                
+                <ul class="list-group mb-3">
+                    {% if not recent_posts %}
+                    <p class="me-2">No hay ningun post reciente. Sigue a algún usuario!</p>
+                    {% else %}
+                        <h2 class="subtitle">Publicaciones recientes</h2>
+                        {% for post in recent_posts %}
+                        <div class="list-group-item col-12 col-lg-12 mb-4 d-flex flex-column justify-content-between p-3 shadow-sm border rounded">
+                            <div class="row g-3">
+                                <!-- Imagen del post -->
+                                <div class="col-md-5 col-lg-6">
+                                    <a href="{% url 'posts:detail' post.pk%}">
+                                        <img src="{{post.image.url}}" class="img-fluid rounded" alt="Imagen del post">
                                     </a>
-                                {% else %}
-                                    <a href="{% url 'posts:like_ajax' post.pk %}" data-post-id="{{ post.pk }}" class="like-button">
-                                        <i class="bi bi-heart text-danger"></i><span class="sr-only">Like this post</span>
-                                        <span data-post-id="{{ post.pk }}" class="n-likes">{{post.likes.count}}</span>
-                                    </a>
-                                {% endif %}
-                                <span class="comment ms-2"><i class="bi bi-chat-dots-fill"></i> {{post.comments.count}}</span>
-                                <p class="mb-3">
-                                    <a class="btn btn-primary p-1 mt-3" href="{% url 'posts:detail' post.pk %}">Ver publicacíón</a>
-                                </p>
+                                </div>
+                                <!-- Contenido del post -->
+                                <div class="col-md-7 col-lg-6 mb-1 d-flex flex-column justify-content-between">
+                                    <!-- Foto de perfil -->
+                                    <div class="d-flex align-items-center mb-2">
+                                        <img src="{{ post.user.profile.profile_picture.url }}" 
+                                            alt="Foto de {{ post.user.username }}"
+                                            class="rounded-circle me-2"
+                                            style="width: 60px; height: 60px; object-fit: cover;">
+                                        <div>
+                                            <p class="mb-0 text-muted small">
+                                                <strong>{{ post.user.username }}</strong> • Hace {{ post.created_at|timesince_short }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Título del post -->
+                                    <p lang="{{ post.language }}" class="mb-2 h5 text-primary">{{ post.title }}</p>
+
+                                    <!-- Tags -->
+                                    <p class="mb-2">
+                                        {% for tag in post.tags.all %}
+                                            <span class="badge bg-primary">{{ tag.name }}</span>
+                                        {% endfor %}
+                                    </p>
+
+                                    <!-- Reacciones -->
+                                    <div class="d-flex align-items-center mb-3">
+                                        {% if request.user in post.likes.all %}
+                                            <a href="{% url 'posts:like_ajax' post.pk %}" data-post-id="{{ post.pk }}" class="like-button me-3 text-decoration-none">
+                                                <i class="bi bi-heart-fill text-danger"></i>
+                                                <span class="ms-1 n-likes" data-post-id="{{ post.pk }}">{{ post.likes.count }}</span>
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url 'posts:like_ajax' post.pk %}" data-post-id="{{ post.pk }}" class="like-button me-3 text-decoration-none">
+                                                <i class="bi bi-heart text-danger"></i>
+                                                <span class="ms-1 n-likes" data-post-id="{{ post.pk }}">{{ post.likes.count }}</span>
+                                            </a>
+                                        {% endif %}
+
+                                        <span class="comment text-muted"><i class="bi bi-chat-dots-fill me-1"></i> {{ post.comments.count }}</span>
+                                    </div>
+
+                                    <!-- Botón de ver publicación -->
+                                    <a class="btn btn-sm btn-outline-primary" href="{% url 'posts:detail' post.pk %}">Ver publicación</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% endif %}
                 </ul>
             </div>
         </div>

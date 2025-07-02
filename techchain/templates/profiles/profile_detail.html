@@ -3,7 +3,7 @@
 
 {% block styles %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/profile_detail.css' %}" />
+    <link rel="stylesheet" href="{% static "css/profile_detail.css" %}">
 {% endblock %}
 {% block title %}Perfil{% endblock %}
 {% block title_h1 %}
@@ -17,46 +17,50 @@
 {% block content %}
     <div class="container m-auto">
         <div class="row">
-            <!-- Menú vertical -->
-            <div class="col-2 menu-container">
+            <!-- Botón para mostrar el menú (solo visible en móvil) -->
+            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+            <i class="bi bi-list"></i> Menú
+            </button>
+            <!-- Menú colapsable -->
+            <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
-                        <i class="bi bi-house"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'home' %}">Inicio</a>
+                    <i class="bi bi-house"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'home' %}">Inicio</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-chat-square-text"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'chat:chat_rooms' %}">Chats</a>
+                    <i class="bi bi-bell"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people-fill"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                    <i class="bi bi-chat-square-text"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-people"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:following' user_id %}">Seguidos</a>
+                    <i class="bi bi-people-fill"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-postcard-heart"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                    <i class="bi bi-people"></i>
+                    <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_id %}">Seguidos</a>
                     </li>
                     <li class='p-2'>
-                        <i class="bi bi-file-earmark-plus"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:create' user_id %}">Crear</a>
+                    <i class="bi bi-postcard-heart"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_id %}">Publicaciones</a>
                     </li>
-                    </ul>
+                    <li class='p-2'>
+                    <i class="bi bi-file-earmark-plus"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
+                    </li>
+                </ul>
             </div>
 
             <!-- Información del perfil -->
-            <div class="col-10 profile-container">
-                <div class="profile-card">
+            <div class="col-12 col-md-12 col-lg-9">
+                <div class="row">
+                   <div class="profile-card col-md-12 col-lg-6">
                     <img 
                     src="{{object.profile_picture.url}}" 
-                    style="width: 100px;
-                    height: 100px;
-                    border-radius: 50%;
-                    object-fit: cover;
-                    align-self: center"
                     alt="Foto de Perfil">
                     <div class="card-body text-center">
                         <h5 class="card-title">@{{object.user.username}}</h5>
@@ -67,11 +71,12 @@
                             <strong>{{object.followers.count}}</strong> seguidos
                         </p>
                         <p class="card-text">{{object.bio}}</p>
-                        {% if request.user.is_authenticated %}
+                        <div class="d-flex flex-row gap-2 justify-content-center">
+                         {% if request.user.is_authenticated %}
                             {% if object.user != request.user %}
                                 <form action="{% url 'profiles:toggle_follow' user_id=object.user.id %}" method="post">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary btn-sm">
                                         {% if object.user.profile in request.user.profile.followers.all %}
                                             Dejar de seguir
                                         {% else %}
@@ -81,12 +86,14 @@
                                 </form>                            
                             {% else %}
                                 <!-- Si es el propio perfil del usuario autenticado -->
-                                <a href="{% url 'profiles:update' user_id %}" class="btn btn-primary mb-2">Editar Perfil</a>
+                                <p><a href="{% url 'profiles:update' user_id %}" class="btn btn-primary mb-2">Editar Perfil</a></p>
+                                <p><a href="{% url 'posts:create' user_id %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Crear</a>
                             {% endif %}
-                        {% endif %}
+                        {% endif %}   
+                        </div>
                     </div>
                 </div>
-                <div class="list_group">
+                <div class="list_group col-auto col-lg-6">
                     <h3 class="subtitle m-3">Publicaciones</h3>
                     {% for post in posts %}
                         <div class="list-group-item d-flex align-items-center p-3">
@@ -99,14 +106,14 @@
                                 <p class="mb-3"><strong>{{post.title}}</strong></p>
                             </div>
                             <p class="m-3">
-                                <a class="btn btn-primary p-2" href="{% url 'posts:detail' post.pk %}">Ver</a>
+                                <button class="btn btn-outline-primary btn-sm">
+                                 <a class="text-decoration-none" href="{% url 'posts:detail' post.pk %}">Ver</a>   
+                                </button>
                             </p>
                         </div>
-                        {% endfor %}
-                        {% if request.user == object.user %}
-                        <p class='text-end'><a href="{% url 'posts:create' user_id %}" class="btn btn-primary mt-2"><i class="bi bi-plus-lg"></i> Crear</a>
-                            {% endif %}
+                    {% endfor %}
                     </p>
+                </div> 
                 </div>
             </div>
         </div>

@@ -2,13 +2,64 @@
 {% block styles %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/chat.css' %}?v=1.4">
+    <style>
+        .day-label {
+        text-align: center;
+        background-color: #e2e2e2;
+        color: #555;
+        font-weight: 600;
+        padding: 6px 12px;
+        margin: 15px 0 10px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        user-select: none;
+    }
+    </style>
 {% endblock %}
 {% block title %}Chats{% endblock %}
 {% block title_h1 %}Tus Chats{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-3">
+        <!-- Botón para mostrar el menú (solo visible en móvil) -->
+        <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+        <i class="bi bi-list"></i> Menú
+        </button>
+
+        <!-- Menú colapsable -->
+        <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
+            <ul class="list-unstyled d-flex flex-column p-2">
+                <li class='p-2'>
+                <i class="bi bi-person-circle"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-bell"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-chat-square-text"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-people-fill"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-people"></i>
+                <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_id %}">Seguidos</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-postcard-heart"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-file-earmark-plus"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-3 col-lg-3">
             <h4>Chats recientes</h4>
             <div class="list-group chatrooms mb-3">
                 {% for chat in chat_rooms %}
@@ -34,7 +85,7 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="col-md-9 p-3">
+        <div class="col-md-9 p-3 col-lg-6">
             <div class="m-2 d-flex gap-2">
                 {% for user in room_usernames %}
                     <div class="m-2">
@@ -68,9 +119,11 @@
                     
                 {% endfor %}
             </div>
-            <div class="input-group m-2">
+            <div class="input-group mt-2">
                 <input class="form-control" type="text" id="message-input" placeholder="Mensaje...">
-                <button class="btn btn-outline-primary" id="send-button">Enviar</button></input>
+                <button class="btn btn-outline-primary" id="send-button" type="button" title="Enviar">
+                    <i class="bi bi-send"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -90,16 +143,16 @@
         const chatBox = document.getElementById("chat-box");
         const messageInput = document.getElementById("message-input");
         const sendButton = document.getElementById("send-button");
-        const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-
+        
         // Conectar WebSocket
-        const socket = new WebSocket(`${protocol}://${window.location.host}/ws/chat/${roomName}/`);
+        const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${roomName}/`);
+
+        let lastMessageDate = null;
 
         socket.onmessage = function(event) {
             const data = JSON.parse(event.data);
 
             if (data.type === "online_users") {
-                // Cargar todos los usuarios online al abrir el chat
                 data.users.forEach(user => {
                     const userStatusElement = document.getElementById(`status-${user}`);
                     if (userStatusElement) {
@@ -107,7 +160,6 @@
                     }
                 });
             }
-
             else if (data.type == 'user_status') {
                 const userStatusElement = document.getElementById(`status-${data.user}`);
                 if (data.is_online) {
@@ -116,75 +168,178 @@
                     } catch (error) {
                         console.error("Error al actualizar el estado del usuario:", error);
                     }
-
-                } else if (data.is_online == false) {
+                } else {
                     try {
                         userStatusElement.innerText = 'Desconectado';
                     } catch (error) {
                         console.error("Error al actualizar el estado del usuario:", error);
                     }
                 }
-            } 
-            
-            else if (data.type = 'chat_message') {
-                //Formatea la hora a un formato legible
-                const formatedTimestamp = new Date(data.timestamp).toLocaleTimeString(
-                    'es-ES', 
-                    { hour: '2-digit', minute: '2-digit', hour12: false }
-                );  
-    
-                if (username == data.username) {
-                    chatBox.innerHTML += 
-                    `<div class="message sent">
-                        ${data.message} 
-                        <span class="timestamp">${formatedTimestamp}</span>
-                    </div>`;
-                } else {
-                    chatBox.innerHTML += 
-                    `<div class="message received">
-                        <img 
-                        src="../../../profiles/media/" 
-                        alt="{{ msg.sender }}"
-                        class="rounded-circle mr-3"
-                        width="25" height="25"
-                        >
-                        ${data.message} 
-                        <span class="timestamp">${formatedTimestamp}</span>
-                    </div>`;
-                }
-
-
-
             }
-            
+            else if (data.type === 'chat_message') {
+                addMessage(data);
+            }
 
             chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll hacia abajo
         };
 
-        document.addEventListener('keydown', function(event) {
-            if (event.key === "Enter") {
+        function addMessage(data) {
+            const msgDate = new Date(data.timestamp);
+            const msgDateString = msgDate.toDateString();
+
+            // Insertar etiqueta de día si cambia
+            if (lastMessageDate !== msgDateString) {
+                const dayLabel = document.createElement("div");
+                dayLabel.classList.add("day-label");
+                dayLabel.textContent = formatDayLabel(msgDate);
+                chatBox.appendChild(dayLabel);
+                lastMessageDate = msgDateString;
+            }
+
+            const formatedTimestamp = msgDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+            let msgElement = document.createElement("div");
+
+            if (username === data.username) {
+                msgElement.classList.add("message", "sent");
+                msgElement.innerHTML = `
+                    ${data.message} 
+                    <span class="timestamp">${formatedTimestamp}</span>
+                `;
+            } else {
+                msgElement.classList.add("message", "received");
+                msgElement.innerHTML = `
+                    <img 
+                        src="${data.profile_picture}"
+                        alt="${data.username}"
+                        class="rounded-circle mr-3"
+                        width="25" height="25"
+                    >
+                    ${data.message} 
+                    <span class="timestamp">${formatedTimestamp}</span>
+                `;
+            }
+
+            chatBox.appendChild(msgElement);
+        }
+
+        function formatDayLabel(date) {
+            const today = new Date();
+            const yesterday = new Date();
+            yesterday.setDate(today.getDate() - 1);
+
+            if (date.toDateString() === today.toDateString()) return "Hoy";
+            if (date.toDateString() === yesterday.toDateString()) return "Ayer";
+
+            return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+        }
+
+        sendButton.onclick = function() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            if (socket.readyState === WebSocket.OPEN) {
+                const timestamp = new Date().toISOString();  // Enviar en formato ISO con zona
+
+                socket.send(JSON.stringify({
+                    type: "chat_message", 
+                    message: message,
+                    username: username,
+                    timestamp: timestamp,
+                }));
+
+                messageInput.value = "";
+            } else {
+                console.error("El socket no está conectado. Intenta más tarde.");
+            }
+        };
+        messageInput.addEventListener("keydown", function(event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
                 sendButton.click();
             }
         });
-        
-        sendButton.onclick = function() {
-            const message = messageInput.value.trim();
-            if (message) {
-                // Verifica si el socket está conectado antes de enviar
-                if (socket.readyState === WebSocket.OPEN) {
-                    const timestamp = new Date().toISOString(); // O usa el formato que prefieras
-                    socket.send(JSON.stringify({ message, username, timestamp }));
-                    messageInput.value = "";  // Limpiar input
-                } else {
-                    console.error("El socket no está conectado. Intenta nuevamente más tarde.");
-                }
-            }
-        };
-        
 
-        document.addEventListener('DOMContentLoaded', function() {
-            chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll hacia abajo
-        });
 
+    </script>
+    <script>
+    function toggleNavbar() {
+        const toggleIcon = document.querySelector('.toggle-navbar-icon');
+        const navbar = document.getElementById('navbar');
+
+        navbar.toggleAttribute('hidden');
+        if (toggleIcon.classList.contains('opened')) {
+            toggleIcon.classList.remove('opened');
+        } else {
+            toggleIcon.classList.add('opened')
+        }
+    }
+
+    const toggleBtn = document.getElementById('menuToggleBtn');
+    const sidebar = document.getElementById('sidebarMenu');
+
+    sidebar.addEventListener('show.bs.collapse', () => {
+        toggleBtn.classList.remove('btn-outline-primary');
+        toggleBtn.classList.add('btn-primary');
+    });
+
+    sidebar.addEventListener('hide.bs.collapse', () => {
+        toggleBtn.classList.remove('btn-primary');
+        toggleBtn.classList.add('btn-outline-primary');
+    });
+
+    const navbarIcon = document.getElementById("navbar-icon");
+    let lastScrollY = window.scrollY;
+    let hideTimeout;
+    let inactivityTimeout;
+
+    function showIcon() {
+        navbarIcon.classList.remove("hidden", "none");
+        clearTimeout(hideTimeout);
+        clearTimeout(inactivityTimeout);
+        startInactivityTimer();
+    }
+
+    function hideIconWithDelay() {
+        navbarIcon.classList.add("hidden");
+        hideTimeout = setTimeout(() => {
+        navbarIcon.classList.add("none");
+        }, 2000);
+    }
+
+    function startInactivityTimer() {
+        inactivityTimeout = setTimeout(() => {
+        hideIconWithDelay();
+        }, 2000);
+    }
+
+    // Reiniciar temporizador si hay interacción con el icono
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimeout);
+        showIcon();
+    }
+
+    // Eventos que cuentan como interacción
+    navbarIcon.addEventListener("mouseenter", resetInactivityTimer);
+    navbarIcon.addEventListener("mouseleave", resetInactivityTimer);
+    navbarIcon.addEventListener("click", resetInactivityTimer);
+    navbarIcon.addEventListener("touchstart", resetInactivityTimer);
+
+    window.addEventListener("scroll", () => {
+        const currentScroll = window.scrollY;
+
+        if (window.innerWidth < 768) {
+        if (currentScroll === 0) {
+            showIcon();
+        } else if (currentScroll > lastScrollY) {
+            hideIconWithDelay();
+        }
+        }
+
+        lastScrollY = currentScroll;
+    });
+
+    // Inicializamos timer al cargar página
+    startInactivityTimer()
     </script>
 {% endblock %}

@@ -1,5 +1,5 @@
 
-img {
+img#techchain-logo {
     width: 400px;
     animation: rotate 6s linear infinite; /* Ajusta la duración y el tipo de animación */
 }
@@ -83,4 +83,77 @@ form {
     color: white;
 }
 
+@media (min-width: 320px) and (max-width: 768px) {
+    #main-header {
+        font-size: 18px;
+    }
 
+    img#techchain-logo {
+        width: 250px;
+    }
+
+    h1.title {
+        text-align: center;
+        width: 100%;
+        font-size: 40px;
+        margin-bottom: 0px;
+        margin-top: 30px;
+    }
+
+    h2 {
+        font-size: 30px;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px;
+
+        img {
+            width: 300px;
+            height: auto;
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .title {
+        text-align: center;
+        font-size: 50px;
+        margin-bottom: 50px;
+    }
+
+    h2 {
+        text-align: start;
+    }
+
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px;
+
+        img {
+            width: 300px;
+            height: auto;
+        }
+    }
+}
+
+@media (min-width: 1025px) {
+    .main-container {
+        display: flex;
+        flex-direction: row;
+        gap: 100px;
+        padding: 20px;
+
+        img {
+            width: 300px;
+            height: auto;
+        }
+    }
+    
+}

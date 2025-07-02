@@ -1,14 +1,15 @@
-<div class="header-hover-zone"></div>
-<header id="main-header" class="bg-dark">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<header id="main-header" class="bg-dark"> 
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark" hidden>
         {% block menu %}
         <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'home' %}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'explore' %}">Explorar</a>
-            </li>
+            {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'explore' %}">Explorar</a>
+                </li>
+            {% endif %}
             {% if not request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
@@ -26,7 +27,13 @@
         </ul>
         {% endblock %}
     </nav>
+    <div class="toggle-navbar">
+        <button class="toggle-navbar-button" onclick="toggleNavbar()">
+          <img id="navbar-icon" class="toggle-navbar-icon" src="/static/icons/arrow-down.svg" />   
+        </button>
+    </div>
 </header>
+
 {% comment %} <form action="{% url 'set_language' %}" method="post">
     {% csrf_token %}
     <select name="language">
@@ -39,4 +46,4 @@
             </select>
             <input type="hidden" name="next" value="{{ request.path }}">
             <button type="submit">Cambiar idioma</button>
-            </form> {% endcomment %}
+            </form>{% endcomment %}

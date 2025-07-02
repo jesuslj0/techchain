@@ -10,7 +10,7 @@
 
 {% block content %}
     <div class="main-container">
-        <img src="/static/icons/android-chrome-512x512.png" alt="logo" />
+        <img id="techchain-logo" src="/static/icons/android-chrome-512x512.png" alt="logo" />
         <div class="content-container">
             <h2>Conectando con el futuro.</h2>
             <h3>Únete ahora</h3>
@@ -48,6 +48,32 @@
       localStorage.removeItem('rememberedUser');
     }
   });
+
+  function toggleNavbar() {
+    const toggleIcon = document.querySelector('.toggle-navbar-icon');
+    const navbar = document.getElementById('navbar');
+
+    navbar.toggleAttribute('hidden');
+      if (toggleIcon.classList.contains('opened')) {
+          toggleIcon.classList.remove('opened');
+      } else {
+          toggleIcon.classList.add('opened')
+      }
+  }
+
+  const toggleBtn = document.getElementById('menuToggleBtn');
+  const sidebar = document.getElementById('sidebarMenu');
+
+  sidebar.addEventListener('show.bs.collapse', () => {
+      toggleBtn.classList.remove('btn-outline-primary');
+      toggleBtn.classList.add('btn-primary');
+  });
+
+  sidebar.addEventListener('hide.bs.collapse', () => {
+      toggleBtn.classList.remove('btn-primary');
+      toggleBtn.classList.add('btn-outline-primary');
+  });
+
 </script>
 
 {% endblock%}
