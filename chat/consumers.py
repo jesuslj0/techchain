@@ -3,8 +3,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import get_user_model
 from asgiref.sync import sync_to_async
 import redis.asyncio as aioredis
-from time import localtime
-
+from django.utils.timezone import localtime
 import re #Expresiones regulares
 
 REDIS_URL = "redis://127.0.0.1:6379"

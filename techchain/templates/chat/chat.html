@@ -152,6 +152,7 @@
         let lastMessageDate = null;
 
         socket.onmessage = function(event) {
+            console.log('En funcion socket.onmessage');
             const data = JSON.parse(event.data);
 
             if (data.type === "online_users") {
@@ -179,6 +180,7 @@
                 }
             }
             else if (data.type === 'chat_message') {
+                console.log("Mensaje captado")
                 addMessage(data);
             }
 
@@ -223,6 +225,7 @@
             }
 
             chatBox.appendChild(msgElement);
+            console.log('Mensaje escrito en el DOM')
         }
 
         function formatDayLabel(date) {
