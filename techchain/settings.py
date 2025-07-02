@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'prose',
     'rest_framework',
     
+    'techchain',
     'profiles',
     'posts',
     'chat',
@@ -158,7 +159,7 @@ LOGOUT_REDIRECT_URL = 'logout'  # Redirige después del cierre de sesión
 
 LANGUAGE_CODE = 'es-ES'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Madrid'
 
 USE_I18N = True
 
