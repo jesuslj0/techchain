@@ -147,7 +147,7 @@
         // Conectar WebSocket
         const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'; // Ver si hay protocolo seguro
 
-        const socket = new WebSocket(`${protocol}://${window.location.host}/ws/chat/${roomName}/`);
+        const socket = new WebSocket(`${protocol}://${window.location.host}/ws/chat/${encodeURIComponent(roomName)}/`);
 
         let lastMessageDate = null;
 
