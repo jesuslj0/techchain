@@ -145,7 +145,7 @@
         const sendButton = document.getElementById("send-button");
         
         // Conectar WebSocket
-        const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${roomName}/`);
+        const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${encodeURIComponent(roomName)}/`);
 
         let lastMessageDate = null;
 
