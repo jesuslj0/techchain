@@ -12,7 +12,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         # Convertir a minúsculas y reemplazar espacios y caracteres especiales por "_"
-        self.room_group_name = f"chat_{re.sub(r'[^a-zA-Z0-9]', '_', self.room_name.lower())}"
+        safe_room_name = re.sub(r'\W+', '_', self.room_name.lower())
+        self.room_group_name = f"chat_{safe_room_name}"
         self.user = self.scope['user']
 
         if self.user.is_authenticated:
