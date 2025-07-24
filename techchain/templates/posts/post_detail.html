@@ -54,10 +54,17 @@
                 <!-- Usuario y fecha -->
                 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
                 <div class="d-flex align-items-center mb-2">
+                    {% if post.user.profile.profile_picture %}
                     <img src="{{ post.user.profile.profile_picture.url }}"
                         class="me-2 rounded-circle"
                         style="width: 60px; height: 60px; object-fit: cover;"
                         alt="Profile Image">
+                    {% else %}
+                     <img src="/static/icons/default-user.png"
+                        class="me-2 rounded-circle"
+                        style="width: 60px; height: 60px; object-fit: cover;"
+                        alt="Profile Image">
+                    {% endif %}
                     <div class="d-flex flex-column">
                      <span class="me-2">{{ post.user.first_name}} {{ post.user.last_name }}</span>
                      <strong class="me-2">@{{ post.user.username }}</strong>

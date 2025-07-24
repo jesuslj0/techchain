@@ -9,34 +9,51 @@
     <span class="title">Descubre lo más nuevo</span>
 {% endblock %}
 {% block content %}
-    <hr />
     <div class='container'>
         <div class="row">
-            <div class="col-2">
-                <ul class="list-unstyled d-flex flex-column p-2">
-                    <li class='p-2'>
-                        <i class="bi bi-person-circle"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:detail' user_id %}">Mi Perfil</a>
-                    </li>
-                    <li class='p-2'>
-                        <i class="bi bi-people-fill"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'profiles:followers' user_id %}">Seguidores</a>
-                    </li>
-                    <li class='p-2'>
-                        <i class="bi bi-people"></i>
-                        <a class="mb-2 text-decoration-none text-dark " href="{% url 'profiles:following' user_id %}">Seguidos</a>
-                    </li>
-                    <li class='p-2'>
-                        <i class="bi bi-postcard-heart"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:list' user_id %}">Publicaciones</a>
-                    </li>
-                    <li class='p-2'>
-                        <i class="bi bi-file-earmark-plus"></i>
-                        <a class="mb-5 text-decoration-none text-dark " href="{% url 'posts:create' user_id %}">Crear</a>
-                    </li>
-                </ul> 
-            </div>
-            <div class="col-7">
+            <!-- Botón para mostrar el menú (solo visible en móvil) -->
+            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+            <i class="bi bi-list"></i> Menú
+            </button>
+
+<!-- Menú colapsable -->
+        <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
+            <ul class="list-unstyled d-flex flex-column p-2">
+                <li class='p-2'>
+                <i class="bi bi-house"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'home' %}">Inicio</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-person-circle"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-bell"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-chat-square-text"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-people-fill"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-people"></i>
+                <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_id %}">Seguidos</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-postcard-heart"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-file-earmark-plus"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
+                </li>
+            </ul>
+        </div>
+            <div class="col-12 col-md-7 col-lg-6">
                 <h2 class="subtitle">Últimas noticias</h2>
                 <ul class="list-group">
                     {% for post in posts %}
@@ -68,11 +85,16 @@
                                 </p>
 
                                 <a href="{% url 'posts:detail' post.pk%}">
-                                    <img src="../posts{{post.image.url}}" class="img-fluid" alt="Imagen del post">
+                                    <img src="{{post.image.url}}" class="img-fluid" alt="Imagen del post">
                                 </a>
                                 <div class="m-2 text-muted small">
-                                    <img src="../posts{{post.user.profile.profile_picture.url}}" 
-                                    style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;">
+                                    {% if post.user.profile.profile_picture %}
+                                        <img src="{{post.user.profile.profile_picture.url}}" 
+                                        style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;">
+                                    {% else %}
+                                        <img src="/static/icons/default-user.png" 
+                                        style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;">
+                                    {% endif %}
                                     <strong>{{post.user.username}}</strong> Hace {{post.created_at|timesince|slice:":10"}}
                                     <a class="btn btn-primary p-1 mt-3 ms-3" href="{% url 'posts:detail' post.pk %}"
                                     >Ver publicacíón</a>
@@ -83,16 +105,24 @@
                     {% endfor %}
                 </ul>
             </div>
-            <div class="col-3">
+            <div class="col-md-5 col-12 col-lg-3">
                 <ul class="list-group display-flex gap-2">
                     <p class="h4" style="font-family: 'Newsreader-Regular'; ">Usuarios para ti</p>
                  {% for user in users %}
                     <div class="list-group-item p-1 display-flex rounded-5">
+                        {% if user.profile_picture %}
                         <img 
-                            src="../posts{{user.profile_picture.url}}" 
+                            src="{{user.profile_picture.url}}" 
                             style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;"
                             alt="{{user.user.username}}"
                         >
+                        {% else %}
+                        <img 
+                            src="/static/icons/default-user.png" 
+                            style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;"
+                            alt="{{user.user.username}}"
+                        >
+                        {% endif %}
                         <a href="{% url 'profiles:detail' user.user.id %}">{{user.user.username}}</a>
                     </div>
                  {% endfor %}   

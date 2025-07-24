@@ -30,6 +30,10 @@
         <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
             <ul class="list-unstyled d-flex flex-column p-2">
                 <li class='p-2'>
+                <i class="bi bi-house"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'home' %}">Inicio</a>
+                </li>
+                <li class='p-2'>
                 <i class="bi bi-person-circle"></i>
                 <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
                 </li>
@@ -67,7 +71,7 @@
                         <div class="list-group-item">
                             {% for user in chat.users.all %}
                                 {% if user != request.user.profile %}
-                                    {{ user|capfirst }}
+                                    {{ user }}
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -105,11 +109,19 @@
                                 </div>
                             {% else %}
                                 <div class="message received">
-                                    <img 
-                                    src="{{ profile.profile_picture.url }}" 
-                                    alt="{{ msg.sender }}"
-                                    class="rounded-circle mr-3"
-                                    width="25" height="25">
+                                    {% if profile.profile_picture %}
+                                        <img 
+                                        src="{{ profile.profile_picture.url }}" 
+                                        alt="{{ msg.sender }}"
+                                        class="rounded-circle mr-3"
+                                        width="25" height="25">
+                                    {% else %}
+                                        <img
+                                        src="/static/icons/default-user.png" 
+                                        alt="{{ msg.sender }}"
+                                        class="rounded-circle mr-3"
+                                        width="25" height="25">
+                                    {% endif %}
                                     {{ msg.content }}
                                     <span class="timestamp">{{ msg.timestamp|date:"H:i" }}</span>
                                 </div>

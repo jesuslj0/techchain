@@ -59,9 +59,15 @@
             <div class="col-12 col-md-12 col-lg-9">
                 <div class="row">
                    <div class="profile-card col-md-12 col-lg-6">
+                    {% if object.profile_picture %}
                     <img 
                     src="{{object.profile_picture.url}}" 
-                    alt="Foto de Perfil">
+                    alt="Foto de Perfil de {{ object.user.username }}">
+                    {% else %}
+                    <img 
+                    src="/static/icons/default-user.png" 
+                    alt="Foto de Perfil de {{ object.user.username }}">
+                    {% endif %}
                     <div class="card-body text-center">
                         <h5 class="card-title">@{{object.user.username}}</h5>
                         <p class="card-subtitle text-muted" style="margin-bottom: 20px">{{object.user.first_name}} {{object.user.last_name}}</p>
@@ -83,7 +89,12 @@
                                             Seguir
                                         {% endif %}
                                     </button>
-                                </form>                            
+                                </form>   
+                                <div>
+                                    <a href="{% url 'chat:new_chat' object.user.id %}" class="btn btn-primary btn-sm">
+                                        Enviar mensaje <i class="bi bi-send"></i>
+                                    </a>
+                                </div>                         
                             {% else %}
                                 <!-- Si es el propio perfil del usuario autenticado -->
                                 <p><a href="{% url 'profiles:update' user_id %}" class="btn btn-primary mb-2">Editar Perfil</a></p>
