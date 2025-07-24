@@ -53,11 +53,19 @@
                     {% for item in profiles %}
                         <li class="list-group-item d-flex align-items-center justify-content-between flex-wrap p-3">
                             <div class="d-flex align-items-center">
-                                <img 
-                                    src="{{ item.profile_picture.url }}" 
-                                    alt="imagen de perfil"
-                                    class="rounded-circle me-3"
-                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                {% if item.profile_picture %}
+                                    <img 
+                                        src="{{ item.profile_picture.url }}"
+                                        alt="imagen de perfil"
+                                        class="rounded-circle me-3"
+                                        style="width: 50px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                    <img 
+                                        src="/static/icons/default-user.png"
+                                        alt="imagen de perfil"
+                                        class="rounded-circle me-3"
+                                        style="width: 50px; height: 50px; object-fit: cover;">
+                                {% endif %}
                                 <div class="d-flex flex-column">
                                     <a href="{% url 'profiles:detail' item.profile.user.id %}" class="fw-semibold text-decoration-none text-dark">
                                         {{ item.profile.user.username }}
