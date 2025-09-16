@@ -147,6 +147,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'profiles.User'  # Modelo de usuario personalizado
+
 LOGIN_REDIRECT_URL = '/'  # Redirige después del inicio de sesión exitoso
 LOGOUT_REDIRECT_URL = 'logout'  # Redirige después del cierre de sesión
 
