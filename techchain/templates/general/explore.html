@@ -25,7 +25,7 @@
                 </li>
                 <li class='p-2'>
                 <i class="bi bi-person-circle"></i>
-                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' user_uuid %}">Mi Perfil</a>
                 </li>
                 <li class='p-2'>
                 <i class="bi bi-bell"></i>
@@ -37,19 +37,19 @@
                 </li>
                 <li class='p-2'>
                 <i class="bi bi-people-fill"></i>
-                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
                 </li>
                 <li class='p-2'>
                 <i class="bi bi-people"></i>
-                <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_id %}">Seguidos</a>
+                <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
                 </li>
                 <li class='p-2'>
                 <i class="bi bi-postcard-heart"></i>
-                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_id %}">Publicaciones</a>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
                 </li>
                 <li class='p-2'>
                 <i class="bi bi-file-earmark-plus"></i>
-                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_uuid %}">Crear</a>
                 </li>
             </ul>
         </div>
@@ -123,7 +123,7 @@
                             alt="{{user.user.username}}"
                         >
                         {% endif %}
-                        <a href="{% url 'profiles:detail' user.user.id %}">{{user.user.username}}</a>
+                        <a href="{% url 'profiles:detail' user.user.uuid %}">{{user.user.username}}</a>
                     </div>
                  {% endfor %}   
                 </ul>

@@ -1,14 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 import uuid
 
 # Usuario personalizado con uuid
 class User(AbstractUser):
-    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False, unique=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
 # Create your models here.
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     profile_picture = models.ImageField('Imagen de perfil', upload_to='profiles/profile_pictures/', blank=True, null=True)
     bio = models.TextField('Biografía', max_length=500, blank=True, null=True)
     birth_date = models.DateField('Fecha de nacimiento', blank=True, null=True)

@@ -1,7 +1,8 @@
 from django.views.generic import DetailView, ListView, UpdateView
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from .models import UserProfile, Follow
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from django.urls import reverse_lazy
 from techchain.forms import UserProfileForm
 from django.shortcuts import redirect, get_object_or_404
@@ -18,8 +19,8 @@ from django.views.decorators.csrf import csrf_exempt
 class ProfileDetailView(DetailView):
     model = UserProfile
     template_name = 'profiles/profile_detail.html'
-    slug_field = 'user_id'
-    slug_url_kwarg = 'user_id'
+    slug_field = 'user__uuid'
+    slug_url_kwarg = 'user_uuid'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -31,12 +32,13 @@ class ProfileUpdateView(UpdateView):
     model = UserProfile
     template_name = 'profiles/profile_update.html'
     form_class = UserProfileForm
-    pk_url_kwarg = 'user_id'
-    slug_field = 'user_id'
-    
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile
+
     def get_success_url(self):
-        messages.success(self.request, 'Perfil actualizado correctamente!');
-        return reverse_lazy('profiles:detail', kwargs={'user_id': self.request.user.id})
+        messages.success(self.request, 'Perfil actualizado correctamente!')
+        return reverse_lazy('profiles:detail', kwargs={'user_uuid': self.request.user.uuid})
 
 class ProfilesSearch(ListView):
     model = UserProfile
@@ -80,16 +82,13 @@ class FollowersView(ListView):
     context_object_name = 'followers'
 
     def get_queryset(self):
-        # Obtener el usuario actual a través del parámetro de la URL
-        user_id = self.kwargs.get('user_id')
-        # Filtrar los seguidores de ese usuario
-        return Follow.objects.filter(followed__id=user_id).select_related('follower', 'followed')
+        user_uuid = self.kwargs.get('user_uuid')
+        return Follow.objects.filter(followed__user__uuid=user_uuid).select_related('follower', 'followed')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Añadir el usuario actual al contexto
-        user_id = self.kwargs.get('user_id')
-        context['user'] = get_object_or_404(UserProfile, id=user_id)
+        user_uuid = self.kwargs.get('user_uuid')
+        context['user'] = get_object_or_404(UserProfile, user__uuid=user_uuid)
         return context
     
 class FollowingView(ListView):
@@ -98,22 +97,14 @@ class FollowingView(ListView):
     context_object_name = 'following'
 
     def get_queryset(self):
-        # Obtener el usuario actual a través del parámetro de la URL
-        user_id = self.kwargs.get('user_id')
-        # Filtrar los seguidos por ese usuario
-        following = Follow.objects.filter(follower__id=user_id).select_related('followed')
+        user_uuid = self.kwargs.get('user_uuid')
+        following = Follow.objects.filter(follower__user__uuid=user_uuid).select_related('followed')
         return following
-        # Envia directamente los objetos de following al contexto
-        #Debugg
-                # for i in context['following']:
-                #     print(i.followed.user.username)
-                #     print('le sigues desde')
-                #     print(i.follow_up_date)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Añadir el usuario actual al contexto
-        user_id = self.kwargs.get('user_id')
-        context['user'] = get_object_or_404(UserProfile, id=user_id)
+        user_uuid = self.kwargs.get('user_uuid')
+        context['user'] = get_object_or_404(UserProfile, user__uuid=user_uuid)
         return context
 
 
@@ -153,20 +144,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
 @login_required
-def toggle_follow(request, user_id):
-    user_profile = get_object_or_404(UserProfile, user_id=user_id)
+def toggle_follow(request, user_uuid):
+    user_profile = get_object_or_404(UserProfile, user__uuid=user_uuid)
     if request.user.profile != user_profile:
-        # Comprobar si ya está siguiendo
         follow_record = Follow.objects.filter(follower=request.user.profile, followed=user_profile)
-
         if follow_record.exists():
-            # Si ya está siguiendo, eliminar el seguimiento
             follow_record.delete()
         else:
-            # Si no está siguiendo, crear un nuevo seguimiento
             Follow.objects.create(follower=request.user.profile, followed=user_profile)
-
-    return redirect('profiles:detail', user_id=user_id)
+    return redirect('profiles:detail', user_uuid=user_uuid)
 
 @login_required
 @csrf_exempt  # 🔹 Permitir solicitudes AJAX sin CSRF manual

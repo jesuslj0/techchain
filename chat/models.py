@@ -1,5 +1,6 @@
 from django.db import models
 from profiles.models import UserProfile
+from django.conf import settings
 from uuid import uuid4
 
 class ChatRoom(models.Model):

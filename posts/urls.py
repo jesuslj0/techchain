@@ -6,8 +6,8 @@ from .views import PostsListView, PostsCreateView, PostDeleteView, PostDetailVie
 app_name = 'posts'
 
 urlpatterns = [
-    path('<int:user_id>/list', login_required(PostsListView.as_view()), name='list',),
-    path('<int:user_id>/create', login_required(PostsCreateView.as_view()), name='create',),
+    path('<uuid:user_uuid>/list', login_required(PostsListView.as_view()), name='list',),
+    path('<uuid:user_uuid>/create', login_required(PostsCreateView.as_view()), name='create',),
     path('<int:pk>/delete', login_required(PostDeleteView.as_view()), name='delete'),
     path('<int:pk>/detail', login_required(PostDetailView.as_view()), name='detail'),
     path('<int:pk>/like', like_post_ajax, name='like_ajax'),

@@ -61,13 +61,10 @@ class ChatView(TemplateView):
         context = super().get_context_data(**kwargs)
         room = ChatRoom.objects.get(id=self.kwargs['room_id'])
 
-        usernames = room.users.exclude(
-            id=self.request.user.profile.id
-        ).values_list('user__username', flat=True)
+        usernames = room.users.values_list('user__username', flat=True).exclude(id=self.request.user.profile.id)    
 
         context['room_name'] = room.name # Nombre para conectar el websocket
-        context['room_usernames'] = list(usernames) # Lista de usuarios del chat
-
+        context['room_usernames'] = usernames # Lista de usuarios del chat
         context['chat_messages'], context['chat_rooms'], context['profiles'], context['group_chats'] = self.get_queryset()
         return context
     

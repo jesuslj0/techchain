@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from prose.fields import RichTextField
 
 # Create your models here.
@@ -25,13 +25,13 @@ class Tag(models.Model):
         return self.get_name_display() 
 
 class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', verbose_name='Usuario')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts', verbose_name='Usuario')
     image = models.ImageField(upload_to='posts/posts_images/', verbose_name='Imagen')
     title = models.TextField(max_length=500, blank=False, verbose_name='Titulo')
     content = RichTextField(verbose_name='Contenido')
     tags = models.ManyToManyField('Tag', related_name="posts")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
-    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True, verbose_name='Nº de Likes')
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_posts', blank=True, verbose_name='Nº de Likes')
 
     class Meta:
         verbose_name = 'Post'
@@ -48,7 +48,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, verbose_name='Post al que pertenece el comentario', on_delete=models.CASCADE, related_name='comments')
-    user = models.ForeignKey(User, verbose_name='Autor', on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Autor', on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(verbose_name='Contenido del comentario', max_length=300)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
 
