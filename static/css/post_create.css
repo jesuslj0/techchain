@@ -4,9 +4,20 @@
 }
 
 input#id_title {
-    width: 100%;
+    width: 60%;
 }
 
 label.form-label{
     font-weight: bold;
 }
+
+div#id_tags {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    grid-template-rows: auto;
+}
+
+div#id_tags > label {
+    margin-right: 10px;
+}
+

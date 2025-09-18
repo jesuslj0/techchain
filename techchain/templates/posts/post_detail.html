@@ -67,7 +67,7 @@
                     {% endif %}
                     <div class="d-flex flex-column">
                      <span class="me-2">{{ post.user.first_name}} {{ post.user.last_name }}</span>
-                     <strong class="me-2">@{{ post.user.username }}</strong>
+                     <a href="{% url 'profiles:detail' post.user.uuid %}" class="text-dark text-decoration-none"><strong class="me-2">@{{ post.user.username }}</strong></a>
                     </div>
                 </div>
                 <p class="mb-0 text-muted small text-md-end">Hace {{ post.created_at|timesince_short}}</p>

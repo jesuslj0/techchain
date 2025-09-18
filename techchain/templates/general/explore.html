@@ -95,7 +95,7 @@
                                         <img src="/static/icons/default-user.png" 
                                         style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;">
                                     {% endif %}
-                                    <strong>{{post.user.username}}</strong> Hace {{post.created_at|timesince|slice:":10"}}
+                                    <a href="{% url 'profiles:detail' post.user.uuid %}"><strong>{{post.user.username}}</strong></a> Hace {{post.created_at|timesince|slice:":10"}}
                                     <a class="btn btn-primary p-1 mt-3 ms-3" href="{% url 'posts:detail' post.pk %}"
                                     >Ver publicacíón</a>
                                 </div>

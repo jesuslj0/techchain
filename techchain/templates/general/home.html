@@ -86,7 +86,7 @@
                                         {% endif %}
                                         <div>
                                             <p class="mb-0 text-muted small">
-                                                <strong>{{ post.user.username }}</strong> • Hace {{ post.created_at|timesince_short }}
+                                                <a href="{% url 'profiles:detail' post.user.uuid %}" class="text-dark text-decoration-none"><strong>{{ post.user.username }}</strong></a> • Hace {{ post.created_at|timesince_short }}
                                             </p>
                                         </div>
                                     </div>

@@ -6,7 +6,7 @@
 {% endblock %}
 {% block title %}Posts{% endblock %}
 {% block title_h1%}
-    {% if request.user.is_authenticated.id != user_id %}
+    {% if request.user.is_authenticated.uuid != user_uuid %}
     Mis Publicaciones
     {% else %}
     Publicaciones de {{object.user.username}}
@@ -26,7 +26,7 @@
                 <div class="col-12 col-md-8 d-flex flex-column justify-content-between">
                     <!-- Usuario y fecha -->
                     <p class="mb-1 text-muted small">
-                        <strong>{{ post.user.username }}</strong> — {{ post.created_at|date:"d M Y" }}
+                        <a href="{% url 'profiles:detail' post.user.uuid %}"><strong>{{ post.user.username }}</strong></a> — {{ post.created_at|date:"d M Y" }}
                     </p>
 
                     <!-- Título -->
@@ -64,6 +64,10 @@
             </div> <!-- /.row -->
         </div> <!-- /.list-group-item -->
     {% empty %}
-        <p class="text-muted">No se encontraron publicaciones.</p>
+        <p class="text-muted w-50">No tienes ninguna publicación</p>
+        <div class="d-flex flex-column gap-2 position-relative top-50 text-center">
+            <h3 class="text-center">Comienza a compartir tus ideas!</h3>
+            <a class="btn btn-primary m-2 w-fit-content align-self-center" href="{% url 'posts:create' user_uuid %}">Crear +</a>
+        </div>
     {% endfor %}
 {% endblock %}
