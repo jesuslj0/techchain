@@ -46,26 +46,18 @@ class ChatRoomsView(TemplateView):
         
 class ChatView(TemplateView):
     template_name = 'chat/chat.html'
-    slug_field = 'room_id'
-    slug_url_kwarg = 'room_id'
-    
-    def get_queryset(self):
-        messages = Message.objects.filter(room=self.kwargs['room_id'])
-        chat_rooms = ChatRoom.objects.filter(users=self.request.user.profile).exclude(id__in=GroupChatRoom.objects.values_list("id", flat=True))
-        group_chats = GroupChatRoom.objects.filter(users=self.request.user.profile)
-        profiles = UserProfile.objects.filter(user__profile__in=ChatRoom.objects.get(id=self.kwargs['room_id']).users.all())
 
-        return messages, chat_rooms, profiles, group_chats
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        room = ChatRoom.objects.get(id=self.kwargs['room_id'])
+        room_id = self.kwargs['room_id']
+        room = get_object_or_404(ChatRoom, id=room_id)
 
-        usernames = room.users.values_list('user__username', flat=True).exclude(id=self.request.user.profile.id)    
-
-        context['room_name'] = room.name # Nombre para conectar el websocket
-        context['room_usernames'] = usernames # Lista de usuarios del chat
-        context['chat_messages'], context['chat_rooms'], context['profiles'], context['group_chats'] = self.get_queryset()
+        context['room_name'] = room.name
+        context['room_usernames'] = room.users.exclude(id=self.request.user.profile.id).values_list('user__username', flat=True)
+        context['chat_messages'] = Message.objects.filter(room=room)
+        context['chat_rooms'] = ChatRoom.objects.filter(users=self.request.user.profile).exclude(id__in=GroupChatRoom.objects.values_list("id", flat=True))
+        context['group_chats'] = GroupChatRoom.objects.filter(users=self.request.user.profile)
+        context['profiles'] = UserProfile.objects.filter(user__profile__in=room.users.all())
         return context
     
 class GroupChatCreateView(CreateView):

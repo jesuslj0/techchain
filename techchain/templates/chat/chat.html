@@ -64,7 +64,7 @@
             </ul>
         </div>
         <div class="col-md-3 col-lg-3">
-            <h4>Chats recientes</h4>
+            <h4>Chats</h4>
             <div class="list-group chatrooms mb-3">
                 {% for chat in chat_rooms %}
                     <a href="{% url 'chat:chat' chat.id %}" class="list-group">
@@ -78,7 +78,7 @@
                     </a>
                 {% endfor %}
             </div>
-            <h4>Grupos recientes</h4>
+            <h4>Grupos</h4>
             <div class="list-group chatrooms">
                 {% for group in group_chats %}
                     <a href="{% url 'chat:chat' group.id %}" class="list-group">
@@ -90,10 +90,10 @@
             </div>
         </div>
         <div class="col-md-9 p-3 col-lg-6">
-            <div class="m-2 d-flex gap-2">
-                {% for user in room_usernames %}
-                    <div class="m-2 d-flex gap-2 align-items-center">
-                        <div class="h4 d-flex align-items-center gap-2">
+            <div class="m-2 d-flex gap-2 align-items-center">
+                {% if room_usernames|length == 1 %}
+                    {% for user in room_usernames %}
+                        {% if user != request.user.username %}
                             {% for profile in profiles %}
                                 {% if profile.user.username == user %}
                                     {% if profile.profile_picture %}
@@ -109,13 +109,25 @@
                                             class="rounded-circle"
                                             width="40" height="40">
                                     {% endif %}
+                                    <span class="h4 mb-0 ms-2">{{ user }}</span>
+                                    <span class="text-muted ms-2" id="status-{{ user }}"></span>
                                 {% endif %}
                             {% endfor %}
-                            <span>{{ user }}</span>
-                        </div>
-                        <span class="text-muted" id="status-{{ user }}"></span>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div>
+                        <h4 class="d-flex align-items-center gap-2 mb-1">
+                            <span>{{ room_name }}</span>
+                        </h4>
+                        <span class="text-muted small">
+                            <span id="group-online-text">En línea: </span>
+                            <span id="group-online-users">
+                                {# Este span se actualizará en tiempo real por JS #}
+                            </span>
+                        </span>
                     </div>
-                {% endfor %}
+                {% endif %}
             </div>
             <div id="chat-box" class="chat-box">
                 {% for msg in chat_messages %}
@@ -174,12 +186,34 @@
         const chatBox = document.getElementById("chat-box");
         const messageInput = document.getElementById("message-input");
         const sendButton = document.getElementById("send-button");
+        const groupOnlineUsersSpan = document.getElementById("group-online-users");
+        const groupOnlineText = document.getElementById("group-online-text");
+        let onlineInRoom = [];
+
+        function updateGroupOnlineUsers(onlineUsers) {
+            const groupOnlineUsersSpan = document.getElementById("group-online-users");
+            if (!groupOnlineUsersSpan) return;
+
+            onlineUsers.forEach(user => {
+                if (!onlineInRoom.includes(user) && user !== username) {
+                    onlineInRoom.push(user);
+                }
+            });
+
+            if (onlineInRoom.length === 0) {
+                groupOnlineUsersSpan.innerText = "";
+                groupOnlineText.textContent = "";
+            } else {
+                groupOnlineText.textContent = "En línea: ";
+                groupOnlineUsersSpan.innerText = onlineInRoom.join(", ");
+            }
+        }
         
         // Conectar WebSocket
         const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${encodeURIComponent(roomName)}/`);
 
         let lastMessageDate = null;
-
+    
         socket.onmessage = function(event) {
             const data = JSON.parse(event.data);
 
@@ -190,7 +224,10 @@
                         userStatusElement.innerText = "En línea";
                     }
                 });
+
+                updateGroupOnlineUsers(data.users);
             }
+
             else if (data.type == 'user_status') {
                 const userStatusElement = document.getElementById(`status-${data.user}`);
                 if (data.is_online) {
