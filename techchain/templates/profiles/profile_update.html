@@ -23,7 +23,11 @@
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
                     <i class="bi bi-person-circle"></i>
+<<<<<<< HEAD
                     <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
+=======
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' user_uuid %}">Mi Perfil</a>
+>>>>>>> develop
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-bell"></i>
@@ -35,6 +39,7 @@
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-people-fill"></i>
+<<<<<<< HEAD
                     <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
                     </li>
                     <li class='p-2'>
@@ -48,6 +53,21 @@
                     <li class='p-2'>
                     <i class="bi bi-file-earmark-plus"></i>
                     <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
+=======
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
+                    </li>
+                    <li class='p-2'>
+                    <i class="bi bi-people"></i>
+                    <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
+                    </li>
+                    <li class='p-2'>
+                    <i class="bi bi-postcard-heart"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
+                    </li>
+                    <li class='p-2'>
+                    <i class="bi bi-file-earmark-plus"></i>
+                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_uuid %}">Crear</a>
+>>>>>>> develop
                     </li>
                 </ul>
             </div>
@@ -69,7 +89,7 @@
                         </div>
                     </div>
                     <button class='btn btn-primary' type='submit'>Guardar</button>
-                    <a href="{% url 'profiles:detail' request.user.id%}" class='btn btn-secondary'>Salir</a>
+                    <a href="{% url 'profiles:detail' user_uuid %}" class='btn btn-secondary'>Salir</a>
                 </form>
             </div>
         </div>

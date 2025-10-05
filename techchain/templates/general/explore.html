@@ -25,7 +25,11 @@
                 </li>
                 <li class='p-2'>
                 <i class="bi bi-person-circle"></i>
+<<<<<<< HEAD
                 <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.id %}">Mi Perfil</a>
+=======
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' user_uuid %}">Mi Perfil</a>
+>>>>>>> develop
                 </li>
                 <li class='p-2'>
                 <i class="bi bi-bell"></i>
@@ -37,6 +41,7 @@
                 </li>
                 <li class='p-2'>
                 <i class="bi bi-people-fill"></i>
+<<<<<<< HEAD
                 <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_id %}">Seguidores</a>
                 </li>
                 <li class='p-2'>
@@ -50,6 +55,21 @@
                 <li class='p-2'>
                 <i class="bi bi-file-earmark-plus"></i>
                 <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_id %}">Crear</a>
+=======
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-people"></i>
+                <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-postcard-heart"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
+                </li>
+                <li class='p-2'>
+                <i class="bi bi-file-earmark-plus"></i>
+                <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_uuid %}">Crear</a>
+>>>>>>> develop
                 </li>
             </ul>
         </div>
@@ -95,7 +115,11 @@
                                         <img src="/static/icons/default-user.png" 
                                         style="width: 60px; height: 60px; object-fit:cover; align-self: center; border-radius: 50%;">
                                     {% endif %}
+<<<<<<< HEAD
                                     <strong>{{post.user.username}}</strong> Hace {{post.created_at|timesince|slice:":10"}}
+=======
+                                    <a href="{% url 'profiles:detail' post.user.uuid %}"><strong>{{post.user.username}}</strong></a> Hace {{post.created_at|timesince|slice:":10"}}
+>>>>>>> develop
                                     <a class="btn btn-primary p-1 mt-3 ms-3" href="{% url 'posts:detail' post.pk %}"
                                     >Ver publicacíón</a>
                                 </div>
@@ -123,7 +147,11 @@
                             alt="{{user.user.username}}"
                         >
                         {% endif %}
+<<<<<<< HEAD
                         <a href="{% url 'profiles:detail' user.user.id %}">{{user.user.username}}</a>
+=======
+                        <a href="{% url 'profiles:detail' user.user.uuid %}">{{user.user.username}}</a>
+>>>>>>> develop
                     </div>
                  {% endfor %}   
                 </ul>

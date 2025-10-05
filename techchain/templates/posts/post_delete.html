@@ -10,7 +10,7 @@
         <h3>¿Estás seguro de eliminar esta publicación?</h3>
         <p class='alert alert-danger'>No podrás recuperarla de ninguna forma</p>
         <button type='submit' class='btn btn-primary'>Eliminar</button>
-        <a href="{% url 'posts:list' user_id %}" class='btn btn-secondary'>Salir</a>
+        <a href="{% url 'posts:list' user_uuid %}" class='btn btn-secondary'>Salir</a>
     </form>
 {% endblock %}
 

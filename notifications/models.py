@@ -1,8 +1,9 @@
 from django.db import models
 from profiles.models import UserProfile
-from django.contrib.auth.models import User
+from django.conf import settings
 from posts.models import Post
 from django.utils import timezone
+from django.conf import settings
 
 # Create your models here.
 class Notification(models.Model):
@@ -29,7 +30,7 @@ class Notification(models.Model):
         return f'Notificación para {self.profile.user.username} - {self.message}'
     
 class LikeLog(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(default=timezone.now)
 

@@ -1,5 +1,7 @@
 from django import forms
 from profiles.models import UserProfile
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class UserProfileForm(forms.ModelForm):
     username = forms.CharField(

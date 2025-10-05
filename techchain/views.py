@@ -6,6 +6,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from posts.models import Post
 from profiles.models import Follow, UserProfile
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from django.contrib import messages
 from .forms import ContactForm, LoginForm, RegisterForm
 from .email import register_message

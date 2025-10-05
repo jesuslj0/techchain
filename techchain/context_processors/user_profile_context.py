@@ -1,9 +1,9 @@
-from profiles.models import UserProfile
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 def user_profile_context(request):
     if request.user.is_authenticated:
-        try:
-            return {'user_id': request.user.id}
-        except UserProfile.DoesNotExist:
-            return {}
+        return {'user_uuid': request.user.uuid}  # cambia user_id por user_uuid
     return {}
+

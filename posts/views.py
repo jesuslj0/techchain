@@ -21,7 +21,11 @@ class PostsListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["posts"] = Post.objects.filter(user=self.request.user)
+        user_uuid = self.kwargs.get('user_uuid', None)
+        if user_uuid:
+            context["posts"] = Post.objects.filter(user__uuid=user_uuid)
+        else:
+            context["posts"] = Post.objects.filter(user=self.request.user)
         return context
     
 
@@ -62,7 +66,7 @@ class PostsCreateView(CreateView):
         return response
     
     def get_success_url(self):
-        return reverse_lazy('posts:list', kwargs={'user_id': self.object.user_id})
+        return reverse_lazy('posts:list', kwargs={'user_uuid': str(self.object.user.uuid)})
     
 class PostDeleteView(DeleteView):
     model = Post
@@ -71,7 +75,7 @@ class PostDeleteView(DeleteView):
 
     def get_success_url(self):
         messages.add_message(self.request, messages.INFO, 'Publicación eliminada correctamente.')
-        return reverse_lazy('posts:list', kwargs={'user_id': self.object.user_id})
+        return reverse_lazy('posts:list', kwargs={'user_uuid': str(self.object.user.uuid)})
 
     def form_valid(self, form):
         self.object.delete()

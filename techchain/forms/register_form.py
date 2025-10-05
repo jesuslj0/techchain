@@ -1,13 +1,16 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from profiles.models import UserProfile
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 
+User = get_user_model()
+
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    bio = forms.CharField(widget=forms.Textarea, required=False)
-    profile_picture = forms.ImageField(required=False)
+    bio = forms.CharField(widget=forms.Textarea, required=True)
+    profile_picture = forms.ImageField(required=True)
 
     class Meta:
         model = User
