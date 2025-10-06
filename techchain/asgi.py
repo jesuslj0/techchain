@@ -14,6 +14,7 @@ from chat.routing import websocket_urlpatterns  # Rutas de WebSockets
 from channels.auth import AuthMiddlewareStack
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "techchain.settings")
+application = get_asgi_application()
 
 application = ProtocolTypeRouter(
     {
