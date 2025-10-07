@@ -19,12 +19,15 @@ from django.views.decorators.csrf import csrf_exempt
 class ProfileDetailView(DetailView):
     model = UserProfile
     template_name = 'profiles/profile_detail.html'
-    slug_field = 'user__uuid'
-    slug_url_kwarg = 'user_uuid'
+
+    def get_object(self):
+        uuid_str = str(self.kwargs['user_uuid'])
+        user = get_object_or_404(User, uuid=uuid_str)
+        return get_object_or_404(UserProfile, user=user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        posts = self.object.user.posts.all
+        posts = self.object.user.posts.all()
         context['posts'] = posts
         return context
 
