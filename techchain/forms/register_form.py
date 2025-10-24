@@ -49,17 +49,18 @@ class RegisterForm(UserCreationForm):
             raise ValidationError("Ya existe un usuario con este correo electrónico.")
         return email
     
-    def save(self, commit=True): #Guardar en la base de datos
+    def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
-        user.password = self.cleaned_data['password1']
-
+        user.set_password(self.cleaned_data['password1'])
         user.save()
-        # Crear el perfil de usuario asociado
+
+        profile_picture = self.cleaned_data['profile_picture']
+        bio = self.cleaned_data['bio']
         UserProfile.objects.create(
             user=user,
-            bio=self.cleaned_data['bio'],
-            profile_picture=self.cleaned_data.get('profile_picture', None)
+            bio=bio,
+            profile_picture=profile_picture
         )
         
         return user
