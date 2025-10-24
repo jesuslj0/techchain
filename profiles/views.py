@@ -21,8 +21,8 @@ class ProfileDetailView(DetailView):
     template_name = 'profiles/profile_detail.html'
 
     def get_object(self):
-        uuid_str = str(self.kwargs['user_uuid'])
-        user = get_object_or_404(User, uuid=uuid_str)
+        user_uuid = self.kwargs['user_uuid']
+        user = get_object_or_404(User, uuid=user_uuid)
         return get_object_or_404(UserProfile, user=user)
 
     def get_context_data(self, **kwargs):
