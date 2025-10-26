@@ -123,14 +123,13 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'techchain', 
-        'USER': os.environ["MYSQL_USER"],  
-        'PASSWORD': os.environ["MYSQL_PASSWORD"],  
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'techchain_db', 
+        'USER': os.environ["POSTGRES_USER"],  
+        'PASSWORD': os.environ["POSTGRES_PASSWORD"],  
         'HOST': 'localhost', 
-        'PORT': os.environ["MYSQL_PORT"],  
+        'PORT': os.environ["POSTGRES_PORT"],  
         'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';",
             'charset': 'utf8mb4',
         },
     }
