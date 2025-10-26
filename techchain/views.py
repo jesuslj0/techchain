@@ -75,23 +75,22 @@ class LogoutView(LogoutView):
 class RegisterView(FormView): 
     template_name = 'general/register.html'
     form_class = RegisterForm
-    success_url = reverse_lazy('login')  # Redirige a la página de inicio de sesión después de un registro exitoso
+    success_url = reverse_lazy('login')  
 
     def form_valid(self, form):
-        # Guarda el usuario pero no lo confirma aún
-        user = form.save(commit=False)
-        user.set_password(form.cleaned_data['password2'])  # Encripta la contraseña
-        user.save()  # Guarda el usuario en la base de datos
+        user = form.save()
+        
         messages.success(self.request, '¡Registro completado con éxito!')
 
         #Enviar correo de bienvenida
+        register_message = "<h1>Bienvenido a TechChain</h1><p>Gracias por registrarte en nuestra plataforma.</p>"
         send_mail(
-            subject="Bienvenido a TechChain",
-            message="Gracias por registrarte en nuestra plataforma.",  # Fallback en texto plano
+            subject="Registrado en Techchain",
+            message="Gracias por registrarte en nuestra plataforma.",
             from_email="servicio.usuarios@techchain.live",
             recipient_list=[user.email],
             fail_silently=False,
-            html_message=register_message  # Correo en HTML
+            html_message=register_message
         )
         
         return super().form_valid(form)

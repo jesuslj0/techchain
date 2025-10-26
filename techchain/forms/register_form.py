@@ -36,12 +36,12 @@ class RegisterForm(UserCreationForm):
             'bio': 'Información sobre ti',
         }
 
-    def clean_password_confirm(self):
-        password = self.cleaned_data.get('password1')
-        password_confirm = self.cleaned_data.get('password2')
-        if password != password_confirm:
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 != password2:
             raise ValidationError("Las contraseñas no coinciden.")
-        return password_confirm
+        return password2
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -53,14 +53,14 @@ class RegisterForm(UserCreationForm):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
         user.set_password(self.cleaned_data['password1'])
-        user.save()
-
-        profile_picture = self.cleaned_data['profile_picture']
-        bio = self.cleaned_data['bio']
-        UserProfile.objects.create(
-            user=user,
-            bio=bio,
-            profile_picture=profile_picture
-        )
         
+        if commit:
+            user.save()
+            profile_picture = self.cleaned_data['profile_picture']
+            bio = self.cleaned_data['bio']
+            UserProfile.objects.create(
+                user=user,
+                bio=bio,
+                profile_picture=profile_picture
+            )
         return user
