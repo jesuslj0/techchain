@@ -123,15 +123,12 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql', # Backend de Postgresql
         'NAME': 'techchain_db', 
         'USER': os.environ["POSTGRES_USER"],  
         'PASSWORD': os.environ["POSTGRES_PASSWORD"],  
         'HOST': 'localhost', 
-        'PORT': os.environ["POSTGRES_PORT"],  
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
+        'PORT': os.environ["POSTGRES_PORT"],
     }
 }
 
