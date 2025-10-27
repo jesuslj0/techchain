@@ -210,7 +210,7 @@
         }
         
         // Conectar WebSocket
-        const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${encodeURIComponent(roomName)}/`);
+        const socket = new WebSocket(`wss://${window.location.host}/ws/chat/${encodeURIComponent(roomName)}/`);
 
         let lastMessageDate = null;
     

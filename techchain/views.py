@@ -79,18 +79,16 @@ class RegisterView(FormView):
 
     def form_valid(self, form):
         user = form.save()
-        
         messages.success(self.request, '¡Registro completado con éxito!')
 
         #Enviar correo de bienvenida
-        register_message = "<h1>Bienvenido a TechChain</h1><p>Gracias por registrarte en nuestra plataforma.</p>"
         send_mail(
-            subject="Registrado en Techchain",
-            message="Gracias por registrarte en nuestra plataforma.",
+            subject="Bienvenido a TechChain",
+            message="Gracias por registrarte en nuestra plataforma.",  # Fallback en texto plano
             from_email="servicio.usuarios@techchain.live",
             recipient_list=[user.email],
             fail_silently=False,
-            html_message=register_message
+            html_message=register_message  # Correo en HTML
         )
         
         return super().form_valid(form)
