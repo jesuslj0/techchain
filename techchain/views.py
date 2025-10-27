@@ -82,14 +82,17 @@ class RegisterView(FormView):
         messages.success(self.request, '¡Registro completado con éxito!')
 
         #Enviar correo de bienvenida
-        send_mail(
-            subject="Bienvenido a TechChain",
-            message="Gracias por registrarte en nuestra plataforma.",  # Fallback en texto plano
-            from_email="servicio.usuarios@techchain.live",
-            recipient_list=[user.email],
-            fail_silently=False,
-            html_message=register_message  # Correo en HTML
+        try:
+            send_mail(
+                subject="Bienvenido a TechChain",
+                message="Gracias por registrarte en nuestra plataforma.",  # Fallback en texto plano
+                from_email="servicio.usuarios@techchain.live",
+                recipient_list=[user.email],
+                fail_silently=False,
+                html_message=register_message  # Correo en HTML
         )
+        except Exception as e:
+            messages.error(self.request, f"Error al enviar el correo de bienvenida: {e}")
         
         return super().form_valid(form)
 
