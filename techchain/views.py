@@ -63,7 +63,7 @@ class LoginView(LoginView):
                 self.request.session.set_expiry(1209600)
             else:
                 self.request.session.set_expiry(0)
-                messages
+                messages.add_message(self.request, messages.SUCCESS, "Inicio de sesión exitoso.")
             return HttpResponseRedirect(self.get_success_url())  # Redirige a la URL de éxito definida en el formulario
         else:
             return self.form_invalid(form)  # Si el usuario no se autentica, mostrar error
