@@ -1,6 +1,7 @@
 from .base import *
 
 DEBUG = False
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 ALLOWED_HOSTS = ["techchain.live", "www.techchain.live"]
 
