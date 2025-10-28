@@ -11,10 +11,11 @@ class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
     bio = forms.CharField(widget=forms.Textarea, required=True)
     profile_picture = forms.ImageField(required=True)
+    birth_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=True, label="Fecha de nacimiento")
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2', 'profile_picture', 'bio']
+        fields = ['first_name', 'last_name', 'username', 'email', 'birth_date', 'password1', 'password2', 'profile_picture', 'bio']
         widgets = {
             'last_name': forms.TextInput(),
             'first_name': forms.TextInput(),
@@ -32,6 +33,7 @@ class RegisterForm(UserCreationForm):
             'password2': 'Confirma tu contraseñá',
             'username': 'Nombre de usuario',
             'email': 'Correo electrónico',
+            'birth_date': 'Fecha de nacimiento',
             'profile_picture': 'Imagen de perfil',
             'bio': 'Información sobre ti',
         }
@@ -49,6 +51,7 @@ class RegisterForm(UserCreationForm):
             raise ValidationError("Ya existe un usuario con este correo electrónico.")
         return email
     
+<<<<<<< HEAD
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
@@ -60,6 +63,34 @@ class RegisterForm(UserCreationForm):
         UserProfile.objects.create(
             user=user,
             bio=bio,
+=======
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data.get('birth_date')
+        if birth_date:
+            import datetime
+            today = datetime.date.today()
+            age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+            if age < 16:
+                raise ValidationError("Debes tener al menos 16 años para registrarte.")
+        return birth_date
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.username = self.cleaned_data['username']
+        user.set_password(self.cleaned_data['password2'])
+        user.save()
+        
+        profile_picture = self.cleaned_data['profile_picture']
+        bio = self.cleaned_data['bio']
+        birth_date = self.cleaned_data['birth_date']
+        UserProfile.objects.create(
+            user=user,
+            bio=bio,
+            birth_date=birth_date,
+>>>>>>> develop
             profile_picture=profile_picture
         )
     

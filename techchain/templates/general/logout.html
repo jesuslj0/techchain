@@ -26,11 +26,11 @@
 <div class='container'>
     {% csrf_token %}
     <h2>Quieres volver a entrar?</h2>
-    <p class='h3 primary-link'>
+    <p class='h3 primary-link mb-4'>
         <a href='{% url 'login'%}'>Iniciar sesion</a>
     </p>
-    <p class='h3 primary-link'>
-        <a href='{% url 'register'%}'>Registrarse</a>
+    <p class='h4 primary-link'>
+        No tienes cuenta? <a href='{% url 'register'%}'>Registrate</a>
     </p>
 </div>
 {% endblock %}

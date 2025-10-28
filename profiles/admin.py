@@ -4,8 +4,8 @@ from .models import User, UserProfile, Follow
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'uuid', 'username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff', 'is_superuser', 'date_joined']
-    
+    list_display = ['id', 'uuid', 'username', 'last_login', 'date_joined', 'is_active', 'is_staff']
+
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):

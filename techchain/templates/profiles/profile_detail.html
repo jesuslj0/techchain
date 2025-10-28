@@ -76,7 +76,7 @@
                             <strong>{{object.following.count}}</strong> seguidores </br>
                             <strong>{{object.followers.count}}</strong> seguidos
                         </p>
-                        <p class="card-text">{{object.bio}}</p>
+                        <p class="card-text">{% if object.bio %}{{object.bio}}{% else %}{% endif %}</p>
                         <div class="d-flex flex-row gap-2 justify-content-center">
                          {% if request.user.is_authenticated %}
                             {% if object.user != request.user %}

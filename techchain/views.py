@@ -81,7 +81,6 @@ class RegisterView(FormView):
         user = form.save()
         messages.success(self.request, '¡Registro completado con éxito!')
 
-        #Enviar correo de bienvenida
         try:
             send_mail(
                 subject="Bienvenido a TechChain",
