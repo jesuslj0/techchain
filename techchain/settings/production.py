@@ -1,4 +1,11 @@
 from .base import *
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Carga explícita del .env
+ENV_PATH = Path(__file__).resolve().parent.parent / "app" / ".env"
+load_dotenv(dotenv_path=ENV_PATH)
 
 DEBUG = False
 SECRET_KEY = os.environ["SECRET_KEY"]
