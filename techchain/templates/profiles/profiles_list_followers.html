@@ -74,7 +74,7 @@
                                     {% endif %}
                                     <div class="d-flex flex-column">
                                     <a href="{% url 'profiles:detail' follow.follower.user.uuid %}"><strong>{{ follow.follower.user.username }}</strong></a> 
-                                    <p class="small">Le sigues desde {{ follow.follow_up_date|date }}</p>  
+                                    <p class="small">Te sigue desde {{ follow.follow_up_date|date }}</p>  
                                 </div>     
                                 </div>
                                 <form action="{% url 'profiles:toggle_follow' user_uuid=follow.follower.user.uuid %}" method="post">

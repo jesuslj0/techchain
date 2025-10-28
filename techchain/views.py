@@ -63,7 +63,7 @@ class LoginView(LoginView):
                 self.request.session.set_expiry(1209600)
             else:
                 self.request.session.set_expiry(0)
-                messages
+                messages.add_message(self.request, messages.SUCCESS, "Inicio de sesión exitoso.")
             return HttpResponseRedirect(self.get_success_url())  # Redirige a la URL de éxito definida en el formulario
         else:
             return self.form_invalid(form)  # Si el usuario no se autentica, mostrar error
@@ -75,24 +75,23 @@ class LogoutView(LogoutView):
 class RegisterView(FormView): 
     template_name = 'general/register.html'
     form_class = RegisterForm
-    success_url = reverse_lazy('login')  # Redirige a la página de inicio de sesión después de un registro exitoso
+    success_url = reverse_lazy('login')  
 
     def form_valid(self, form):
-        # Guarda el usuario pero no lo confirma aún
-        user = form.save(commit=False)
-        user.set_password(form.cleaned_data['password2'])  # Encripta la contraseña
-        user.save()  # Guarda el usuario en la base de datos
+        user = form.save()
         messages.success(self.request, '¡Registro completado con éxito!')
 
-        #Enviar correo de bienvenida
-        send_mail(
-            subject="Bienvenido a TechChain",
-            message="Gracias por registrarte en nuestra plataforma.",  # Fallback en texto plano
-            from_email="servicio.usuarios@techchain.live",
-            recipient_list=[user.email],
-            fail_silently=False,
-            html_message=register_message  # Correo en HTML
+        try:
+            send_mail(
+                subject="Bienvenido a TechChain",
+                message="Gracias por registrarte en nuestra plataforma.",  # Fallback en texto plano
+                from_email="servicio.usuarios@techchain.live",
+                recipient_list=[user.email],
+                fail_silently=False,
+                html_message=register_message  # Correo en HTML
         )
+        except Exception as e:
+            messages.error(self.request, f"Error al enviar el correo de bienvenida: {e}")
         
         return super().form_valid(form)
 
