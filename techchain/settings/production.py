@@ -3,6 +3,8 @@ from .base import *
 DEBUG = False
 SECRET_KEY = os.environ["SECRET_KEY"]
 
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 ALLOWED_HOSTS = ["techchain.live", "www.techchain.live"]
 
 # Base de datos de producción
@@ -22,7 +24,7 @@ SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-LOG_DIR = "/var/log/techchain"
+LOG_DIR = BASE_DIR / "logs"
 os.makedirs(LOG_DIR, exist_ok=True)
 
 LOGGING = {
