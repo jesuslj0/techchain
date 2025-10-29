@@ -17,9 +17,6 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from chat.routing import websocket_urlpatterns  # Rutas de WebSockets
 from channels.auth import AuthMiddlewareStack
 
-
-application = get_asgi_application()
-
 application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,  # Peticiones HTTP normales
