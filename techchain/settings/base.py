@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     'prose',
     'rest_framework',
     'corsheaders',
-    'django_select2',
     
     'techchain',
     'profiles',
