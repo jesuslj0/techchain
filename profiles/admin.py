@@ -6,7 +6,6 @@ from .models import User, UserProfile, Follow
 class UserAdmin(admin.ModelAdmin):
     list_display = ['id', 'uuid', 'username', 'last_login', 'date_joined', 'is_active', 'is_staff']
 
-
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'birth_date']

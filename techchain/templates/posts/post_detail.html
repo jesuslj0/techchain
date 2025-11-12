@@ -77,16 +77,19 @@
                 <p class="h3 m-2 text-primary text-center text-md-start"><strong>{{ post.title }}</strong></p>
 
                 <!-- Tags -->
-                <div class="m-2">
-                {% for tag in post.tags.all %}
-                    <span class="badge bg-primary">{{ tag.name }}</span>
-                {% endfor %}
-                </div>
+                 {% if post.tags %}
+                 <div class="m-2">
+                 {% for tag in post.tags.all %}
+                     <span class="badge bg-primary">{{ tag.name }}</span>
+                 {% endfor %}
+                 </div>
+                 {% endif %}
 
-                <!-- Imagen del post -->
                 {% if post.image %}
-                <div class="col-12">
-                <img src="{{ post.image.url }}" class="img-fluid rounded w-100" alt="{{ post.title }}">
+                <div class="col-12 d-flex justify-content-center my-4">
+                <img src="{{ post.image.url }}" 
+                    class="img-fluid rounded shadow-sm post-detail-img" 
+                    alt="{{ post.title }}">
                 </div>
                 {% endif %}
 
@@ -120,41 +123,56 @@
                 <!-- Comentarios -->
                 <div class="col-12 container comments">
                 {% if comments %}
+                    <form method="post" class="mb-2">
+                        {% csrf_token %}
+                        <div class="mb-1">
+                        {{ form.text }}
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Enviar</button>
+                    </form>
                     <details>
-                    <summary class="mb-2"><i class="bi bi-chevron-down"></i> Ver comentarios</summary>
+                    <summary class="mb-2 small"><i class="bi bi-chevron-down"></i> Comentarios</summary>
                     {% for comment in comments %}
-                        <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                            <h5 class="card-title mb-1">{{ comment.user }}</h5>
-                            <small class="text-muted">{{ comment.created_at|date }}</small>
+                        <li class="list-group-item mb-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 small">
+                                {{ comment.user }} · <small class="text-muted">Hace {{ comment.created_at|timesince_short}}</small>
+                            </h6>
+                                <div class="d-flex align-items-center gap-3">
+                                    <a href="{% url 'posts:like_comment_ajax' comment.pk %}" data-comment-id="{{ comment.pk }}"
+                                        class="like-button text-decoration-none">
+                                        {% if request.user in comment.likes.all %}
+                                        <i class="bi bi-heart-fill text-danger"></i>
+                                        <span class="visually-hidden">Quitar like</span>
+                                        {% else %}
+                                        <i class="bi bi-heart text-danger"></i>
+                                        <span class="visually-hidden">Dar like</span>
+                                        {% endif %}
+                                        <span class="n-likes ms-1">{{ comment.num_likes }}</span>
+                                    </a>
+                                </div>
                             </div>
-                            <p class="card-text mt-2">{{ comment.text }}</p>
-                        </div>
-                        </div>
+                        <p class="mt-1 small">{{ comment.text }}</p>
+                        </li>
                     {% endfor %}
                     </details>
-                    <form method="post" class="mt-3">
-                    {% csrf_token %}
-                    {{ form.text.label|safe }} <i class="bi bi-arrow-down"></i>
-                    {{ form.text }}
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                    </form>
                 {% else %}
-                    <p class='text-info'>Todavía no hay comentarios</p>
-                    <form method="post" class="mt-3">
-                    {% csrf_token %}
-                    {{ form.text.label|safe }} <i class="bi bi-arrow-down"></i>
-                    {{ form.text }}
-                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <p class='text-muted small'>Sin comentarios aún.</p>
+                    <form method="post" class="mt-2">
+                        {% csrf_token %}
+                        <div class="mb-1">
+                        {{ form.text }}
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Enviar</button>
                     </form>
                 {% endif %}
                 </div>
 
-                <!-- Botón eliminar -->
+                <!-- Botones -->
                 {% if request.user == post.user %}
                 <div class="col-12 text-end mt-4">
-                <a class="btn btn-danger p-1" href="{% url 'posts:delete' post.pk %}">Eliminar</a>
+                    <a class="btn btn-outline-warning" href="{% url 'posts:edit' request.user.uuid post.pk %}">Editar</a>
+                    <a class="btn btn-outline-danger p-1" href="{% url 'posts:delete' post.pk %}">Eliminar</a>
                 </div>
                 {% endif %}
             </div>

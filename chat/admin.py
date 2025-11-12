@@ -25,7 +25,7 @@ class AdminsInline(admin.TabularInline):
 
 @admin.register(GroupChatRoom)
 class GroupChatRoomAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description']
+    list_display = ['name', 'description', 'creator']
     search_fields = ['name', 'description']
 
     inlines = [

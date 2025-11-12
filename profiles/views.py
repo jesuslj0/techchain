@@ -14,7 +14,6 @@ from datetime import timedelta
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 
-
 # Create your views here.
 class ProfileDetailView(DetailView):
     model = UserProfile
@@ -41,12 +40,13 @@ class ProfileUpdateView(UpdateView):
     template_name = 'profiles/profile_update.html'
     form_class = UserProfileForm
 
-    def get_object(self, queryset=None):
-        return self.request.user.profile
-
     def get_success_url(self):
         messages.success(self.request, 'Perfil actualizado correctamente!')
         return reverse_lazy('profiles:detail', kwargs={'user_uuid': self.request.user.uuid})
+    
+    def get_object(self, queryset=None):
+        return self.request.user.profile
+
 
 class ProfilesSearch(ListView):
     model = UserProfile

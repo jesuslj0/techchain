@@ -7,3 +7,17 @@
     background-color: #fff;
     width: 250px;
 }
+
+.post-detail-img {
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: 800px;
+}
+
+@media (max-width: 768px) {
+    .post-detail-img {
+        max-width: 100%;
+    }
+}

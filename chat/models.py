@@ -2,6 +2,7 @@ from django.db import models
 from profiles.models import UserProfile
 from django.conf import settings
 from uuid import uuid4
+from django.utils import timezone
 
 class ChatRoom(models.Model):
     id = models.CharField(max_length=255, primary_key=True, default=uuid4, editable=False)
@@ -13,8 +14,11 @@ class ChatRoom(models.Model):
         verbose_name_plural = 'Salas de Chat'
 
 class GroupChatRoom(ChatRoom):
-    description = models.TextField(max_length=500)
+    creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='created_groups')
+    description = models.TextField(max_length=500, blank=True)
     admins = models.ManyToManyField(UserProfile)
+    image = models.FileField(verbose_name="Imagen de grupo", blank=True, null=True)
+    created_at = models.DateTimeField(verbose_name='Fecha de creación', default=timezone.now)
 
     class Meta:
         verbose_name = 'Grupo de Chat'

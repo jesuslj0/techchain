@@ -22,7 +22,7 @@
             <i class="bi bi-list"></i> Menú
             </button>
             <!-- Menú colapsable -->
-            <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
+            <div class="collapse d-lg-block col-12 col-lg-3 col-xl-2" id="sidebarMenu">
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
                     <i class="bi bi-house"></i>
@@ -56,77 +56,87 @@
             </div>
 
             <!-- Información del perfil -->
-            <div class="col-12 col-md-12 col-lg-9">
-                <div class="row">
-                   <div class="profile-card col-md-12 col-lg-6">
-                    {% if object.profile_picture %}
-                    <img 
-                    src="{{object.profile_picture.url}}" 
-                    alt="Foto de Perfil de {{ object.user.username }}">
-                    {% else %}
-                    <img 
-                    src="/static/icons/default-user.png" 
-                    alt="Foto de Perfil de {{ object.user.username }}">
-                    {% endif %}
-                    <div class="card-body text-center">
-                        <h5 class="card-title">@{{object.user.username}}</h5>
-                        <p class="card-subtitle text-muted" style="margin-bottom: 20px">{{object.user.first_name}} {{object.user.last_name}}</p>
-                        <p class="card-subtitle text-muted" style="margin-bottom: 20px">
-                            <strong>{{object.user.posts.count}}</strong> publicaciones </br>
-                            <strong>{{object.following.count}}</strong> seguidores </br>
-                            <strong>{{object.followers.count}}</strong> seguidos
-                        </p>
-                        <p class="card-text">{% if object.bio %}{{object.bio}}{% else %}{% endif %}</p>
-                        <div class="d-flex flex-row gap-2 justify-content-center">
-                         {% if request.user.is_authenticated %}
+            <div class="col-12 col-md-12 col-lg-9 col-xl-10">
+                <div class="row g-4">
+                 <!-- Tarjeta de perfil -->
+                <div class="col-12 col-lg-6 col-xxl-5">
+                    <div class="card border-0 shadow-sm text-center p-4 rounded-4">
+                        {% if object.profile_picture %}
+                        <img src="{{ object.profile_picture.url }}" alt="Foto de perfil de {{ object.user.username }}" class="rounded-circle mx-auto mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                        {% else %}
+                        <img src="/static/icons/default-user.png" alt="Foto de perfil por defecto" class="rounded-circle mx-auto mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                        {% endif %}
+
+                        <h5 class="fw-bold mb-1">@{{ object.user.username }}</h5>
+                        <p class="text-muted mb-3">{{ object.user.first_name }} {{ object.user.last_name }}</p>
+
+                        <div class="d-flex justify-content-around text-center mb-3">
+                        <div><strong>{{ object.user.posts.count }}</strong><br><small class="text-muted">Publicaciones</small></div>
+                        <div><strong>{{ object.following.count }}</strong><br><small class="text-muted">Seguidores</small></div>
+                        <div><strong>{{ object.followers.count }}</strong><br><small class="text-muted">Seguidos</small></div>
+                        </div>
+
+                        {% if object.bio %}
+                        <p class="text-muted small mb-3">{{ object.bio }}</p>
+                        {% endif %}
+
+                        <div class="d-flex flex-column gap-2">
+                        {% if request.user.is_authenticated %}
                             {% if object.user != request.user %}
-                                <form action="{% url 'profiles:toggle_follow' user_uuid=object.user.uuid %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-primary btn-sm">
-                                        {% if object.user.profile in request.user.profile.followers.all %}
-                                            Dejar de seguir
-                                        {% else %}
-                                            Seguir
-                                        {% endif %}
-                                    </button>
-                                </form>   
-                                <div>
-                                    <a href="{% url 'chat:new_chat' object.user.id %}" class="btn btn-primary btn-sm">
-                                        Enviar mensaje <i class="bi bi-send"></i>
-                                    </a>
-                                </div>                         
+                            <form action="{% url 'profiles:toggle_follow' user_uuid=object.user.uuid %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-primary w-100 btn-sm">
+                                {% if object.user.profile in request.user.profile.followers.all %}
+                                Dejar de seguir
+                                {% else %}
+                                Seguir
+                                {% endif %}
+                                </button>
+                            </form>
+                            <a href="{% url 'chat:new_chat' object.user.id %}" class="btn btn-primary w-100 btn-sm">
+                                Enviar mensaje <i class="bi bi-send"></i>
+                            </a>
                             {% else %}
-                                <!-- Si es el propio perfil del usuario autenticado -->
-                                <p><a href="{% url 'profiles:update' %}" class="btn btn-primary mb-2">Editar Perfil</a></p>
-                                <p><a href="{% url 'posts:create' user_uuid %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Crear</a>
+                            <a href="{% url 'profiles:update' %}" class="btn btn-primary w-100 btn-sm">Editar perfil</a>
+                            <a href="{% url 'posts:create' user_uuid %}" class="btn btn-outline-primary w-100 btn-sm">
+                                <i class="bi bi-plus-lg"></i> Crear publicación
+                            </a>
                             {% endif %}
-                        {% endif %}   
+                        {% endif %}
                         </div>
                     </div>
                 </div>
-                <div class="list_group col-auto col-lg-6">
-                    <h3 class="subtitle m-3">Publicaciones</h3>
+                <!-- Grid de publicaciones -->
+                <div class="col-12 col-lg-6 col-xxl-7">
+                <h4 class="mb-3 fw-semibold">Publicaciones</h4>
+                <div class="row g-3">
                     {% for post in posts %}
-                        <div class="list-group-item d-flex align-items-center p-3">
-                            <img src="{{post.image.url}}" alt="Imagen" class="rounded me-3" style="max-width: 90px; height: auto;">
-                            <div>
-                                <p>
-                                    <span class="mb-1"><a href="{% url 'profiles:detail' post.user.uuid %}">{{post.user.username}}</a> <i class="bi bi-heart-fill text-danger"></i> {{post.likes.all.count}}</span>
-                                    <span class="comment ms-2"><i class="bi bi-chat-dots-fill"></i> {{post.comments.count}}</span>
-                                </p>
-                                <p class="mb-3"><strong>{{post.title}}</strong></p>
+                    <div class="col-12 col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+                        <div class="card-body">
+                        <h6 class="fw-bold">{{ post.title }}</h6>
+                        <p class="text-muted small mb-2">
+                            <a href="{% url 'profiles:detail' post.user.uuid %}" class="text-decoration-none text-dark">@{{ post.user.username }}</a>
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-muted small">
+                            <i class="bi bi-heart-fill text-danger"></i> {{ post.likes.all.count }}
+                            <i class="bi bi-chat-dots-fill ms-2"></i> {{ post.comments.count }}
                             </div>
-                            <p class="m-3">
-                                <button class="btn btn-outline-primary btn-sm">
-                                 <a class="text-decoration-none" href="{% url 'posts:detail' post.pk %}">Ver</a>   
-                                </button>
-                            </p>
+                            <a href="{% url 'posts:detail' post.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
                         </div>
+                        </div>
+                    </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">Este usuario no tiene publicaciones aún.</p>
                     {% endfor %}
-                    </p>
-                </div> 
+                </div>
+                </div>
                 </div>
             </div>
+            
         </div>
     </div>
 {% endblock %}

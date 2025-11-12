@@ -69,32 +69,56 @@
             const navbarIcon = document.getElementById("navbar-icon");
             let lastScrollY = window.scrollY;
             let hideTimeout;
+            let inactivityTimeout;
 
             function showIcon() {
                 navbarIcon.classList.remove("hidden", "none");
                 clearTimeout(hideTimeout);
+                clearTimeout(inactivityTimeout);
+                startInactivityTimer();
             }
 
             function hideIconWithDelay() {
                 navbarIcon.classList.add("hidden");
                 hideTimeout = setTimeout(() => {
                 navbarIcon.classList.add("none");
-                }, 2000); // esperar 2 segundos
+                }, 2000);
             }
+
+            function startInactivityTimer() {
+                inactivityTimeout = setTimeout(() => {
+                hideIconWithDelay();
+                }, 2000);
+            }
+
+            // Reiniciar temporizador si hay interacción con el icono
+            function resetInactivityTimer() {
+                clearTimeout(inactivityTimeout);
+                showIcon();
+            }
+
+            // Eventos que cuentan como interacción
+            navbarIcon.addEventListener("mouseenter", resetInactivityTimer);
+            navbarIcon.addEventListener("mouseleave", resetInactivityTimer);
+            navbarIcon.addEventListener("click", resetInactivityTimer);
+            navbarIcon.addEventListener("touchstart", resetInactivityTimer);
 
             window.addEventListener("scroll", () => {
                 const currentScroll = window.scrollY;
 
                 if (window.innerWidth < 768) {
                 if (currentScroll === 0) {
-                    showIcon(); // solo si está en el top
+                    showIcon();
                 } else if (currentScroll > lastScrollY) {
-                    hideIconWithDelay(); // scroll hacia abajo
+                    hideIconWithDelay();
                 }
                 }
 
                 lastScrollY = currentScroll;
             });
+
+            // Inicializamos timer al cargar página
+            startInactivityTimer()
         </script>
     {% endblock %}
         {% block session %}

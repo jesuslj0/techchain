@@ -21,3 +21,13 @@ div#id_tags > label {
     margin-right: 10px;
 }
 
+#previewContainer {
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+#imagePreview {
+  transition: all 0.2s ease-in-out;
+  cursor: grab;
+}

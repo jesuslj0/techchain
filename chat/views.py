@@ -2,11 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import viewsets
 from .models import ChatRoom, Message, GroupChatRoom
 from .serializers import ChatRoomSerializer, MessageSerializer
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, DetailView, DeleteView
 from profiles.models import UserProfile
 from django.core.serializers import serialize
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.forms import forms
+from .forms import GroupChatForm
+from django.http import HttpResponseRedirect
 
 class ChatRoomViewSet(viewsets.ModelViewSet):
     queryset = ChatRoom.objects.all()
@@ -50,34 +53,60 @@ class ChatView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         room_id = self.kwargs['room_id']
-        room = get_object_or_404(ChatRoom, id=room_id)
+        room_instance = None
 
-        context['room_name'] = room.name
-        context['room_usernames'] = room.users.exclude(id=self.request.user.profile.id).values_list('user__username', flat=True)
-        context['chat_messages'] = Message.objects.filter(room=room)
+        try:
+            room_instance = GroupChatRoom.objects.get(id=room_id)
+            context['is_group_chat'] = True
+            context['display_name'] = room_instance.name
+        except GroupChatRoom.DoesNotExist:
+            room_instance = get_object_or_404(ChatRoom, id=room_id)
+            context['is_group_chat'] = False
+
+            other_profile = room_instance.users.exclude(id=self.request.user.profile.id).first()
+            if other_profile:
+                context['display_name'] = other_profile.user.username
+            else:
+                context['display_name'] = self.request.user.username 
+            
+            context['room_usernames'] = [context['display_name']]
+            context['other_profile'] = other_profile
+        
+        context['chat_messages'] = Message.objects.filter(room=room_instance).order_by('timestamp')
+        
+        context['current_room'] = room_instance
+        context['profiles'] = room_instance.users.all() # Lista de todos los perfiles en el chat
+        
         context['chat_rooms'] = ChatRoom.objects.filter(users=self.request.user.profile).exclude(id__in=GroupChatRoom.objects.values_list("id", flat=True))
         context['group_chats'] = GroupChatRoom.objects.filter(users=self.request.user.profile)
-        context['profiles'] = UserProfile.objects.filter(user__profile__in=room.users.all())
         return context
     
 class GroupChatCreateView(CreateView):
     model = GroupChatRoom
     template_name = 'chat/group_chat_create.html'
-    fields = ['name', 'description', 'users']
+    form_class = GroupChatForm
     success_url = reverse_lazy('chat:chat_rooms')
 
+    def get_form(self, form_class=None):
+        allowed_users = self.request.user.profile.followers.all() | self.request.user.profile.following.all()
+        return self.form_class(**self.get_form_kwargs(), allowed_users=allowed_users)
+    
     def form_valid(self, form):
-        form.fields['users'].queryset = self.request.user.profile.followers.all() | self.request.user.profile.following.all()
-        form.instance.creator = self.request.user.profile
+        self.object = form.save(commit=False)
+        self.object.creator = self.request.user.profile
+        # Save the form to create the GroupChatRoom instance
+        self.object.save()
         
-        group_chat_room = form.save()
+        # Add the creator as a user and admin
+        self.object.users.add(self.request.user.profile)
+        self.object.admins.add(self.request.user.profile)
 
-        # Añadir el creador a los administradores
-        group_chat_room.admins.add(self.request.user.profile)
+        for user in form.cleaned_data['users']:
+            self.object.users.add(user)
 
-        # Mensaje de creación
-        messages.add_message(self.request, messages.INFO, 'Grupo creado correctamente.')
-        return super().form_valid(form)
+        messages.add_message(self.request, messages.INFO, f'Grupo "{self.object.name}" creado correctamente.')
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 def create_chat_room(request, profile_id):
@@ -94,3 +123,32 @@ def create_chat_room(request, profile_id):
 
     return redirect('chat:chat', room_id=chatroom.id)
 
+class GroupDetailView(DetailView):
+    model = GroupChatRoom
+    template_name = "chat/group_detail.html"
+    context_object_name = 'group'
+    pk_url_kwarg = 'room_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['chat_messages'] = Message.objects.filter(room=self.object)
+        return context
+
+class GroupDeleteView(DeleteView):
+    model = GroupChatRoom
+    template_name = "chat/group_confirm_delete.html"
+    success_url = reverse_lazy('chat:chat_rooms')
+    context_object_name = 'group'
+    pk_url_kwarg = 'group_id'
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.object.creator != self.request.user.profile:
+            messages.error(request, "No tienes permiso para borrar este grupo.")
+            return HttpResponseRedirect(self.success_url)
+
+        success_url = self.get_success_url()
+        self.object.delete()
+        messages.success(request, "Grupo eliminado correctamente.")
+        return HttpResponseRedirect(success_url)

@@ -3,7 +3,7 @@ if __name__ == "__main__":
     import os
     import sys
 
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "techchain.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "techchain.settings.development")
 
     from django.core.management import execute_from_command_line
 

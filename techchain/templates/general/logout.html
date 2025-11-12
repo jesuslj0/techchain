@@ -24,13 +24,22 @@
 {% endblock %}
 {% block form %}
 <div class='container'>
-    {% csrf_token %}
-    <h2>Quieres volver a entrar?</h2>
-    <p class='h3 primary-link mb-4'>
-        <a href='{% url 'login'%}'>Iniciar sesion</a>
-    </p>
-    <p class='h4 primary-link'>
-        No tienes cuenta? <a href='{% url 'register'%}'>Registrate</a>
-    </p>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0 rounded-lg mt-5">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">¿Quieres volver a entrar?</h2>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Iniciar Sesión</a>
+                    </div>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small">
+                        ¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
