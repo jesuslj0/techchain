@@ -16,6 +16,16 @@
     max-height: 800px;
 }
 
+.post-detail-img:hover {
+    transition: transform 0.5s ease, box-shadow 0.3s ease-in;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.post-detail-img:not(:hover) {
+    transition: transform 0.4s ease-out, box-shadow 0.4s ease;
+}
+
 @media (max-width: 768px) {
     .post-detail-img {
         max-width: 100%;

@@ -101,7 +101,7 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="col-md-9 p-3 col-lg-6">
+        <div class="col-md-9 p-3 col-lg-6" id="chat-box-container">
             <div class="m-2 d-flex gap-2 align-items-center">
                 {% with room=current_room %} 
 
@@ -160,6 +160,11 @@
                     <span class="text-muted small">
                         <span id="status-{{ other_profile.user.username|escapejs }}">Desconectado</span>
                     </span>
+                </div>
+                <div>
+                    <button id="toggle-chatbox" class="btn">
+                        <i class="bi bi-fullscreen"></i>
+                    </button>
                 </div>
             {% endif %}
         {% endif %}
@@ -446,5 +451,61 @@
 
     // Inicializamos timer al cargar página
     startInactivityTimer()
+    </script>
+    <script>
+        const toggleChatButton = document.getElementById('toggle-chatbox');
+        const chatBoxContainer = document.getElementById('chat-box-container');
+        const chatBoxElement = document.getElementById('chat-box');
+
+        let isFullscreen = false;
+
+        if (toggleChatButton) {
+        toggleChatButton.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                isFullscreen = !isFullscreen;
+
+                if (chatBoxContainer) {
+                    if (isFullscreen) {
+                        // Make Fullscreen
+                        chatBoxContainer.style.position = "fixed";
+                        chatBoxContainer.style.top = "0";
+                        chatBoxContainer.style.left = "0";
+                        chatBoxContainer.style.right = "0";
+                        chatBoxContainer.style.bottom = "0";
+                        chatBoxContainer.style.width = "100%";
+                        chatBoxContainer.style.height = "100%";
+                        chatBoxContainer.style.zIndex = "1000"; // Ensure it's on top
+                        chatBoxContainer.style.backgroundColor = "#ffffff";
+                    } else {
+                        // Revert to original state
+                        chatBoxContainer.style.position = "";
+                        chatBoxContainer.style.top = "";
+                        chatBoxContainer.style.left = "";
+                        chatBoxContainer.style.right = "";
+                        chatBoxContainer.style.bottom = "";
+                        chatBoxContainer.style.width = "";
+                        chatBoxContainer.style.height = "";
+                        chatBoxContainer.style.zIndex = "";
+                        chatBoxContainer.style.backgroundColor = "";
+                }
+        }
+
+                if (chatBoxElement) {
+                    if (isFullscreen) {
+                        chatBoxElement.style.height = "85%"; // Adjust as needed in fullscreen
+                    } else {
+                        chatBoxElement.style.height = ""; // Revert to original
+                    }
+                }
+
+                // Toggle the icon
+                if (isFullscreen) {
+                    toggleChatButton.innerHTML = '<i class="bi bi-arrows-angle-contract"></i>'; // Contract icon
+                } else {
+                    toggleChatButton.innerHTML = '<i class="bi bi-fullscreen"></i>'; // Fullscreen icon
+                }
+            });
+        }
     </script>
 {% endblock %}
