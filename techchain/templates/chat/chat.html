@@ -102,7 +102,7 @@
             </div>
         </div>
         <div class="col-md-9 p-3 col-lg-6" id="chat-box-container">
-            <div class="m-2 d-flex gap-2 align-items-center">
+            <div class="m-2 d-flex gap-2 align-items-center" id="chat-info">
                 {% with room=current_room %} 
 
         {% if is_group_chat %}
@@ -122,15 +122,22 @@
                 </div>
             {% endif %}
 
-            <div class="flex-grow-1">
-                <h4 class="d-flex align-items-center justify-content-between gap-2 mb-1">
-                    <span>{{ display_name }}</span>
-                    <a href="{% url 'chat:group_detail' room_id %}" class="btn btn-sm btn-outline-primary">Ver más</a>
-                </h4>
-                <span class="text-muted small">
-                    <span id="group-online-text">En línea: </span>
-                    <span id="group-online-users"></span>
-                </span>
+            <div class="d-flex flex-row flex-grow-1 justify-content-between align-items-center">
+                <div class="d-flex flex-column">
+                    <h4 class="d-flex align-items-center justify-content-between gap-2 mb-1">
+                        <span>{{ display_name }}</span>
+                    </h4>
+                    <span class="text-muted small">
+                        <span id="group-online-text">En línea: </span>
+                        <span id="group-online-users"></span>
+                    </span>
+                </div>
+                <a href="{% url 'chat:group_detail' room_id %}" class="btn btn-sm btn-outline-primary">Ver</a>
+            </div>
+            <div>
+                <button id="toggle-chatbox" class="btn">
+                    <i class="bi bi-fullscreen"></i>
+                </button>
             </div>
 
         {% else %}
@@ -456,7 +463,7 @@
         const toggleChatButton = document.getElementById('toggle-chatbox');
         const chatBoxContainer = document.getElementById('chat-box-container');
         const chatBoxElement = document.getElementById('chat-box');
-
+        const chatInfoElement = document.getElementById('chat-info')
         let isFullscreen = false;
 
         if (toggleChatButton) {
@@ -464,6 +471,13 @@
                 event.preventDefault();
 
                 isFullscreen = !isFullscreen;
+
+                if (chatInfoElement) {
+                    chatInfoElement.style.position = "relative"
+                    chatInfoElement.style.top = "0px"
+                    chatInfoElement.classList.toggle("m-2")
+                    chatInfoElement.classList.add('mb-2')
+                }
 
                 if (chatBoxContainer) {
                     if (isFullscreen) {
@@ -490,20 +504,18 @@
                         chatBoxContainer.style.backgroundColor = "";
                 }
         }
-
                 if (chatBoxElement) {
                     if (isFullscreen) {
-                        chatBoxElement.style.height = "85%"; // Adjust as needed in fullscreen
+                        chatBoxElement.style.height = "87%"; // Adjust as needed in fullscreen
                     } else {
-                        chatBoxElement.style.height = ""; // Revert to original
+                        chatBoxElement.style.height = ""; 
                     }
                 }
 
-                // Toggle the icon
                 if (isFullscreen) {
-                    toggleChatButton.innerHTML = '<i class="bi bi-arrows-angle-contract"></i>'; // Contract icon
-                } else {
-                    toggleChatButton.innerHTML = '<i class="bi bi-fullscreen"></i>'; // Fullscreen icon
+                    toggleChatButton.innerHTML = '<i class="bi bi-arrows-angle-contract"></i>'; 
+                } else if (!isFullscreen) {
+                    toggleChatButton.innerHTML = '<i class="bi bi-fullscreen"></i>'; 
                 }
             });
         }
