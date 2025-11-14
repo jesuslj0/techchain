@@ -112,8 +112,8 @@
             {% if room.image %}
                 <img src="{{ room.image.url }}" 
                     alt="{{ display_name }}" 
-                    class="rounded-circle me-3" 
-                    width="40" height="40"
+                    class="rounded-circle me-2" 
+                    width="48" height="48"
                     style="object-fit: cover;">
             {% else %}
                 <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
@@ -124,7 +124,7 @@
 
             <div class="d-flex flex-row flex-grow-1 justify-content-between align-items-center">
                 <div class="d-flex flex-column">
-                    <h4 class="d-flex align-items-center justify-content-between gap-2 mb-1">
+                    <h4 class="d-flex align-items-center m-0">
                         <span>{{ display_name }}</span>
                     </h4>
                     <span class="text-muted small">
@@ -135,6 +135,9 @@
                 <a href="{% url 'chat:group_detail' room_id %}" class="btn btn-sm btn-outline-primary">Ver</a>
             </div>
             <div>
+                <button id="toggle-settings" class="btn">
+                        <i class="bi bi-palette"></i>
+                    </button>
                 <button id="toggle-chatbox" class="btn">
                     <i class="bi bi-fullscreen"></i>
                 </button>
@@ -149,8 +152,8 @@
                     <img 
                         src="{{ other_profile.profile_picture.url }}" 
                         alt="{{ display_name }}"
-                        class="rounded-circle me-3"
-                        width="40" height="40"
+                        class="rounded-circle me-2"
+                        width="48" height="48"
                         style="object-fit: cover;">
                 {% else %}
                     <img
@@ -161,7 +164,7 @@
                 {% endif %}
 
                 <div class="flex-grow-1">
-                    <h4 class="d-flex align-items-center gap-2 mb-1">
+                    <h4 class="d-flex align-items-center m-0">
                         <span>{{ display_name }}</span>
                     </h4>
                     <span class="text-muted small">
@@ -169,6 +172,9 @@
                     </span>
                 </div>
                 <div>
+                    <button id="toggle-settings" class="btn">
+                        <i class="bi bi-palette"></i>
+                    </button>
                     <button id="toggle-chatbox" class="btn">
                         <i class="bi bi-fullscreen"></i>
                     </button>
@@ -211,7 +217,7 @@
                     
                 {% endfor %}
             </div>
-            <div class="input-group mt-2">
+            <div class="input-group">
                 <input class="form-control" type="text" id="message-input" placeholder="Mensaje...">
                 <button class="btn btn-outline-primary" id="send-button" type="button" title="Enviar">
                     <i class="bi bi-send"></i>
@@ -464,6 +470,18 @@
         const chatBoxContainer = document.getElementById('chat-box-container');
         const chatBoxElement = document.getElementById('chat-box');
         const chatInfoElement = document.getElementById('chat-info')
+
+        // Cargar color de chat
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedColor = localStorage.getItem('chatBackgroundColor');
+            if (savedColor) {
+                bgColorPicker.value = savedColor;
+                chatBoxElement.style.backgroundColor = savedColor;
+            }
+        });
+
+        // Preparamos el contenedor una sola vez
+        chatBoxContainer.style.position = 'relative';
         let isFullscreen = false;
 
         if (toggleChatButton) {
@@ -471,13 +489,6 @@
                 event.preventDefault();
 
                 isFullscreen = !isFullscreen;
-
-                if (chatInfoElement) {
-                    chatInfoElement.style.position = "relative"
-                    chatInfoElement.style.top = "0px"
-                    chatInfoElement.classList.toggle("m-2")
-                    chatInfoElement.classList.add('mb-2')
-                }
 
                 if (chatBoxContainer) {
                     if (isFullscreen) {
@@ -491,6 +502,21 @@
                         chatBoxContainer.style.height = "100%";
                         chatBoxContainer.style.zIndex = "1000"; // Ensure it's on top
                         chatBoxContainer.style.backgroundColor = "#ffffff";
+                        
+                        // Cambiar padding
+                        chatBoxContainer.classList.remove('p-3');
+                        chatBoxContainer.classList.add('pt-2')
+                        chatBoxContainer.style.paddingLeft = "0px";
+                        chatBoxContainer.style.paddingRight = "0px";
+                        chatInfoElement.style.margin = "0px 10px 0px 10px";
+
+                        if (chatInfoElement) {
+                            chatInfoElement.style.position = "relative"
+                            chatInfoElement.style.top = "0px"
+                            chatInfoElement.classList.toggle("m-2")
+                            chatInfoElement.classList.add('mb-2')
+                        }
+
                     } else {
                         // Revert to original state
                         chatBoxContainer.style.position = "";
@@ -519,5 +545,56 @@
                 }
             });
         }
+
+        //Chat settings
+        const settingsModal = document.createElement('div');
+        const toggleSettingsBtn = document.getElementById('toggle-settings');
+        settingsModal.className = 'settings-modal';
+
+        // Elementos de chat bg-color
+        const label = document.createElement('span');
+        label.textContent = "Color de fondo actual";
+
+        const bgColorContainer = document.createElement('div')
+        bgColorContainer.classList.add('bg-container')
+
+        // Input color
+        const bgColorPicker = document.createElement('input');
+        bgColorPicker.type = 'color';
+        bgColorPicker.value = '#f8f9fa'; //Valor inicial
+        bgColorPicker.className = 'bg-picker';
+
+        // Aplicar color al chat
+        bgColorPicker.addEventListener('input', () => {
+            chatBoxElement.style.backgroundColor = bgColorPicker.value;
+
+                // Guardar el color en el localStorage
+                localStorage.setItem('chatBackgroundColor', bgColorPicker.value);
+            });
+
+        // Añadir elementos
+        bgColorContainer.appendChild(label)
+        bgColorContainer.appendChild(bgColorPicker)
+
+        settingsModal.appendChild(bgColorContainer);
+
+        let settingsOpened = false;
+
+        toggleSettingsBtn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            settingsOpened = !settingsOpened;
+
+            if (settingsOpened) {
+                if (!chatBoxContainer.contains(settingsModal)) {
+                    chatBoxContainer.appendChild(settingsModal);
+                }
+                settingsModal.classList.add('open');
+
+                toggleSettingsBtn.innerHTML = '<i class="bi bi-palette-fill"></i>';
+            } else {
+                settingsModal.classList.remove('open');
+                toggleSettingsBtn.innerHTML = '<i class="bi bi-palette"></i>';
+            }
+        });
     </script>
 {% endblock %}
