@@ -7,12 +7,14 @@ from dotenv import load_dotenv
 ENV_PATH = Path(__file__).resolve().parent.parent / "app" / ".env"
 load_dotenv(dotenv_path=ENV_PATH)
 
+
 DEBUG = False
 SECRET_KEY = os.environ["SECRET_KEY"]
 
 ALLOWED_HOSTS = ["techchain.live", "www.techchain.live"]
 
 #STATICS
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_ROOT = BASE_DIR / 'media'
 
