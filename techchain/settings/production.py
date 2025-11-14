@@ -35,6 +35,64 @@ DATABASES = {
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 # Opcional: forzar HTTPS en producción
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+
+# LOG_DIR = BASE_DIR / "logs"
+# os.makedirs(LOG_DIR, exist_ok=True)
+
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "formatters": {
+#         "verbose": {
+#             "format": "[{asctime}] {levelname} [{name}] {message}",
+#             "style": "{",
+#         },
+#     },
+#     "handlers": {
+#         "console": {
+#             "class": "logging.StreamHandler",
+#             "formatter": "verbose",
+#         },
+#         "file_auth": {
+#             "level": "INFO",
+#             "class": "logging.FileHandler",
+#             "filename": os.path.join(LOG_DIR, "auth.log"),
+#             "formatter": "verbose",
+#         },
+#         "file_error": {
+#             "level": "ERROR",
+#             "class": "logging.FileHandler",
+#             "filename": os.path.join(LOG_DIR, "error.log"),
+#             "formatter": "verbose",
+#         },
+#     },
+#     "loggers": {
+#         # Logs de Django
+#         "django": {
+#             "handlers": ["console", "file_error"],
+#             "level": "WARNING",
+#             "propagate": True,
+#         },
+#         # Logs de autenticación (login, logout, fallos)
+#         "django.auth": {
+#             "handlers": ["console", "file_auth"],
+#             "level": "INFO",
+#             "propagate": False,
+#         },
+#         # Logs de seguridad (CSRF, permisos, etc.)
+#         "django.security": {
+#             "handlers": ["console", "file_error"],
+#             "level": "WARNING",
+#             "propagate": False,
+#         },
+#         # Logs generales del proyecto
+#         "techchain": {
+#             "handlers": ["console", "file_error"],
+#             "level": "INFO",
+#             "propagate": True,
+#         },
+#     },
+# }
