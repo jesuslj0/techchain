@@ -14,7 +14,6 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 ALLOWED_HOSTS = ["techchain.live", "www.techchain.live"]
 
 #STATICS
-STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_ROOT = BASE_DIR / 'media'
 
