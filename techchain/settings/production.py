@@ -13,9 +13,13 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 ALLOWED_HOSTS = ["techchain.live", "www.techchain.live"]
 
-#STATICS
+#Static
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # Base de datos de producción
 DATABASES = {
