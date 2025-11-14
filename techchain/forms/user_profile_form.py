@@ -15,6 +15,7 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ['username', 'profile_picture', 'bio', 'private']
         widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
             'profile_picture': forms.FileInput(attrs={'class': 'form-control'}),
             'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'private': forms.CheckboxInput(attrs={'class': 'form-check-input', 'data-id': 'privateButton'}),

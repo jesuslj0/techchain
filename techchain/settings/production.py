@@ -14,6 +14,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 ALLOWED_HOSTS = ["techchain.live", "www.techchain.live"]
 
+#STATICS
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Base de datos de producción
 DATABASES = {
     'default': {
@@ -26,6 +30,10 @@ DATABASES = {
     }
 }
 
+
+# Seguridad y caché
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
 # Opcional: forzar HTTPS en producción
 # SECURE_SSL_REDIRECT = True
 # SESSION_COOKIE_SECURE = True

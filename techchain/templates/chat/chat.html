@@ -16,8 +16,20 @@
     }
     </style>
 {% endblock %}
-{% block title %}Chats{% endblock %}
-{% block title_h1 %}Tus Chats{% endblock %}
+{% block title %}
+    {% if is_group_chat %}
+        Grupo {{ display_name }}
+    {% else %}
+        Hablando con {{display_name}}
+    {% endif %}
+{% endblock %}
+{% block title_h1 %}
+{% if is_group_chat %}
+        Grupo
+    {% else %}
+        Chat
+    {% endif %}
+{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
@@ -67,7 +79,7 @@
             <h4>Chats</h4>
             <div class="list-group chatrooms mb-3">
                 {% for chat in chat_rooms %}
-                    <a href="{% url 'chat:chat' chat.id %}" class="list-group">
+                    <a href="{% url 'chat:chat' chat.id %}" class="list-group text-decoration-none">
                         <div class="list-group-item">
                             {% for user in chat.users.all %}
                                 {% if user != request.user.profile %}
@@ -81,7 +93,7 @@
             <h4>Grupos</h4>
             <div class="list-group chatrooms">
                 {% for group in group_chats %}
-                    <a href="{% url 'chat:chat' group.id %}" class="list-group">
+                    <a href="{% url 'chat:chat' group.id %}" class="list-group text-decoration-none">
                         <div class="list-group-item">
                             {{ group.name }}
                         </div>
@@ -89,45 +101,88 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="col-md-9 p-3 col-lg-6">
-            <div class="m-2 d-flex gap-2 align-items-center">
-                {% if room_usernames|length == 1 %}
-                    {% for user in room_usernames %}
-                        {% if user != request.user.username %}
-                            {% for profile in profiles %}
-                                {% if profile.user.username == user %}
-                                    {% if profile.profile_picture %}
-                                        <img 
-                                            src="{{ profile.profile_picture.url }}" 
-                                            alt="{{ user }}"
-                                            class="rounded-circle"
-                                            width="40" height="40">
-                                    {% else %}
-                                        <img
-                                            src="/static/icons/default-user.png" 
-                                            alt="{{ user }}"
-                                            class="rounded-circle"
-                                            width="40" height="40">
-                                    {% endif %}
-                                    <span class="h4 mb-0 ms-2">{{ user }}</span>
-                                    <span class="text-muted ms-2" id="status-{{ user }}"></span>
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
+        <div class="col-md-9 p-3 col-lg-6" id="chat-box-container">
+            <div class="m-2 d-flex gap-2 align-items-center" id="chat-info">
+                {% with room=current_room %} 
+
+        {% if is_group_chat %}
+            {# ---------------- CHAT GRUPAL ---------------- #}
+            
+            {# Imagen del Grupo #}
+            {% if room.image %}
+                <img src="{{ room.image.url }}" 
+                    alt="{{ display_name }}" 
+                    class="rounded-circle me-2" 
+                    width="48" height="48"
+                    style="object-fit: cover;">
+            {% else %}
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                    style="width: 40px; height: 40px; font-size: 1.2rem;">
+                    {{ display_name|slice:":1"|upper }}
+                </div>
+            {% endif %}
+
+            <div class="d-flex flex-row flex-grow-1 justify-content-between align-items-center">
+                <div class="d-flex flex-column">
+                    <h4 class="d-flex align-items-center m-0">
+                        <span>{{ display_name }}</span>
+                    </h4>
+                    <span class="text-muted small">
+                        <span id="group-online-text">En línea: </span>
+                        <span id="group-online-users"></span>
+                    </span>
+                </div>
+                <a href="{% url 'chat:group_detail' room_id %}" class="btn btn-sm btn-outline-primary">Ver</a>
+            </div>
+            <div>
+                <button id="toggle-settings" class="btn">
+                        <i class="bi bi-palette"></i>
+                    </button>
+                <button id="toggle-chatbox" class="btn">
+                    <i class="bi bi-fullscreen"></i>
+                </button>
+            </div>
+
+        {% else %}
+            {# ---------------- CHAT INDIVIDUAL ---------------- #}
+            
+            {% if other_profile %}
+                {# Imagen de Perfil #}
+                {% if other_profile.profile_picture %}
+                    <img 
+                        src="{{ other_profile.profile_picture.url }}" 
+                        alt="{{ display_name }}"
+                        class="rounded-circle me-2"
+                        width="48" height="48"
+                        style="object-fit: cover;">
                 {% else %}
-                    <div>
-                        <h4 class="d-flex align-items-center gap-2 mb-1">
-                            <span>{{ room_name }}</span>
-                        </h4>
-                        <span class="text-muted small">
-                            <span id="group-online-text">En línea: </span>
-                            <span id="group-online-users">
-                                {# Este span se actualizará en tiempo real por JS #}
-                            </span>
-                        </span>
-                    </div>
+                    <img
+                        src="{% static 'icons/default-user.png' %}" 
+                        alt="{{ display_name }}"
+                        class="rounded-circle me-3"
+                        width="40" height="40">
                 {% endif %}
+
+                <div class="flex-grow-1">
+                    <h4 class="d-flex align-items-center m-0">
+                        <span>{{ display_name }}</span>
+                    </h4>
+                    <span class="text-muted small">
+                        <span id="status-{{ other_profile.user.username|escapejs }}">Desconectado</span>
+                    </span>
+                </div>
+                <div>
+                    <button id="toggle-settings" class="btn">
+                        <i class="bi bi-palette"></i>
+                    </button>
+                    <button id="toggle-chatbox" class="btn">
+                        <i class="bi bi-fullscreen"></i>
+                    </button>
+                </div>
+            {% endif %}
+        {% endif %}
+
+    {% endwith %}
             </div>
             <div id="chat-box" class="chat-box">
                 {% for msg in chat_messages %}
@@ -162,7 +217,7 @@
                     
                 {% endfor %}
             </div>
-            <div class="input-group mt-2">
+            <div class="input-group">
                 <input class="form-control" type="text" id="message-input" placeholder="Mensaje...">
                 <button class="btn btn-outline-primary" id="send-button" type="button" title="Enviar">
                     <i class="bi bi-send"></i>
@@ -181,7 +236,8 @@
         }
     </script>
     <script>
-        const roomName = "{{ room_name }}";  // Pasado desde la vista
+        const roomDisplayName = "{{ display_name }}";  // Pasado desde la vista
+        const roomUUID = "{{ current_room.id }}"; // UUID único de sala
         const username = "{{ user.username }}";  // Captura el usuario autenticado
         const chatBox = document.getElementById("chat-box");
         const messageInput = document.getElementById("message-input");
@@ -201,7 +257,7 @@
             });
 
             if (onlineInRoom.length === 0) {
-                groupOnlineUsersSpan.innerText = "";
+                groupOnlineUsersSpan.innerText = "Nadie en línea";
                 groupOnlineText.textContent = "";
             } else {
                 groupOnlineText.textContent = "En línea: ";
@@ -210,7 +266,7 @@
         }
         
         // Conectar WebSocket
-        const socket = new WebSocket(`wss://${window.location.host}/ws/chat/${encodeURIComponent(roomName)}/`);
+        const socket = new WebSocket(`${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/ws/chat/${encodeURIComponent(roomUUID)}/`);
 
         let lastMessageDate = null;
     
@@ -307,13 +363,12 @@
             if (!message) return;
 
             if (socket.readyState === WebSocket.OPEN) {
-                const timestamp = new Date().toISOString();  // Enviar en formato ISO con zona
 
                 socket.send(JSON.stringify({
+                    room_id: roomUUID,
                     type: "chat_message", 
                     message: message,
                     username: username,
-                    timestamp: timestamp,
                 }));
 
                 messageInput.value = "";
@@ -409,5 +464,137 @@
 
     // Inicializamos timer al cargar página
     startInactivityTimer()
+    </script>
+    <script>
+        const toggleChatButton = document.getElementById('toggle-chatbox');
+        const chatBoxContainer = document.getElementById('chat-box-container');
+        const chatBoxElement = document.getElementById('chat-box');
+        const chatInfoElement = document.getElementById('chat-info')
+
+        // Cargar color de chat
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedColor = localStorage.getItem('chatBackgroundColor');
+            if (savedColor) {
+                bgColorPicker.value = savedColor;
+                chatBoxElement.style.backgroundColor = savedColor;
+            }
+        });
+
+        // Preparamos el contenedor una sola vez
+        chatBoxContainer.style.position = 'relative';
+        let isFullscreen = false;
+
+        if (toggleChatButton) {
+        toggleChatButton.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                isFullscreen = !isFullscreen;
+
+                if (chatBoxContainer) {
+                    if (isFullscreen) {
+                        // Make Fullscreen
+                        chatBoxContainer.style.position = "fixed";
+                        chatBoxContainer.style.top = "0";
+                        chatBoxContainer.style.left = "0";
+                        chatBoxContainer.style.right = "0";
+                        chatBoxContainer.style.bottom = "0";
+                        chatBoxContainer.style.width = "100%";
+                        chatBoxContainer.style.height = "100%";
+                        chatBoxContainer.style.zIndex = "1000"; // Ensure it's on top
+                        chatBoxContainer.style.backgroundColor = "#ffffff";
+                        
+                        // Cambiar padding
+                        chatBoxContainer.classList.remove('p-3');
+                        chatBoxContainer.classList.add('pt-2')
+                        chatBoxContainer.style.paddingLeft = "0px";
+                        chatBoxContainer.style.paddingRight = "0px";
+                        chatInfoElement.style.margin = "0px 10px 0px 10px";
+
+                        if (chatInfoElement) {
+                            chatInfoElement.style.position = "relative"
+                            chatInfoElement.style.top = "0px"
+                            chatInfoElement.classList.toggle("m-2")
+                            chatInfoElement.classList.add('mb-2')
+                        }
+
+                    } else {
+                        // Revert to original state
+                        chatBoxContainer.style.position = "";
+                        chatBoxContainer.style.top = "";
+                        chatBoxContainer.style.left = "";
+                        chatBoxContainer.style.right = "";
+                        chatBoxContainer.style.bottom = "";
+                        chatBoxContainer.style.width = "";
+                        chatBoxContainer.style.height = "";
+                        chatBoxContainer.style.zIndex = "";
+                        chatBoxContainer.style.backgroundColor = "";
+                }
+        }
+                if (chatBoxElement) {
+                    if (isFullscreen) {
+                        chatBoxElement.style.height = "87%"; // Adjust as needed in fullscreen
+                    } else {
+                        chatBoxElement.style.height = ""; 
+                    }
+                }
+
+                if (isFullscreen) {
+                    toggleChatButton.innerHTML = '<i class="bi bi-arrows-angle-contract"></i>'; 
+                } else if (!isFullscreen) {
+                    toggleChatButton.innerHTML = '<i class="bi bi-fullscreen"></i>'; 
+                }
+            });
+        }
+
+        //Chat settings
+        const settingsModal = document.createElement('div');
+        const toggleSettingsBtn = document.getElementById('toggle-settings');
+        settingsModal.className = 'settings-modal';
+
+        // Elementos de chat bg-color
+        const label = document.createElement('span');
+        label.textContent = "Color de fondo actual";
+
+        const bgColorContainer = document.createElement('div')
+        bgColorContainer.classList.add('bg-container')
+
+        // Input color
+        const bgColorPicker = document.createElement('input');
+        bgColorPicker.type = 'color';
+        bgColorPicker.value = '#f8f9fa'; //Valor inicial
+        bgColorPicker.className = 'bg-picker';
+
+        // Aplicar color al chat
+        bgColorPicker.addEventListener('input', () => {
+            chatBoxElement.style.backgroundColor = bgColorPicker.value;
+
+                // Guardar el color en el localStorage
+                localStorage.setItem('chatBackgroundColor', bgColorPicker.value);
+            });
+
+        // Añadir elementos
+        bgColorContainer.appendChild(label)
+        bgColorContainer.appendChild(bgColorPicker)
+
+        settingsModal.appendChild(bgColorContainer);
+
+        let settingsOpened = false;
+
+        toggleSettingsBtn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            settingsOpened = !settingsOpened;
+
+            if (settingsOpened) {
+                if (!chatBoxContainer.contains(settingsModal)) {
+                    chatBoxContainer.appendChild(settingsModal);
+                }
+                settingsModal.classList.add('open');
+
+                toggleSettingsBtn.innerHTML = '<i class="bi bi-palette-fill"></i>';
+            } else {
+                settingsModal.classList.remove('open');
+                toggleSettingsBtn.innerHTML = '<i class="bi bi-palette"></i>';
+            }
+        });
     </script>
 {% endblock %}

@@ -1,9 +1,9 @@
 from django.db.models.query import QuerySet
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post, Comment
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, DeleteView
-from techchain.forms import PostCreateForm, CommentCreateForm
+from techchain.forms import PostCreateOrUpdateForm, CommentCreateForm
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
@@ -13,6 +13,7 @@ from notifications.utils import create_notification
 from notifications.models import LikeLog
 from django.utils import timezone
 from datetime import timedelta
+from django.db.models import Count
 
 @method_decorator(login_required, 'dispatch')
 class PostsListView(ListView):
@@ -38,7 +39,11 @@ class PostDetailView(DetailView, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        comments = Comment.objects.filter(post=self.get_object())
+        comments = (
+            Comment.objects.filter(post=self.get_object())
+            .annotate(num_likes=Count('likes', distinct=True))
+            .order_by("-num_likes", "created_at")
+        )
         context["comments"] =  comments
         return context
     
@@ -52,22 +57,38 @@ class PostDetailView(DetailView, CreateView):
         return reverse('posts:detail', args=[self.get_object().pk])
     
 
-
-@method_decorator(login_required, 'dispatch')
-class PostsCreateView(CreateView):
+@method_decorator(login_required, name='dispatch')
+class PostCreateOrUpdateView(CreateView):
     model = Post
     template_name = 'posts/post_create.html'
-    form_class = PostCreateForm
+    form_class = PostCreateOrUpdateForm
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user  # Asigna el usuario actual al Post
-        response = super().form_valid(form)     # ✅ Guarda el Post en la base de datos
-        form.instance.tags.set(form.cleaned_data['tags'])  # ✅ Establece los tags después de guardar
-        return response
-    
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        if pk:
+            return Post.objects.filter(pk=pk, user=self.request.user).first()
+        return None
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(instance=self.object)
+        return self.render_to_response({'form': form})
+
     def get_success_url(self):
-        return reverse_lazy('posts:list', kwargs={'user_uuid': str(self.object.user.uuid)})
+        return reverse('posts:list', kwargs={'user_uuid': str(self.request.user.uuid)})
     
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(request.POST, request.FILES, instance=self.object)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            post.save()
+            form.save_m2m()
+            return redirect(self.get_success_url())
+        return self.render_to_response({'form': form})
+
+
 class PostDeleteView(DeleteView):
     model = Post
     template_name = 'posts/post_delete.html'
@@ -82,27 +103,11 @@ class PostDeleteView(DeleteView):
         return HttpResponseRedirect(self.get_success_url())
     
 
-# @login_required
-# def like_post(request, pk):
-#     post = Post.objects.get(pk=pk)
-
-#     if request.user in post.likes.all():
-#         messages.add_message(request, messages.INFO, message='Ya no te gusta esta publicación')
-#         post.likes.remove(request.user)
-#     else:
-#         post.likes.add(request.user)
-#         messages.add_message(request, messages.INFO, message='Te gusta esta publicación')
-
-#     return HttpResponseRedirect(reverse('posts:detail', args=[pk]))
-
-
 @login_required
 def like_post_ajax(request, pk):
-    # Obtener el post o lanzar 404 si no existe
     post = get_object_or_404(Post, pk=pk)
     user = request.user
 
-    # Si el usuario ya dio like, eliminarlo (unlike)
     if user in post.likes.all():
         post.likes.remove(user)
         LikeLog.objects.filter(user=user, post=post).delete()
@@ -112,7 +117,6 @@ def like_post_ajax(request, pk):
             'liked': False,
         })
     
-    # Si el usuario no ha dado like, añadirlo
     post.likes.add(user)
 
     cooldown_minutes = 10
@@ -142,5 +146,26 @@ def like_post_ajax(request, pk):
     return JsonResponse({
         'message': 'Te gusta esta publicación',
         'nLikes': post.likes.count(),
+        'liked': True,
+    })
+
+@login_required
+def like_comment_ajax(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    user = request.user
+
+    if user in comment.likes.all():
+        comment.likes.remove(user)
+        return JsonResponse({
+            'message': 'Ya no te gusta este comentario',
+            'nLikes': comment.likes.count(),
+            'liked': False,
+        })
+
+    comment.likes.add(user)
+
+    return JsonResponse({
+        'message': 'Te gusta este comentario',
+        'nLikes': comment.likes.count(),
         'liked': True,
     })

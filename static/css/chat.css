@@ -15,8 +15,7 @@ h4 {
 .chat-box {
     height: 400px; /* Altura del chat */
     overflow-y: auto; /* Scroll para mensajes largos */
-    border: 1px solid #ddd;
-    border-radius: 10px;
+    border-radius: 10px 10px 0px 0px;
     padding: 10px;
     background: #f8f9fa;
     display: flex;
@@ -46,8 +45,75 @@ h4 {
     background: #e9ecef;
     align-self: flex-start;
 }
+
+.message.received::before {
+  content: "";
+  position: absolute;
+  left: -8px;      /* separa el pico del mensaje */
+  top: 6px;        /* ajusta verticalmente */
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 18px solid #e9ecef;  /* color del mensaje */
+}
+
 .sent {
     background: #0d6efd;
     color: white;
     align-self: flex-end;
 }
+
+.message.sent::before {
+  content: "";
+  position: absolute;
+  right: -8px;     /* separa el pico del mensaje */
+  top: 6px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 18px solid #0d6efd;  /* color del mensaje */
+}
+
+/* Settings Modal */
+.settings-modal {
+  position: absolute;
+  top: 65px;
+  width: 100%;
+  padding: 12px 16px;
+  background: #1e1e1e;
+  color: white;
+  border-radius: 8px;
+  z-index: 20;
+  display: none;
+}
+
+.settings-modal.open {
+  display: block;
+}
+
+.settings-modal span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.bg-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.bg-picker {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+}
+
+

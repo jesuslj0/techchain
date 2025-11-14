@@ -37,3 +37,15 @@
 .subtitle {
     font-family: "Newsreader-Variable";
 }
+
+.profile-card img {
+  border: 3px solid #f0f0f0;
+}
+
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}

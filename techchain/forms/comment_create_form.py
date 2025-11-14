@@ -6,14 +6,13 @@ class CommentCreateForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
-        labels ={
-            'text': 'Comenta aquí',
+        labels = {
+            'text': '',
         }
         widgets = {
-            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': '💬 Comparte tu opinión...'}),
         }
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            for field in self.fields.values():
-                field.label_suffix = ''
+            self.fields['text'].label = ''

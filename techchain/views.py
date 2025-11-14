@@ -56,6 +56,11 @@ class LoginView(LoginView):
         user = form.get_user()
         remember_me = self.request.POST.get('remember_me')
 
+        if not user.profile:
+            UserProfile.objects.create(
+                user=user
+            )
+
         if user is not None:
             login(self.request, user)
 
@@ -63,10 +68,9 @@ class LoginView(LoginView):
                 self.request.session.set_expiry(1209600)
             else:
                 self.request.session.set_expiry(0)
-                messages.add_message(self.request, messages.SUCCESS, "Inicio de sesión exitoso.")
-            return HttpResponseRedirect(self.get_success_url())  # Redirige a la URL de éxito definida en el formulario
+            return HttpResponseRedirect(self.get_success_url())  
         else:
-            return self.form_invalid(form)  # Si el usuario no se autentica, mostrar error
+            return self.form_invalid(form)  
 
 class LogoutView(LogoutView):
     template_name = 'general/logout.html'
@@ -99,7 +103,6 @@ class RegisterView(FormView):
         messages.error(self.request, 'Por favor, corrige los errores del formulario.')
         return super().form_invalid(form)
     
-        
 # Vista de exploración
 class ExploreView(ListView):
     template_name = "general/explore.html"

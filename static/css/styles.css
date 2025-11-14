@@ -83,3 +83,11 @@ footer {
         color: rgba(255, 255, 255, 0.6)
     }
 }
+
+.title {
+    font-family: "Goldman-Regular";
+}
+
+.subtitle {
+    font-family: "Newsreader-Varible";
+}

@@ -15,13 +15,12 @@ urlpatterns = [
     path('legal/', LegalView.as_view(), name='legal'),
     path('explore/', ExploreView.as_view(), name='explore'),
 
+    # Urls de apps externas
     path('profiles/', include('profiles.urls', namespace='profiles')),
-
     path('posts/', include('posts.urls', namespace='posts')),
-
     path('chat/', include('chat.urls', namespace='chat')),
-
     path('notifications/', include('notifications.urls', namespace='notifications')),
+    path('api/', include('api.urls',namespace='api')),
 
     path("prose/", include("prose.urls")),
 ] + debug_toolbar_urls()

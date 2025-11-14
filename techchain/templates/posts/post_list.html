@@ -23,7 +23,7 @@
                 </div>
 
                 <!-- Contenido -->
-                <div class="col-12 col-md-8 d-flex flex-column justify-content-between">
+                <div class="col-12 col-md-8 d-flex flex-column justify-content-start">
                     <!-- Usuario y fecha -->
                     <p class="mb-1 text-muted small">
                         <a href="{% url 'profiles:detail' post.user.uuid %}"><strong>{{ post.user.username }}</strong></a> — {{ post.created_at|date:"d M Y" }}
@@ -58,7 +58,10 @@
                     <!-- Botones -->
                     <div class="mt-2">
                         <a class="btn btn-sm btn-outline-primary me-2" href="{% url 'posts:detail' post.pk %}">Ver publicación</a>
+                        {% if request.user == post.user %}
+                            <a class="btn btn-sm btn-outline-warning me-2" href="{% url 'posts:edit' request.user.uuid post.pk %}">Editar</a>
                         <a class="btn btn-sm btn-outline-danger" href="{% url 'posts:delete' post.pk %}">Eliminar</a>
+                        {% endif %}
                     </div>
                 </div> <!-- /.col-md-8 -->
             </div> <!-- /.row -->
