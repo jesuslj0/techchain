@@ -101,7 +101,7 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="col-md-9 p-3 col-lg-6" id="chat-box-container">
+        <div class="col-md-9 p-3 col-lg-6" id="chat-box-container" style="position: relative">
             <div class="m-2 d-flex gap-2 align-items-center" id="chat-info">
                 {% with room=current_room %} 
 
@@ -245,6 +245,12 @@
         const groupOnlineUsersSpan = document.getElementById("group-online-users");
         const groupOnlineText = document.getElementById("group-online-text");
         let onlineInRoom = [];
+
+        //Auto scroll hacia abajo
+        chatBox.scrollTo({
+            top: chatBox.scrollHeight,
+            behavior: "smooth"
+        });
 
         function updateGroupOnlineUsers(onlineUsers) {
             const groupOnlineUsersSpan = document.getElementById("group-online-users");
@@ -480,8 +486,6 @@
             }
         });
 
-        // Preparamos el contenedor una sola vez
-        chatBoxContainer.style.position = 'relative';
         let isFullscreen = false;
 
         if (toggleChatButton) {

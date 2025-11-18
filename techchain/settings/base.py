@@ -17,6 +17,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Requeridos para allauth
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # Proveedor de Google
+    'allauth.socialaccount.providers.google',
+
     'django_extensions',
     'debug_toolbar',
     'crispy_forms',
@@ -45,6 +53,9 @@ MIDDLEWARE = [
 
     # Middleware custom
     'techchain.middleware.profile_completion.ProfileCompletionMiddleware',
+
+    # Allauth
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 REST_FRAMEWORK = {
@@ -114,7 +125,6 @@ USE_TZ = True
 USE_I18N = True
 USE_L10N = True
 
-
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
@@ -135,3 +145,19 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+
+# Allauth
+AUTHENTICATION_BACKENDS = [
+    # Requerido para iniciar sesión como administrador
+    'django.contrib.auth.backends.ModelBackend',
+    # allauth para autenticación
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SITE_ID = 1 # django.contrib.sites
+
+# Configuraciones específicas de allauth
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_UNIQUE_EMAIL = True

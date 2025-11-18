@@ -12,19 +12,31 @@
     <div class="main-container">
         <img id="techchain-logo" src="/static/icons/android-chrome-512x512.png" alt="logo" />
         <div class="content-container">
-            <h2>Conectando con el futuro.</h2>
-            <h3>Únete ahora</h3>
-            <form method='post'>
-                {% csrf_token %}
-                {{ form|crispy }}
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
-                    <label class="form-check-label" for="rememberMe">Recuérdame</label>
-                </div>
-                <button class='btn btn-primary bg-dark' type='submit'>Entrar</button>
-            </form>   
-            <p class="register">¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate</a></p>
+          <h2>Conectando con el futuro.</h2>
+          <h3>Únete ahora</h3>
+          <form method='post'>
+              {% csrf_token %}
+              {{ form|crispy }}
+              <div class="form-check mb-3">
+                  <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
+                  <label class="form-check-label" for="rememberMe">Recuérdame</label>
+              </div>
+              <button class='btn btn-primary bg-dark' type='submit'>Entrar</button>
+          </form>   
+          <div class="separator-container">
+              <div class="separator-line"></div>
+              <span class="separator-text">o</span>
+              <div class="separator-line"></div>
+          </div>
+
+          <a href="{% url 'google_login' %}" class="google-login-btn">
+              {% load static %}
+              <img src="{% static 'icons/google-icon.png' %}" alt="Google">
+              Entrar con Google
+          </a>
+          <p class="register">¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate</a></p>
         </div>
+    </div>
 {% endblock %}
 
 {% block script %}

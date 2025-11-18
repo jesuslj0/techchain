@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a TechChain</title>
+    <style>
+        /* Estilos básicos para compatibilidad con correo */
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); }
+        .header { background-color: #007bff; /* Color primario de TechChain */ color: #ffffff; padding: 20px; text-align: center; }
+        .content { padding: 30px; line-height: 1.6; color: #333333; }
+        .footer { background-color: #f0f0f0; padding: 20px; text-align: center; font-size: 12px; color: #777777; }
+        .button { display: inline-block; background-color: #28a745; /* Color para el botón de acción */ color: #ffffff !important; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 15px; }
+        .highlight { color: #007bff; font-weight: bold; }
+        h1 { margin: 0; font-size: 24px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            {% load static %}
+            <h1>Bienvenido a TechChain 
+                <img src="https://techchain.live/static/icons/android-chrome-192x192.png" 
+                style="width: 28px; height: 28px; vertical-align: middle;"
+                alt="TechChain Icon"/></h1>
+        </div>
+
+        <div class="content">
+            {% if user.first_name %}
+                <p>Hola, <span class="highlight">{{ user.first_name }}</span>,</p>
+            {% else %}
+                <p>Hola,</p>
+            {% endif %}
+            
+            <p>¡Gracias por unirte a la comunidad de TechChain! Estamos emocionados de tenerte a bordo.</p>
+            
+            <p>Tu cuenta ha sido creada exitosamente con el siguiente email:</p>
+            <p style="text-align: center; font-size: 1.1em; background-color: #f9f9f9; padding: 10px; border-radius: 4px;">
+                <strong>{{ user.email }}</strong>
+            </p>
+
+            <p>Te invitamos a explorar nuestra plataforma y comenzar a utilizar todas las herramientas que hemos desarrollado para ti.</p>
+
+            <p style="text-align: center;">
+                <a href="https://techchain.live/login" class="button" target="_blank">
+                    Ir a la Plataforma
+                </a>
+            </p>
+
+            <p>Si tienes alguna pregunta o necesitas ayuda, no dudes en responder a este correo.</p>
+            
+            <p>Saludos cordiales,<br>El equipo de TechChain.</p>
+        </div>
+
+        <div class="footer">
+            <p>&copy; {% now "Y" %} TechChain. Todos los derechos reservados.</p>
+            <p>Este es un correo automático. Por favor, no lo respondas si no es para soporte.</p>
+        </div>
+    </div>
+</body>
+</html>
