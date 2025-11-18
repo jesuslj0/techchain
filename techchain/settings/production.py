@@ -37,10 +37,14 @@ DATABASES = {
 # Seguridad y caché
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Header para Google Auh
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Opcional: forzar HTTPS en producción
-# SECURE_SSL_REDIRECT = True
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # LOG_DIR = BASE_DIR / "logs"
 # os.makedirs(LOG_DIR, exist_ok=True)
