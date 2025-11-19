@@ -31,8 +31,3 @@ from django.conf.urls.static import static
 if settings.DEBUG:  # Solo durante el desarrollo
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-def trigger_error(request):
-    division = 1 / 0
-
-urlpatterns =+ path('sentry-debug/', trigger_error),

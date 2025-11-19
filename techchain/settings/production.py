@@ -46,7 +46,7 @@ SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-LOG_DIR = BASE_DIR / "logs"
+LOG_DIR = "/var/log/techchain"
 os.makedirs(LOG_DIR, exist_ok=True)
 
 LOGGING = {
