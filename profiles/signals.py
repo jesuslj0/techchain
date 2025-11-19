@@ -4,6 +4,9 @@ from django.contrib.auth import get_user_model
 from .models import UserProfile
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
+import logging
+
+logger =  logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -24,10 +27,10 @@ def handle_user_creation_tasks(sender, instance, created, **kwargs):
                 message="Gracias por registrarte en nuestra plataforma.",
                 from_email="servicio.usuarios@techchain.live",
                 recipient_list=[instance.email],
-                fail_silently=False,
+                fail_silently=True, # Cambio temporal
                 html_message=html_message
             )
             
         except Exception as e:
-            print(f"Error al enviar el correo de bienvenida a {instance.email}: {e}")
+            logger.error(f"Fallo de SMTP al enviar correo de bienvenida a {instance.email}. Error: {e}", exc_info=True)
 
