@@ -161,3 +161,14 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_UNIQUE_EMAIL = True
+
+# Configuracion de logging con Sentry
+import sentry_sdk
+
+SENTRY_DSN = os.environ.get("SENTRY_DSN")
+
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    traces_sample_rate=0.2,
+    send_default_pii=True,
+)
