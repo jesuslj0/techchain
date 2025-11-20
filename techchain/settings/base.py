@@ -61,7 +61,16 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
+    ],
+    #Ayuda a seguridad en producción
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        # Limita las solicitudes de usuarios no autenticados (Anónimos)
+        'anon': '100/day', # 100 registros al día por IP
+        'register': '3/minute', # Máximo 3 intentos de registro por minuto por IP
+    },
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
