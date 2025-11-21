@@ -10,8 +10,7 @@
 
 .post-detail-img {
     width: 100%;
-    max-width: 600px;
-    max-height: 800px;
+    max-height: 700px;
     height: auto;
     object-fit: contain;
 

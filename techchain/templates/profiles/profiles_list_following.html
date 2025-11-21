@@ -79,11 +79,7 @@
                                 <form action="{% url 'profiles:toggle_follow' user_uuid=follow.followed.user.uuid %}" method="post">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-primary btn-sm">
-                                        {% if follow.followed in request.user.profile.followers.all %}
-                                            Dejar de seguir
-                                        {% else %}
-                                            Seguir
-                                        {% endif %}
+                                        Dejar de seguir
                                     </button>
                                 </form>
                             </li>
