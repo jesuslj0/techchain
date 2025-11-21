@@ -18,8 +18,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Post
-        fields = ['id', 'image', 'title', 'content', 'tags', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        fields = ['image', 'title', 'content', 'tags']
         
     def validate_tags(self, value):
         if len(value) > 5:
