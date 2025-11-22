@@ -24,9 +24,9 @@ class PostsListView(ListView):
         context = super().get_context_data(**kwargs)
         user_uuid = self.kwargs.get('user_uuid', None)
         if user_uuid:
-            context["posts"] = Post.objects.filter(user__uuid=user_uuid)
+            context["posts"] = Post.objects.filter(user__uuid=user_uuid).order_by('-created_at')
         else:
-            context["posts"] = Post.objects.filter(user=self.request.user)
+            context["posts"] = Post.objects.filter(user=self.request.user).order_by('-created_at')
         return context
     
 
