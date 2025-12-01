@@ -5,7 +5,13 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/profile_detail.css' %}">
 {% endblock %}
-{% block title %}Mi perfil - TechChain{% endblock %}
+{% block title %}
+    {% if object.user.uuid == user_uuid %}
+        Mi perfil
+    {% else %}
+        Perfil de {{object.user.username}}
+    {% endif %}
+{% endblock %}
 {% block title_h1 %}
     {% if object.user.uuid == user_uuid %}
         Mi perfil
@@ -86,7 +92,7 @@
                             <form action="{% url 'profiles:toggle_follow' user_uuid=object.user.uuid %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-outline-primary w-100 btn-sm">
-                                {% if object.user.profile in request.user.profile.following.all %}
+                                {% if object.user.profile in request.user.profile.follow.all %}
                                 Dejar de seguir
                                 {% else %}
                                 Seguir
@@ -108,7 +114,9 @@
                 </div>
                 <!-- Grid de publicaciones -->
                 <div class="col-12 col-lg-6 col-xxl-7">
-                <h4 class="mb-3 fw-semibold">Publicaciones</h4>
+                <h4 class="mb-3 fw-semibold">Publicaciones
+                    <a class="btn btn-sm btn-outline-primary ms-2" href="{% url 'posts:list' object.user.uuid %}">Ver más</a>
+                </h4>
                 <div class="row g-3">
                     {% for post in posts %}
                     <div class="col-12 col-md-6">

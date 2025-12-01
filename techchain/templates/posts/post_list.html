@@ -4,12 +4,18 @@
     {% load static%}
     <link rel="stylesheet" href="{% static 'css/post_list.css' %}">
 {% endblock %}
-{% block title %}Posts{% endblock %}
-{% block title_h1%}
-    {% if request.user.is_authenticated.uuid != user_uuid %}
+{% block title %}
+{% if user_uuid == user_obj.uuid %}
     Mis Publicaciones
     {% else %}
-    Publicaciones de {{object.user.username}}
+    {{user_obj.username}} - Publicaciones
+    {% endif %}
+{% endblock %}
+{% block title_h1%}
+{% if user_uuid == user_obj.uuid %}
+    Mis Publicaciones
+    {% else %}
+    Publicaciones de {{user_obj.username}}
     {% endif %}
 {% endblock %}
 
