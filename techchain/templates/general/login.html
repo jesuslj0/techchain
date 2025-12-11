@@ -29,8 +29,9 @@
               <div class="separator-line"></div>
           </div>
 
-          <a href="{% provider_login_url 'google' %}" class="google-login-btn">
-              {% load static %}
+          {% load static %}
+          {% load socialaccount %}
+          <a href="{% provider_login_url 'google' process="login" %}" class="google-login-btn">
               <img src="{% static 'icons/google-icon.png' %}" alt="Google">
               Entrar con Google
           </a>
