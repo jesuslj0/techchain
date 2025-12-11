@@ -24,6 +24,7 @@ urlpatterns = [
 
     # Allauth
     path('accounts/', include('allauth.urls')),
+    
     path("prose/", include("prose.urls")),
 ] + debug_toolbar_urls()
 

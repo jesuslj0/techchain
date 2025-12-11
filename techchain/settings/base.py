@@ -163,6 +163,20 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# Google AllAuth
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "openid",
+            "email",
+            "profile",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        }
+    }
+}
+
 SITE_ID = 1 # django.contrib.sites
 
 # Configuraciones específicas de allauth
@@ -170,6 +184,12 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_UNIQUE_EMAIL = True
+
+SOCIALACCOUNT_PROVIDERS['google']['APP'] = {
+    'client_id': os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_ID"),
+    'secret': os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_SECRET"),
+    'key': '',
+}
 
 # Configuracion de logging con Sentry
 import sentry_sdk
