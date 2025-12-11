@@ -24,6 +24,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'legal' %}">Aviso Legal</a>
             </li>
+            <li class="nav-item">
+                <button id="theme-toggle" class="btn btn-outline-secondary" aria-label="Cambiar modo oscuro/claro">
+                    <i class="bi bi-toggle-off"></i> Modo oscuro
+                </button>
+            </li>
         </ul>
         {% endblock %}
     </nav>
@@ -33,6 +38,8 @@
         </button>
     </div>
 </header>
+{% load static %}
+<script src="{% static 'js/theme-toggle.js' %}"></script>
 
 {% comment %} <form action="{% url 'set_language' %}" method="post">
     {% csrf_token %}
@@ -46,4 +53,6 @@
             </select>
             <input type="hidden" name="next" value="{{ request.path }}">
             <button type="submit">Cambiar idioma</button>
-            </form>{% endcomment %}
+            </form>
+{% endcomment %}
+

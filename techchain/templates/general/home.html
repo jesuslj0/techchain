@@ -24,31 +24,31 @@
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
                     <i class="bi bi-person-circle"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.uuid %}">Mi Perfil</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'profiles:detail' request.user.uuid %}">Mi Perfil</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-bell"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'notifications:list' %}">Notificaciones</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-chat-square-text"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'chat:chat_rooms' %}">Chats</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-people-fill"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-people"></i>
-                    <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
+                    <a class="mb-2 text-decoration-none" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-postcard-heart"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-file-earmark-plus"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_uuid %}">Crear</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'posts:create' user_uuid %}">Crear</a>
                     </li>
                 </ul>
             </div>

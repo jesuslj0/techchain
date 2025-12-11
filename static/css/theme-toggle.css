@@ -1,0 +1,43 @@
+/* --- 1. Variables Globales (Modo Claro por Defecto) --- */
+:root {
+    /* Colores primarios */
+    --color-bg-primary: #ffffff; /* Fondo principal */
+    --color-text-primary: #212529; /* Texto principal (dark-mode por defecto en Bootstrap) */
+    --color-text-secondary: rgba(33, 37, 41, 0.75); /* El color que usas para .n-likes y a.like-button */
+
+    /* Colores del Footer (basados en tu CSS, asumiendo que quieres un footer oscuro siempre) */
+    --color-footer-text-primary: white;
+    --color-footer-text-secondary: rgba(255, 255, 255, 0.6);
+}
+
+/* --- 2. Sobrescritura para Modo Oscuro --- */
+body.dark-mode {
+    --color-bg-primary: #1e1e1e; /* Un fondo gris oscuro profesional */
+    --color-text-primary: #f8f9fa; /* Texto claro */
+    --color-text-secondary: rgba(248, 249, 250, 0.75); /* Texto secundario claro */
+
+    /* Puedes agregar overrides de Bootstrap aquí si fuera necesario, como fondos de cards */
+}
+
+/* --- 3. Aplicación a Elementos Principales --- */
+body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    transition: background-color 0.3s, color 0.3s;
+    /* Mantenemos tu cursor */
+    cursor: url('/static/cursor/Aero.cur'), auto; 
+}
+
+/* Aplicar la variable secundaria a los elementos que detecté en tu CSS */
+.n-likes, a.like-button {
+    color: var(--color-text-secondary);
+}
+
+/* IMPORTANTE: Tu footer parece tener colores fijos (blanco/gris claro), por lo que lo mantendremos así: */
+footer p:nth-of-type(1) {
+    color: var(--color-footer-text-primary);
+}
+
+footer p {
+    color: var(--color-footer-text-secondary);
+}

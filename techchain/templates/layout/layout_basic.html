@@ -12,7 +12,8 @@
         <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.4">
         <link rel="stylesheet" href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" >
         <link rel="stylesheet" href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" >
-        <link rel="stylesheet" href="{% static "css/fontfaces.css" %}">
+        <link rel="stylesheet" href="{% static 'css/fontfaces.css' %}">
+        <link rel="stylesheet" href="{% static 'css/theme-toggle.css' %}">
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
         {% block styles %}{% endblock %}
     <title>{% block title %}Title Default{% endblock %}</title>
@@ -50,7 +51,8 @@
             </form>
             {% else%}
             {% endif %}
-        {% endblock %} {% endcomment %}
+        {% endblock %} 
+        {% endcomment %}
         
         <div class="container">
             {% block messages %}
@@ -69,9 +71,9 @@
         {% endblock %}
         
         {% block content %}
+        {% load static %}
+        <script src="{% static 'js/theme-toggle.js' }"></script>
         {% endblock %}
-        
-        
     </main>
     {% block script %}
         <script>
@@ -208,10 +210,10 @@
     {% block session %}
             {% if request.user.is_authenticated %}
             <div class="container mt-4">
-                <div class="session-bar d-flex flex-column flex-sm-row justify-content-between align-items-center p-3 rounded shadow-sm bg-light">
+                <div id="session-bar" class="session-bar d-flex flex-column flex-sm-row justify-content-between align-items-center p-3 rounded shadow-sm">
                     
-                    <div class="text-muted mb-2 mb-sm-0 small">
-                    Sesión iniciada como <span class="text-primary fw-semibold">{{ request.user.username }}</span>
+                    <div class="mb-2 mb-sm-0 small">
+                    Sesión iniciada: <span class="text-primary fw-semibold">{{ request.user.username }}</span>
                     </div>
 
                     <form action="{% url 'logout' %}" method="POST" class="m-0">
