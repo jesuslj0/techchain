@@ -12,9 +12,21 @@
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/styles.css'%}?v=1.1">
         <link rel="stylesheet" href="{% static 'css/fontfaces.css' %}">
-        <link rel="stylesheet" href="{% static 'css/theme-toggle.css' %}">
+        <link rel="stylesheet" href="{% static 'css/theme.css' %}">
         <link href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+        <script>
+            (function () {
+                try {
+                    const theme = localStorage.getItem('themePreference');
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                    if (theme === 'dark' || (!theme && prefersDark)) {
+                        document.documentElement.classList.add('dark-mode');
+                    }
+                } catch (e) {}
+            })();
+        </script>
     <title>{% block title %}Profile Default{% endblock %}</title>
 </head>
 <body class="d-flex flex-column min-vh-100">

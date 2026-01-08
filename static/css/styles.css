@@ -1,4 +1,10 @@
 
+@media (prefers-color-scheme: dark) {
+    html:not(.light-mode) {
+        background-color: #121212;
+    }
+}
+
 .sr-only { /* Para lectores de pantallas */
     position: absolute;
     width: 1px;

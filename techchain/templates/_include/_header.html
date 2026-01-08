@@ -1,7 +1,7 @@
-<header id="main-header" class="bg-dark"> 
-    <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark" hidden>
+<header id="main-header"> 
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-dark" hidden>
         {% block menu %}
-        <ul class="navbar-nav">
+        <ul class="navbar-nav gap-3">
             {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'home' %}">Home</a>
@@ -26,7 +26,7 @@
             </li>
             <li class="nav-item">
                 <button id="theme-toggle" class="btn btn-outline-secondary" aria-label="Cambiar modo oscuro/claro">
-                    <i class="bi bi-toggle-off"></i> Modo oscuro
+                    <i class="bi bi-lightbulb-fill" id="toggle-theme-icon"></i>
                 </button>
             </li>
         </ul>
@@ -40,7 +40,14 @@
 </header>
 {% load static %}
 <script src="{% static 'js/theme-toggle.js' %}"></script>
+<script>
+    const toggleThemeButton = document.getElementById('toggle-theme-icon');
+    const isCurrentlyDark = document.documentElement.classList.contains('dark-mode');
 
+    if (isCurrentlyDark) {
+        toggleThemeButton.classList.replace('bi-lightbulb-fill', 'bi-lightbulb');
+    }
+</script>
 {% comment %} <form action="{% url 'set_language' %}" method="post">
     {% csrf_token %}
     <select name="language">

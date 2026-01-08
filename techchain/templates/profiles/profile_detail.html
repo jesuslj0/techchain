@@ -123,10 +123,7 @@
                     <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
                         <img src="{{ post.image.url }}" alt="{{ post.title }}" class="card-img-top" style="height: 180px; object-fit: cover;">
                         <div class="card-body">
-                        <h6 class="fw-bold">{{ post.title }}</h6>
-                        <p class="text-muted small mb-2">
-                            <a href="{% url 'profiles:detail' post.user.uuid %}" class="text-decoration-none text-dark">@{{ post.user.username }}</a>
-                        </p>
+                        <h6 class="fw-bold text-primary">{{ post.title }}</h6>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="text-muted small">
                             <i class="bi bi-heart-fill text-danger"></i> {{ post.likes.all.count }}

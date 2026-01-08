@@ -13,8 +13,20 @@
         <link rel="stylesheet" href="{% static 'css/fontfaces.css' %}">
         <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.2">
         <link href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-        <link rel="stylesheet" href="{% static 'css/theme-toggle.css' %}"> 
+        <link rel="stylesheet" href="{% static 'css/theme.css' %}"> 
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+        <script>
+            (function () {
+                try {
+                    const theme = localStorage.getItem('themePreference');
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                    if (theme === 'dark' || (!theme && prefersDark)) {
+                        document.documentElement.classList.add('dark-mode');
+                    }
+                } catch (e) {}
+            })();
+        </script>
     <title>{% block title %}List Default{% endblock %}</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -238,7 +250,6 @@
         // Inicializamos timer al cargar página
         startInactivityTimer()          
     </script>
-    <script src="{% static 'js/theme-toggle.js' %}"></script>
     {% endblock %}
     {% block session %}
         {% if request.user.is_authenticated %}

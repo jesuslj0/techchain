@@ -8,15 +8,24 @@
     /* Colores del Footer (basados en tu CSS, asumiendo que quieres un footer oscuro siempre) */
     --color-footer-text-primary: white;
     --color-footer-text-secondary: rgba(255, 255, 255, 0.6);
+    --color-footer-bg: #0e0e0e;
 }
 
 /* --- 2. Sobrescritura para Modo Oscuro --- */
-body.dark-mode {
-    --color-bg-primary: #1e1e1e; /* Un fondo gris oscuro profesional */
-    --color-text-primary: #f8f9fa; /* Texto claro */
-    --color-text-secondary: rgba(248, 249, 250, 0.75); /* Texto secundario claro */
+html.dark-mode {
+    --color-bg-primary: #121212; 
+    --color-text-primary: #e5e5e5; /* Texto claro */
+    --color-text-secondary: #a3a3a3; /* Texto secundario claro */
+    --color-text-muted: #737373;
 
-    /* Puedes agregar overrides de Bootstrap aquí si fuera necesario, como fondos de cards */
+    /* Colores Sobreescritos BS*/
+    --bs-body-bg: #1a1a1a;
+    --bs-body-color: var(--color-text-primary);
+
+    --bs-card-color: #e5e5e5;
+    --bs-border-color: rgb(255,255,255, 0.006);
+
+    --bs-secondary-color: var(--color-text-secondary);
 }
 
 /* --- 3. Aplicación a Elementos Principales --- */
@@ -28,6 +37,20 @@ body {
     cursor: url('/static/cursor/Aero.cur'), auto; 
 }
 
+header {
+    background-color: var(--color-footer-bg);
+}
+footer {
+    background-color: var(--color-footer-bg);
+}
+
+#sidebarMenu > ul > li > a  {
+    color:  var(--color-text-primary);
+}
+
+.card {
+    color: var(--bs-card-color)
+}
 /* Aplicar la variable secundaria a los elementos que detecté en tu CSS */
 .n-likes, a.like-button {
     color: var(--color-text-secondary);
