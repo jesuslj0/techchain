@@ -1,8 +1,11 @@
 
 img#techchain-logo {
     width: 360px;
-    animation: rotate 6s linear infinite; /* Ajusta la duración y el tipo de animación */
     filter: drop-shadow(0px 0px 25px rgba(255, 255, 255, 0.8))
+}
+
+.logo-wrapper {
+  animation: rotate 4s ease-in-out infinite;
 }
 
 @keyframes rotate {
@@ -13,6 +16,15 @@ img#techchain-logo {
         transform: rotate(360deg);
     }
 }
+
+#techchain-logo:hover {
+  transform: scale(1.05);
+}
+
+#techchain-logo:active {
+  transform: scale(1.12) rotate(-1deg);
+}
+
 
 h1 {
     font-family: "Goldman-Regular";
@@ -90,7 +102,7 @@ form {
     }
 
     img#techchain-logo {
-        width: 250px;
+        width: 200px;
     }
 
     h1.title {
@@ -104,7 +116,7 @@ form {
     h2 {
         font-size: 30px;
         text-align: center;
-        margin-bottom: 50px;
+        margin: 20px 0px 40px 0px;
     }
 
     .main-container {
@@ -124,7 +136,7 @@ form {
     .title {
         text-align: center;
         font-size: 50px;
-        margin-bottom: 50px;
+        margin-bottom: 30px;
     }
 
     h2 {
@@ -141,6 +153,16 @@ form {
             width: 300px;
             height: auto;
         }
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1025px) {
+    .logo-wrapper {
+        margin-bottom: 30px;
+    }
+
+    img#techchain-logo {
+        width: 250px;
     }
 }
 

@@ -35,3 +35,30 @@
 .list-unstyled {
     width: 200px;
 }
+
+h5 {
+    color: var(--text-primary-color);
+}
+
+@media screen and (max-width: 767px) {
+    .title > span {
+        display: none;
+    }
+
+    .title {
+        text-align: start;
+    }
+
+    #search-bar {
+        position: absolute;
+        right: 10px;
+    }
+
+    #search-bar > form {
+        justify-content: end;
+    }
+
+    #user-search {
+        width: 220px;
+    }
+}

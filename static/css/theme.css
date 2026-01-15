@@ -19,7 +19,7 @@ html.dark-mode {
     --color-text-muted: #737373;
 
     /* Colores Sobreescritos BS*/
-    --bs-body-bg: #1a1a1a;
+    --bs-body-bg: #1e1e1e;
     --bs-body-color: var(--color-text-primary);
 
     --bs-card-color: #e5e5e5;

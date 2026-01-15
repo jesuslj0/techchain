@@ -10,7 +10,9 @@
 
 {% block content %}
     <div class="main-container">
-        <img id="techchain-logo" src="/static/icons/android-chrome-512x512.png" alt="logo" />
+        <div class="logo-wrapper">
+          <img id="techchain-logo" src="/static/icons/android-chrome-512x512.png" alt="logo" />
+        </div>
         <div class="content-container">
           <h2>Conectando con el futuro.</h2>
           <h3>Únete ahora</h3>
@@ -86,6 +88,60 @@
       toggleBtn.classList.remove('btn-primary');
       toggleBtn.classList.add('btn-outline-primary');
   });
+
+</script>
+
+<script>
+  const techchainLogo = document.getElementById("techchain-logo")
+  techchainLogo.style.transition = "transform 0.25s cubic-bezier(.2,.8,.2,1)"
+
+  techchainLogo.addEventListener("mousedown", () => {
+    techchainLogo.style.transform = "scale(1.12) rotate(-1deg)"
+    console.log('mousedown')
+  })
+
+  techchainLogo.addEventListener("mouseup", () => {
+    techchainLogo.style.transform = "scale(1)"
+        console.log('mouseup')
+  })
+
+  techchainLogo.addEventListener("mouseleave", () => {
+    techchainLogo.style.transform = "scale(1)"
+        console.log('mouseleave')
+  })
+
+  techchainLogo.addEventListener("mouseenter", () => {
+    techchainLogo.style.transform = "scale(1.1)"
+        console.log('mouseenter')
+  })
+</script>
+<script>
+  const input = document.querySelector('input#id_password')
+
+  if (input) {
+    input.style.paddingRight = "40px"
+
+    const toggle = document.createElement("span")
+    toggle.innerHTML = `<i class="bi bi-eye"></i>`
+    toggle.style.position = "absolute"
+    toggle.style.cursor = "pointer"
+    toggle.style.opacity = "0.6"
+
+    const parent = input.parentElement
+    parent.style.position = "relative"
+
+    toggle.style.right = "12px"
+    toggle.style.top = "55%"
+    toggle.style.position = "absolute"
+
+    parent.appendChild(toggle)
+
+    toggle.onclick = () => {
+      const isPass = input.type === "password"
+      input.type = isPass ? "text" : "password"
+      toggle.innerHTML = isPass ? `<i class="bi bi-eye-fill"></i>` : `<i class="bi bi-eye"></i>`
+    }
+  }
 
 </script>
 {% endblock%}
