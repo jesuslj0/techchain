@@ -5,7 +5,13 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/profile_detail.css' %}">
 {% endblock %}
-{% block title %}Mi perfil - TechChain{% endblock %}
+{% block title %}
+    {% if object.user.uuid == user_uuid %}
+        Mi perfil
+    {% else %}
+        Perfil de {{object.user.username}}
+    {% endif %}
+{% endblock %}
 {% block title_h1 %}
     {% if object.user.uuid == user_uuid %}
         Mi perfil
@@ -26,31 +32,31 @@
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
                     <i class="bi bi-house"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'home' %}">Inicio</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'home' %}">Inicio</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-bell"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'notifications:list' %}">Notificaciones</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-chat-square-text"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'chat:chat_rooms' %}">Chats</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-people-fill"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-people"></i>
-                    <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
+                    <a class="mb-2 text-decoration-none" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-postcard-heart"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-file-earmark-plus"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_uuid %}">Crear</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'posts:create' user_uuid %}">Crear</a>
                     </li>
                 </ul>
             </div>
@@ -72,8 +78,8 @@
 
                         <div class="d-flex justify-content-around text-center mb-3">
                         <div><strong>{{ object.user.posts.count }}</strong><br><small class="text-muted">Publicaciones</small></div>
-                        <div><strong>{{ object.following.count }}</strong><br><small class="text-muted">Seguidores</small></div>
-                        <div><strong>{{ object.followers.count }}</strong><br><small class="text-muted">Seguidos</small></div>
+                        <div><strong>{{ object.followers.count }}</strong><br><small class="text-muted">Seguidores</small></div>
+                        <div><strong>{{ object.following.count }}</strong><br><small class="text-muted">Seguidos</small></div>
                         </div>
 
                         {% if object.bio %}
@@ -86,7 +92,7 @@
                             <form action="{% url 'profiles:toggle_follow' user_uuid=object.user.uuid %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-outline-primary w-100 btn-sm">
-                                {% if object.user.profile in request.user.profile.followers.all %}
+                                {% if object.user.profile in request.user.profile.follow.all %}
                                 Dejar de seguir
                                 {% else %}
                                 Seguir
@@ -108,17 +114,16 @@
                 </div>
                 <!-- Grid de publicaciones -->
                 <div class="col-12 col-lg-6 col-xxl-7">
-                <h4 class="mb-3 fw-semibold">Publicaciones</h4>
+                <h4 class="mb-3 fw-semibold">Publicaciones
+                    <a class="btn btn-sm btn-outline-primary ms-2" href="{% url 'posts:list' object.user.uuid %}">Ver más</a>
+                </h4>
                 <div class="row g-3">
                     {% for post in posts %}
                     <div class="col-12 col-md-6">
                     <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
                         <img src="{{ post.image.url }}" alt="{{ post.title }}" class="card-img-top" style="height: 180px; object-fit: cover;">
                         <div class="card-body">
-                        <h6 class="fw-bold">{{ post.title }}</h6>
-                        <p class="text-muted small mb-2">
-                            <a href="{% url 'profiles:detail' post.user.uuid %}" class="text-decoration-none text-dark">@{{ post.user.username }}</a>
-                        </p>
+                        <h6 class="fw-bold text-primary">{{ post.title }}</h6>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="text-muted small">
                             <i class="bi bi-heart-fill text-danger"></i> {{ post.likes.all.count }}

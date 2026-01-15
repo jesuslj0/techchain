@@ -1,1 +1,4 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
+a {
+    color: #212529 !important;
+}

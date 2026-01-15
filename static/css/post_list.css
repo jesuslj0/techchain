@@ -4,6 +4,6 @@
 }
 
 .list-unstyled {
-    background-color: #fff;
+    background-color: var(--color-bg-primary);
     width: 250px;
 }

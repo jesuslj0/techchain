@@ -12,8 +12,21 @@
         <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.4">
         <link rel="stylesheet" href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" >
         <link rel="stylesheet" href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" >
-        <link rel="stylesheet" href="{% static "css/fontfaces.css" %}">
+        <link rel="stylesheet" href="{% static 'css/fontfaces.css' %}">
+        <link rel="stylesheet" href="{% static 'css/theme.css' %}">
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+        <script>
+            (function () {
+                try {
+                    const theme = localStorage.getItem('themePreference');
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                    if (theme === 'dark' || (!theme && prefersDark)) {
+                        document.documentElement.classList.add('dark-mode');
+                    }
+                } catch (e) {}
+            })();
+        </script>
         {% block styles %}{% endblock %}
     <title>{% block title %}Title Default{% endblock %}</title>
 </head>
@@ -29,9 +42,9 @@
                 </div>
 
                 <!-- Barra de búsqueda -->
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6" id="search-bar">
                 {% block search_bar %}
-                <form class="d-flex justify-content-center justify-content-md-end" method="get" action="{% url 'profiles:search' %}">
+                <form class="d-flex" method="get" action="{% url 'profiles:search' %}">
                     <input class="form-control me-2" type="search" name="query" placeholder="Buscar usuarios" id="user-search" value="{{ request.GET.query }}">
                     <button class="btn btn-outline-primary" type="submit" id="search-btn">
                     <i class="bi bi-search"></i>
@@ -50,7 +63,8 @@
             </form>
             {% else%}
             {% endif %}
-        {% endblock %} {% endcomment %}
+        {% endblock %} 
+        {% endcomment %}
         
         <div class="container">
             {% block messages %}
@@ -69,9 +83,9 @@
         {% endblock %}
         
         {% block content %}
+        {% load static %}
+        <script src="{% static 'js/theme-toggle.js' }"></script>
         {% endblock %}
-        
-        
     </main>
     {% block script %}
         <script>
@@ -208,10 +222,10 @@
     {% block session %}
             {% if request.user.is_authenticated %}
             <div class="container mt-4">
-                <div class="session-bar d-flex flex-column flex-sm-row justify-content-between align-items-center p-3 rounded shadow-sm bg-light">
+                <div id="session-bar" class="session-bar d-flex flex-column flex-sm-row justify-content-between align-items-center p-3 rounded shadow-sm">
                     
-                    <div class="text-muted mb-2 mb-sm-0 small">
-                    Sesión iniciada como <span class="text-primary fw-semibold">{{ request.user.username }}</span>
+                    <div class="mb-2 mb-sm-0 small">
+                    Sesión iniciada: <span class="text-primary fw-semibold">{{ request.user.username }}</span>
                     </div>
 
                     <form action="{% url 'logout' %}" method="POST" class="m-0">

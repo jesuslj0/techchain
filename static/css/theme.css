@@ -1,0 +1,66 @@
+/* --- 1. Variables Globales (Modo Claro por Defecto) --- */
+:root {
+    /* Colores primarios */
+    --color-bg-primary: #ffffff; /* Fondo principal */
+    --color-text-primary: #212529; /* Texto principal (dark-mode por defecto en Bootstrap) */
+    --color-text-secondary: rgba(33, 37, 41, 0.75); /* El color que usas para .n-likes y a.like-button */
+
+    /* Colores del Footer (basados en tu CSS, asumiendo que quieres un footer oscuro siempre) */
+    --color-footer-text-primary: white;
+    --color-footer-text-secondary: rgba(255, 255, 255, 0.6);
+    --color-footer-bg: #0e0e0e;
+}
+
+/* --- 2. Sobrescritura para Modo Oscuro --- */
+html.dark-mode {
+    --color-bg-primary: #121212; 
+    --color-text-primary: #e5e5e5; /* Texto claro */
+    --color-text-secondary: #a3a3a3; /* Texto secundario claro */
+    --color-text-muted: #737373;
+
+    /* Colores Sobreescritos BS*/
+    --bs-body-bg: #1e1e1e;
+    --bs-body-color: var(--color-text-primary);
+
+    --bs-card-color: #e5e5e5;
+    --bs-border-color: rgb(255,255,255, 0.006);
+
+    --bs-secondary-color: var(--color-text-secondary);
+}
+
+/* --- 3. Aplicación a Elementos Principales --- */
+body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    transition: background-color 0.3s, color 0.3s;
+    /* Mantenemos tu cursor */
+    cursor: url('/static/cursor/Aero.cur'), auto; 
+}
+
+header {
+    background-color: var(--color-footer-bg);
+}
+footer {
+    background-color: var(--color-footer-bg);
+}
+
+#sidebarMenu > ul > li > a  {
+    color:  var(--color-text-primary);
+}
+
+.card {
+    color: var(--bs-card-color)
+}
+/* Aplicar la variable secundaria a los elementos que detecté en tu CSS */
+.n-likes, a.like-button {
+    color: var(--color-text-secondary);
+}
+
+/* IMPORTANTE: Tu footer parece tener colores fijos (blanco/gris claro), por lo que lo mantendremos así: */
+footer p:nth-of-type(1) {
+    color: var(--color-footer-text-primary);
+}
+
+footer p {
+    color: var(--color-footer-text-secondary);
+}

@@ -56,11 +56,6 @@ class LoginView(LoginView):
         user = form.get_user()
         remember_me = self.request.POST.get('remember_me')
 
-        if not user.profile:
-            UserProfile.objects.create(
-                user=user
-            )
-
         if user is not None:
             login(self.request, user)
 
@@ -83,19 +78,7 @@ class RegisterView(FormView):
 
     def form_valid(self, form):
         user = form.save()
-        messages.success(self.request, '¡Registro completado con éxito!')
-
-        try:
-            send_mail(
-                subject="Bienvenido a TechChain",
-                message="Gracias por registrarte en nuestra plataforma.",  # Fallback en texto plano
-                from_email="servicio.usuarios@techchain.live",
-                recipient_list=[user.email],
-                fail_silently=False,
-                html_message=register_message  # Correo en HTML
-        )
-        except Exception as e:
-            messages.error(self.request, f"Error al enviar el correo de bienvenida: {e}")
+        messages.success(self.request, '¡Registro completado con éxito! Revisa tu correo.')
         
         return super().form_valid(form)
 

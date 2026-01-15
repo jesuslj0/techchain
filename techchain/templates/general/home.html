@@ -15,7 +15,7 @@
     <div class='container'>
         <div class="row">
             <!-- Botón para mostrar el menú (solo visible en móvil) -->
-            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-3 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
             <i class="bi bi-list"></i> Menú
             </button>
 
@@ -24,31 +24,31 @@
                 <ul class="list-unstyled d-flex flex-column p-2">
                     <li class='p-2'>
                     <i class="bi bi-person-circle"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:detail' request.user.uuid %}">Mi Perfil</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'profiles:detail' request.user.uuid %}">Mi Perfil</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-bell"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'notifications:list' %}">Notificaciones</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'notifications:list' %}">Notificaciones</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-chat-square-text"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'chat:chat_rooms' %}">Chats</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'chat:chat_rooms' %}">Chats</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-people-fill"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-people"></i>
-                    <a class="mb-2 text-decoration-none text-dark" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
+                    <a class="mb-2 text-decoration-none" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-postcard-heart"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
                     </li>
                     <li class='p-2'>
                     <i class="bi bi-file-earmark-plus"></i>
-                    <a class="mb-5 text-decoration-none text-dark" href="{% url 'posts:create' user_uuid %}">Crear</a>
+                    <a class="mb-5 text-decoration-none" href="{% url 'posts:create' user_uuid %}">Crear</a>
                     </li>
                 </ul>
             </div>
@@ -86,13 +86,13 @@
                                         {% endif %}
                                         <div>
                                             <p class="mb-0 text-muted small">
-                                                <a href="{% url 'profiles:detail' post.user.uuid %}" class="text-dark text-decoration-none"><strong>{{ post.user.username }}</strong></a> • Hace {{ post.created_at|timesince_short }}
+                                                <a href="{% url 'profiles:detail' post.user.uuid %}" class="text-decoration-none"><strong>{{ post.user.username }}</strong></a> • Hace {{ post.created_at|timesince_short }}
                                             </p>
                                         </div>
                                     </div>
 
                                     <!-- Título del post -->
-                                    <p lang="{{ post.language }}" class="mb-2 h5 text-primary">{{ post.title }}</p>
+                                    <h5 lang="{{ post.language }}" class="mb-2">{{ post.title }}</h5>
 
                                     <!-- Tags -->
                                     <p class="mb-2">

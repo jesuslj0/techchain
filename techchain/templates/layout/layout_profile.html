@@ -12,8 +12,21 @@
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/styles.css'%}?v=1.1">
         <link rel="stylesheet" href="{% static 'css/fontfaces.css' %}">
+        <link rel="stylesheet" href="{% static 'css/theme.css' %}">
         <link href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+        <script>
+            (function () {
+                try {
+                    const theme = localStorage.getItem('themePreference');
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                    if (theme === 'dark' || (!theme && prefersDark)) {
+                        document.documentElement.classList.add('dark-mode');
+                    }
+                } catch (e) {}
+            })();
+        </script>
     <title>{% block title %}Profile Default{% endblock %}</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -123,20 +136,20 @@
     {% endblock %}
         {% block session %}
         {% if request.user.is_authenticated %}
-        <div class="container mt-4">
-            <div class="session-bar d-flex flex-column flex-sm-row justify-content-between align-items-center p-3 rounded shadow-sm bg-light">
-                
-                <div class="text-muted mb-2 mb-sm-0 small">
-                Sesión iniciada como <span class="text-primary fw-semibold">{{ request.user.username }}</span>
-                </div>
+            <div class="container mt-4">
+                <div id="session-bar" class="session-bar d-flex flex-column flex-sm-row justify-content-between align-items-center p-3 rounded shadow-sm">
+                    
+                    <div class="mb-2 mb-sm-0 small">
+                    Sesión iniciada: <span class="text-primary fw-semibold">{{ request.user.username }}</span>
+                    </div>
 
-                <form action="{% url 'logout' %}" method="POST" class="m-0">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar sesión</button>
-                </form>
-            </div>
-            </div>
-        {% endif %}
+                    <form action="{% url 'logout' %}" method="POST" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar sesión</button>
+                    </form>
+                </div>
+                </div>
+            {% endif %}
     {% endblock %}
     {% include "_include/_footer.html" %}
 </body>

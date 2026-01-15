@@ -14,6 +14,7 @@ from notifications.models import LikeLog
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Count
+from profiles.models import User
 
 @method_decorator(login_required, 'dispatch')
 class PostsListView(ListView):
@@ -24,9 +25,12 @@ class PostsListView(ListView):
         context = super().get_context_data(**kwargs)
         user_uuid = self.kwargs.get('user_uuid', None)
         if user_uuid:
-            context["posts"] = Post.objects.filter(user__uuid=user_uuid)
+            context["posts"] = Post.objects.filter(user__uuid=user_uuid).order_by('-created_at')
         else:
-            context["posts"] = Post.objects.filter(user=self.request.user)
+            context["posts"] = Post.objects.filter(user=self.request.user).order_by('-created_at')
+        
+        user = User.objects.get(uuid=user_uuid)
+        context['user_obj'] = user
         return context
     
 

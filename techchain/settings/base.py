@@ -17,6 +17,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Requeridos para allauth
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # Proveedor de Google
+    'allauth.socialaccount.providers.google',
+
     'django_extensions',
     'debug_toolbar',
     'crispy_forms',
@@ -45,12 +53,24 @@ MIDDLEWARE = [
 
     # Middleware custom
     'techchain.middleware.profile_completion.ProfileCompletionMiddleware',
+
+    # Allauth
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
+    ],
+    #Ayuda a seguridad en producción
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        # Limita las solicitudes de usuarios no autenticados (Anónimos)
+        'anon': '100/day', # 100 registros al día por IP
+        'register': '3/minute', # Máximo 3 intentos de registro por minuto por IP
+    },
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -114,7 +134,6 @@ USE_TZ = True
 USE_I18N = True
 USE_L10N = True
 
-
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
@@ -135,3 +154,52 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+
+# Allauth
+AUTHENTICATION_BACKENDS = [
+    # Requerido para iniciar sesión como administrador
+    'django.contrib.auth.backends.ModelBackend',
+    # allauth para autenticación
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Google AllAuth
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "openid",
+            "email",
+            "profile",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        }
+    }
+}
+
+SITE_ID = 1 # django.contrib.sites
+
+# Configuraciones específicas de allauth
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_UNIQUE_EMAIL = True
+
+SOCIALACCOUNT_PROVIDERS['google']['APP'] = {
+    'client_id': os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_ID"),
+    'secret': os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_SECRET"),
+    'key': '',
+}
+
+# Configuracion de logging con Sentry
+import sentry_sdk
+
+SENTRY_DSN = os.environ.get("SENTRY_DSN")
+
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    traces_sample_rate=0.2,
+    send_default_pii=True,
+)
+
+PROFILE_EXCLUDE_URLS = ['/accounts/']

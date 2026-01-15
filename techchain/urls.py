@@ -22,6 +22,9 @@ urlpatterns = [
     path('notifications/', include('notifications.urls', namespace='notifications')),
     path('api/', include('api.urls',namespace='api')),
 
+    # Allauth
+    path('accounts/', include('allauth.urls')),
+    
     path("prose/", include("prose.urls")),
 ] + debug_toolbar_urls()
 
