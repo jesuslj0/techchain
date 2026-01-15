@@ -11,7 +11,7 @@ load_dotenv(dotenv_path=ENV_PATH)
 DEBUG = False
 SECRET_KEY = os.environ["SECRET_KEY"]
 
-ALLOWED_HOSTS = ["techchain.live", "www.techchain.live"]
+ALLOWED_HOSTS = ["techchain.site", "www.techchain.site"]
 
 #Static
 STATIC_ROOT = BASE_DIR / 'staticfiles'

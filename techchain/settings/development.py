@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = [ "127.0.0.1", "localhost", "techchain.live", "www.techchain.live"]
+ALLOWED_HOSTS = [ "127.0.0.1", "localhost", "techchain.site", "www.techchain.site"]
 INTERNAL_IPS = ["127.0.0.1"]
 
 #statics
