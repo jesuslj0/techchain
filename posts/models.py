@@ -35,6 +35,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.get_name_display() 
 
+
 class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts', verbose_name='Usuario')
     image = models.ImageField(upload_to='posts/posts_images/', verbose_name='Imagen')
@@ -57,6 +58,7 @@ class Post(models.Model):
     def unlike(self, user):
         self.likes.remove(user)
 
+
 class Comment(models.Model):
     post = models.ForeignKey(Post, verbose_name='Post al que pertenece el comentario', on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Autor', on_delete=models.CASCADE, related_name='comments')
@@ -71,5 +73,24 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Coméntó {self.user.username} en {self.post}"
-    
 
+class Reel(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reels")
+    video = models.FileField(upload_to="reels/videos/")
+    caption = models.TextField(blank=True)
+    thumbnail = models.ImageField(upload_to="reels/thumbs/", blank=True, null=True)
+
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="liked_reels", blank=True)
+    views = models.PositiveIntegerField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_public = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Reel {self.id} - {self.user.username}"
+
+class ReelComment(models.Model):
+    reel = models.ForeignKey(Reel, on_delete=models.CASCADE, related_name="comments")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    text = models.TextField(blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
