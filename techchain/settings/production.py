@@ -7,19 +7,20 @@ from dotenv import load_dotenv
 ENV_PATH = Path(__file__).resolve().parent.parent / "app" / ".env"
 load_dotenv(dotenv_path=ENV_PATH)
 
-
 DEBUG = False
 SECRET_KEY = os.environ["SECRET_KEY"]
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ["techchain.site", "www.techchain.site"]
+=======
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-#Static
+ALLOWED_HOSTS = ["techchain.live", "www.techchain.live"]
+>>>>>>> develop
+
+#STATICS
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
 
 # Base de datos de producción
 DATABASES = {
@@ -56,57 +57,57 @@ SIMPLE_JWT = {
 # LOG_DIR = "/tmp/techchain_logs"
 # os.makedirs(LOG_DIR, exist_ok=True)
 
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "formatters": {
-#         "verbose": {
-#             "format": "[{asctime}] {levelname} [{name}] {message}",
-#             "style": "{",
-#         },
-#     },
-#     "handlers": {
-#         "console": {
-#             "class": "logging.StreamHandler",
-#             "formatter": "verbose",
-#         },
-#         "file_auth": {
-#             "level": "INFO",
-#             "class": "logging.FileHandler",
-#             "filename": os.path.join(LOG_DIR, "auth.log"),
-#             "formatter": "verbose",
-#         },
-#         "file_error": {
-#             "level": "ERROR",
-#             "class": "logging.FileHandler",
-#             "filename": os.path.join(LOG_DIR, "error.log"),
-#             "formatter": "verbose",
-#         },
-#     },
-#     "loggers": {
-#         # Logs de Django
-#         "django": {
-#             "handlers": ["console", "file_error"],
-#             "level": "WARNING",
-#             "propagate": True,
-#         },
-#         # Logs de autenticación (login, logout, fallos)
-#         "django.auth": {
-#             "handlers": ["console", "file_auth"],
-#             "level": "INFO",
-#             "propagate": False,
-#         },
-#         # Logs de seguridad (CSRF, permisos, etc.)
-#         "django.security": {
-#             "handlers": ["console", "file_error"],
-#             "level": "WARNING",
-#             "propagate": False,
-#         },
-#         # Logs generales del proyecto
-#         "techchain": {
-#             "handlers": ["console", "file_error"],
-#             "level": "INFO",
-#             "propagate": True,
-#         },
-#     },
-# }
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[{asctime}] {levelname} [{name}] {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "file_auth": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(LOG_DIR, "auth.log"),
+            "formatter": "verbose",
+        },
+        "file_error": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(LOG_DIR, "error.log"),
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        # Logs de Django
+        "django": {
+            "handlers": ["console", "file_error"],
+            "level": "WARNING",
+            "propagate": True,
+        },
+        # Logs de autenticación (login, logout, fallos)
+        "django.auth": {
+            "handlers": ["console", "file_auth"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        # Logs de seguridad (CSRF, permisos, etc.)
+        "django.security": {
+            "handlers": ["console", "file_error"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        # Logs generales del proyecto
+        "techchain": {
+            "handlers": ["console", "file_error"],
+            "level": "INFO",
+            "propagate": True,
+        },
+    },
+}

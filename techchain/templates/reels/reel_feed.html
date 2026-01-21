@@ -1,0 +1,97 @@
+{% extends 'layout/layout_basic.html' %}
+{% block title %}Reels{% endblock %}
+{% block title_h1 %}Reels{% endblock %}
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/reels_feed.css' %}">
+{% endblock %}
+{% block content %}
+    <div id="reels-container">
+    {% for reel in reels %}
+        <div class="reel">
+        <video src="{{ reel.video.url }}" playsinline muted loop autoplay></video>
+
+        <div class="overlay">
+            <p>{{ reel.caption }}</p>
+            <!-- Likes y comentarios -->
+            <div class="mb-2 text-muted small">
+                <a href="{% url 'posts:like_reel_ajax' reel.pk %}" class="reel-like-button me-2 text-decoration-none" data-reel-id="{{ reel.pk }}">
+                    {% if request.user in reel.likes.all %}
+                        <i class="bi bi-heart-fill text-danger"></i>
+                    {% else %}
+                        <i class="bi bi-heart text-danger"></i>
+                    {% endif %}
+                </a>
+                <span class="reel-n-likes me-3" data-reel-id="{{ reel.pk }}">{{ reel.likes.count }}</span>
+                <i class="bi bi-chat-dots-fill me-1"></i> {{ reel.comments.count }}
+            </div>
+        </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const likeButtons = document.querySelectorAll('.reel-like-button');
+
+        likeButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const reelId = button.dataset.reelId;
+            const likesSpan = document.querySelector(`.reel-n-likes[data-reel-id="${reelId}"]`);
+
+            fetch(button.href, {
+                method: 'POST',
+                headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': getCSRFToken()
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                button.innerHTML = data.liked
+                ? `<i class="bi bi-heart-fill text-danger"></i>`
+                : `<i class="bi bi-heart text-danger"></i>`;
+
+                likesSpan.textContent = data.nLikes;
+            })
+            .catch(err => console.error(err));
+            });
+        });
+    });   
+    
+    function getCSRFToken() {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // ¿Esta cookie comienza con el prefijo CSRF?
+                if (cookie.substring(0, 10) === 'csrftoken=') {
+                    cookieValue = decodeURIComponent(cookie.substring(10));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }   
+</script>
+<script>
+    const videos = document.querySelectorAll("video");
+
+    const observer = new IntersectionObserver(
+    entries => {
+        entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.play();
+        else entry.target.pause();
+        });
+    },
+    { threshold: 0.6 }
+    );
+
+    videos.forEach(v => observer.observe(v));
+
+</script>
+{% endblock %}

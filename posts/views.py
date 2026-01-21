@@ -173,3 +173,45 @@ def like_comment_ajax(request, pk):
         'nLikes': comment.likes.count(),
         'liked': True,
     })
+
+
+## Reels views
+from .models import Reel
+
+@method_decorator(login_required, 'dispatch')
+class ReelFeedView(ListView):
+    model = Reel
+    template_name = 'reels/reel_feed.html'
+    context_object_name = 'reels'
+    paginate_by = 5 #reels por carga
+
+    def get_queryset(self):
+        return (
+            Reel.objects
+            .filter(is_public=True)
+            .select_related('user')
+            .prefetch_related('likes')
+            .order_by('-created_at')
+        )
+    
+
+@login_required
+def like_reel_ajax(request, pk):
+    reel = get_object_or_404(Reel, pk=pk)
+    user = request.user
+
+    if user in reel.likes.all():
+        reel.likes.remove(user)
+        return JsonResponse({
+            'message': 'Ya no te gusta este reel',
+            'nLikes': reel.likes.count(),
+            'liked': False,
+        })
+    
+    reel.likes.add(user)
+
+    return JsonResponse({
+        'message': 'Te gusta este reel',
+        'nLikes': reel.likes.count(),
+        'liked': True,
+    })
