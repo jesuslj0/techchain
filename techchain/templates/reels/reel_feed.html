@@ -1,33 +1,71 @@
 {% extends 'layout/layout_basic.html' %}
-{% block title %}Reels{% endblock %}
+{% block title %}Reels - TechChain{% endblock %}
 {% block title_h1 %}Reels{% endblock %}
 {% block styles %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/reels_feed.css' %}">
 {% endblock %}
 {% block content %}
-    <div id="reels-container">
-    {% for reel in reels %}
-        <div class="reel">
-        <video src="{{ reel.video.url }}" playsinline muted loop autoplay></video>
+    <div class="container">
+        <div class="row">
+             <!-- Botón para mostrar el menú (solo visible en móvil) -->
+            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-3 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+            <i class="bi bi-list"></i> Menú
+            </button>
 
-        <div class="overlay">
-            <p>{{ reel.caption }}</p>
-            <!-- Likes y comentarios -->
-            <div class="mb-2 text-muted small">
-                <a href="{% url 'posts:like_reel_ajax' reel.pk %}" class="reel-like-button me-2 text-decoration-none" data-reel-id="{{ reel.pk }}">
-                    {% if request.user in reel.likes.all %}
-                        <i class="bi bi-heart-fill text-danger"></i>
-                    {% else %}
-                        <i class="bi bi-heart text-danger"></i>
-                    {% endif %}
-                </a>
-                <span class="reel-n-likes me-3" data-reel-id="{{ reel.pk }}">{{ reel.likes.count }}</span>
-                <i class="bi bi-chat-dots-fill me-1"></i> {{ reel.comments.count }}
+            <!-- Menú colapsable -->
+            <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
+                <ul class="list-unstyled d-flex flex-column p-2">
+                    <li class='p-2'>
+                        <i class="bi bi-house"></i>
+                        <a class="mb-5 text-decoration-none" href="{% url 'home' %}">Inicio</a>
+                    </li>
+                    <li class='p-2'>
+                        <i class="bi bi-file-earmark-plus"></i>
+                        <a class="mb-5 text-decoration-none" href="{% url 'posts:create_reel' user_uuid %}">Crear</a>
+                    </li>
+                </ul>
+            </div>
+            <div id="reels-container">
+            {% for reel in reels %}
+                <div class="reel">
+                    <video src="{{ reel.video.url }}" playsinline muted loop autoplay></video>
+        
+                    <div class="overlay">
+                        <!-- Likes y comentarios -->
+                        <div class="mb-3 small data">
+                            <div class="user-info">
+                                <img id="user-icon" src="{{ reel.user.profile.profile_picture.url }}" alt="{{ reel.user.username }}"/>
+                                <a href="{% url 'profiles:detail' reel.user.uuid %}">{{ reel.user.username }}</a>
+                                {% if reel.user != user %}
+                                {% if reel.user.profile in user.profile.following.all %}
+                                <a class="btn" href="{% url 'profiles:toggle_follow' reel.user.uuid %}">Seguido</a>
+                                {% else %}
+                                <a class="btn" href="{% url 'profiles:toggle_follow' reel.user.uuid %}">Seguir</a>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="reactions">
+                                <a href="{% url 'posts:like_reel_ajax' reel.pk %}" class="reel-like-button me-2 text-decoration-none" data-reel-id="{{ reel.pk }}">
+                                    {% if user in reel.likes.all %}
+                                    <i class="bi bi-heart-fill text-danger"></i>
+                                    {% else %}
+                                    <i class="bi bi-heart text-danger"></i>
+                                    {% endif %}
+                                </a>
+                                <span class="reel-n-likes me-3" data-reel-id="{{ reel.pk }}">{{ reel.likes.count }}</span>
+                                <span><i class="bi bi-chat-dots me-1"></i>{{ reel.comments.count }}</span>
+                            </div>
+                        </div> 
+                        <details class="reel-caption">
+                            <summary>{{ reel.caption|truncatechars:80 }}</summary>
+                            <p>{{ reel.caption }}</p>
+                        </details>
+                    </div>
+                </div>
+            {% endfor %}
             </div>
         </div>
-        </div>
-    {% endfor %}
     </div>
 {% endblock %}
 {% block script %}
@@ -92,6 +130,86 @@
     );
 
     videos.forEach(v => observer.observe(v));
+</script>
+<script>
+    const reelOverlays = document.querySelectorAll(".overlay");
 
+    reelOverlays.forEach((reel) => {
+
+        reel.addEventListener("click", (e) => {
+
+            document.querySelectorAll("details[open]").forEach(details => {
+                details.removeAttribute("open");
+            });
+        })
+    })
+</script>
+<script>
+    function toggleNavbar() {
+        const toggleIcon = document.querySelector('.toggle-navbar-icon');
+        const navbar = document.getElementById('navbar');
+
+        navbar.toggleAttribute('hidden');
+        if (toggleIcon.classList.contains('opened')) {
+            toggleIcon.classList.remove('opened');
+        } else {
+            toggleIcon.classList.add('opened')
+        }
+    }
+
+
+    const navbarIcon = document.getElementById("navbar-icon");
+    let lastScrollY = window.scrollY;
+    let hideTimeout;
+    let inactivityTimeout;
+
+    function showIcon() {
+        navbarIcon.classList.remove("hidden", "none");
+        clearTimeout(hideTimeout);
+        clearTimeout(inactivityTimeout);
+        startInactivityTimer();
+    }
+
+    function hideIconWithDelay() {
+        navbarIcon.classList.add("hidden");
+        hideTimeout = setTimeout(() => {
+        navbarIcon.classList.add("none");
+        }, 2000);
+    }
+
+    function startInactivityTimer() {
+        inactivityTimeout = setTimeout(() => {
+        hideIconWithDelay();
+        }, 2000);
+    }
+
+    // Reiniciar temporizador si hay interacción con el icono
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimeout);
+        showIcon();
+    }
+
+    // Eventos que cuentan como interacción
+    navbarIcon.addEventListener("mouseenter", resetInactivityTimer);
+    navbarIcon.addEventListener("mouseleave", resetInactivityTimer);
+    navbarIcon.addEventListener("click", resetInactivityTimer);
+    navbarIcon.addEventListener("touchstart", resetInactivityTimer);
+
+    window.addEventListener("scroll", () => {
+        const currentScroll = window.scrollY;
+
+        if (window.innerWidth < 768) {
+        if (currentScroll === 0) {
+            showIcon();
+        } else if (currentScroll > lastScrollY) {
+            hideIconWithDelay();
+        }
+        }
+
+        lastScrollY = currentScroll;
+    });
+
+    // Inicializamos timer al cargar página
+    startInactivityTimer()
 </script>
 {% endblock %}

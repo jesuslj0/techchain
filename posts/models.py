@@ -80,7 +80,7 @@ class Reel(models.Model):
     caption = models.TextField(blank=True)
     thumbnail = models.ImageField(upload_to="reels/thumbs/", blank=True, null=True)
 
-    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="liked_reels", blank=True)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, through="ReelLike", related_name="liked_reels", blank=True)
     views = models.PositiveIntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -94,3 +94,13 @@ class ReelComment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     text = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class ReelLike(models.Model):
+    reel = models.ForeignKey(Reel, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["reel", "user"], name="unique_reel_like")
+        ]
