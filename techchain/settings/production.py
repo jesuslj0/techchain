@@ -10,13 +10,7 @@ load_dotenv(dotenv_path=ENV_PATH)
 DEBUG = False
 SECRET_KEY = os.environ["SECRET_KEY"]
 
-<<<<<<< HEAD
 ALLOWED_HOSTS = ["techchain.site", "www.techchain.site"]
-=======
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
-ALLOWED_HOSTS = ["techchain.live", "www.techchain.live"]
->>>>>>> develop
 
 #STATICS
 STATIC_ROOT = BASE_DIR / 'staticfiles'
