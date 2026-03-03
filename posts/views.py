@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post, Comment
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, DeleteView
-from techchain.forms import PostCreateOrUpdateForm, CommentCreateForm
+from techchain.forms import PostCreateOrUpdateForm, CommentCreateForm, ReelCreateOrUpdateForm
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
@@ -215,3 +215,33 @@ def like_reel_ajax(request, pk):
         'nLikes': reel.likes.count(),
         'liked': True,
     })
+
+@method_decorator(login_required, 'dispatch')
+class ReelCreateView(CreateView):
+    model = Reel
+    template_name = 'reels/reel_create.html'
+    form_class = ReelCreateOrUpdateForm
+    
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        if pk:
+            return Reel.objects.filter(pk=pk, user=self.request.user).first()
+        return None
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(instance=self.object)
+        return self.render_to_response({'form': form })
+
+    def get_success_url(self):
+        return reverse('posts:reels_feed')
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(request.POST, request.FILES, instance=self.object)
+        if form.is_valid():
+            reel = form.save(commit=False)
+            reel.user = request.user
+            reel.save()
+            return redirect(self.get_success_url())
+        return self.render_to_response({'form': form})

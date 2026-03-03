@@ -44,7 +44,7 @@
                 <!-- Barra de búsqueda -->
                 <div class="col-12 col-md-6" id="search-bar">
                 {% block search_bar %}
-                <form class="d-flex" method="get" action="{% url 'profiles:search' %}">
+                <form class="d-flex justify-content-end" method="get" action="{% url 'profiles:search' %}">
                     <input class="form-control me-2" type="search" name="query" placeholder="Buscar usuarios" id="user-search" value="{{ request.GET.query }}">
                     <button class="btn btn-outline-primary" type="submit" id="search-btn">
                     <i class="bi bi-search"></i>
