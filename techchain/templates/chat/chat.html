@@ -33,48 +33,7 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <!-- Botón para mostrar el menú (solo visible en móvil) -->
-        <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
-        <i class="bi bi-list"></i> Menú
-        </button>
-
-        <!-- Menú colapsable -->
-        <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
-            <ul class="list-unstyled d-flex flex-column p-2">
-                <li class='p-2'>
-                <i class="bi bi-house"></i>
-                <a class="mb-5 text-decoration-none " href="{% url 'home' %}">Inicio</a>
-                </li>
-                <li class='p-2'>
-                <i class="bi bi-person-circle"></i>
-                <a class="mb-5 text-decoration-none" href="{% url 'profiles:detail' user_uuid %}">Mi Perfil</a>
-                </li>
-                <li class='p-2'>
-                <i class="bi bi-bell"></i>
-                <a class="mb-5 text-decoration-none" href="{% url 'notifications:list' %}">Notificaciones</a>
-                </li>
-                <li class='p-2'>
-                <i class="bi bi-chat-square-text"></i>
-                <a class="mb-5 text-decoration-none" href="{% url 'chat:chat_rooms' %}">Chats</a>
-                </li>
-                <li class='p-2'>
-                <i class="bi bi-people-fill"></i>
-                <a class="mb-5 text-decoration-none" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
-                </li>
-                <li class='p-2'>
-                <i class="bi bi-people"></i>
-                <a class="mb-2 text-decoration-none" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
-                </li>
-                <li class='p-2'>
-                <i class="bi bi-postcard-heart"></i>
-                <a class="mb-5 text-decoration-none" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
-                </li>
-                <li class='p-2'>
-                <i class="bi bi-file-earmark-plus"></i>
-                <a class="mb-5 text-decoration-none" href="{% url 'posts:create' user_uuid %}">Crear</a>
-                </li>
-            </ul>
-        </div>
+        {% include '_include/_sidebar.html' %}
         <div class="col-md-3 col-lg-3">
             <h4>Chats</h4>
             <div class="list-group chatrooms mb-3">
@@ -394,14 +353,17 @@
     <script>
     function toggleNavbar() {
         const toggleIcon = document.querySelector('.toggle-navbar-icon');
+        const toggleBtn = document.querySelector('.toggle-navbar-button');
         const navbar = document.getElementById('navbar');
 
-        navbar.toggleAttribute('hidden');
-        if (toggleIcon.classList.contains('opened')) {
-            toggleIcon.classList.remove('opened');
-        } else {
-            toggleIcon.classList.add('opened')
-        }
+        const isOpen = !navbar.toggleAttribute('hidden');
+        toggleIcon.classList.toggle('bi-list', !isOpen);
+        toggleIcon.classList.toggle('bi-x-lg', isOpen);
+        toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        toggleBtn.setAttribute(
+            'aria-label',
+            isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'
+        );
     }
 
     const toggleBtn = document.getElementById('menuToggleBtn');
@@ -417,59 +379,7 @@
         toggleBtn.classList.add('btn-outline-primary');
     });
 
-    const navbarIcon = document.getElementById("navbar-icon");
-    let lastScrollY = window.scrollY;
-    let hideTimeout;
-    let inactivityTimeout;
-
-    function showIcon() {
-        navbarIcon.classList.remove("hidden", "none");
-        clearTimeout(hideTimeout);
-        clearTimeout(inactivityTimeout);
-        startInactivityTimer();
-    }
-
-    function hideIconWithDelay() {
-        navbarIcon.classList.add("hidden");
-        hideTimeout = setTimeout(() => {
-        navbarIcon.classList.add("none");
-        }, 2000);
-    }
-
-    function startInactivityTimer() {
-        inactivityTimeout = setTimeout(() => {
-        hideIconWithDelay();
-        }, 2000);
-    }
-
-    // Reiniciar temporizador si hay interacción con el icono
-    function resetInactivityTimer() {
-        clearTimeout(inactivityTimeout);
-        showIcon();
-    }
-
-    // Eventos que cuentan como interacción
-    navbarIcon.addEventListener("mouseenter", resetInactivityTimer);
-    navbarIcon.addEventListener("mouseleave", resetInactivityTimer);
-    navbarIcon.addEventListener("click", resetInactivityTimer);
-    navbarIcon.addEventListener("touchstart", resetInactivityTimer);
-
-    window.addEventListener("scroll", () => {
-        const currentScroll = window.scrollY;
-
-        if (window.innerWidth < 768) {
-        if (currentScroll === 0) {
-            showIcon();
-        } else if (currentScroll > lastScrollY) {
-            hideIconWithDelay();
-        }
-        }
-
-        lastScrollY = currentScroll;
-    });
-
-    // Inicializamos timer al cargar página
-    startInactivityTimer()
+    // El botón hamburguesa permanece siempre visible.
     </script>
     <script>
         const toggleChatButton = document.getElementById('toggle-chatbox');

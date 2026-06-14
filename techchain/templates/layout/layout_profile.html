@@ -10,9 +10,9 @@
         <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16x16.png">
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'css/styles.css'%}?v=1.1">
+        <link rel="stylesheet" href="{% static 'css/styles.css'%}?v=1.8">
         <link rel="stylesheet" href="{% static 'css/fontfaces.css' %}">
-        <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+        <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=2.0">
         <link href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
         <script>
@@ -32,8 +32,8 @@
 <body class="d-flex flex-column min-vh-100">
     {% include '_include/_header.html' %}
     <main class="container flex-grow-1">
-        <div class='container'>
-            <h1 class='title text-center text-md-start text-lg-start'>{% block title_h1 %}Profile default{% endblock %}</h1>
+        <div id="top-bar" class="container mt-3">
+            <h1 class="page-title text-center text-md-start">{% block title_h1 %}Profile default{% endblock %}</h1>
         </div>
 
         {% block form %}
@@ -56,14 +56,17 @@
         <script>
             function toggleNavbar() {
                 const toggleIcon = document.querySelector('.toggle-navbar-icon');
+                const toggleBtn = document.querySelector('.toggle-navbar-button');
                 const navbar = document.getElementById('navbar');
 
-                navbar.toggleAttribute('hidden');
-                if (toggleIcon.classList.contains('opened')) {
-                    toggleIcon.classList.remove('opened');
-                } else {
-                    toggleIcon.classList.add('opened')
-                }
+                const isOpen = !navbar.toggleAttribute('hidden');
+                toggleIcon.classList.toggle('bi-list', !isOpen);
+                toggleIcon.classList.toggle('bi-x-lg', isOpen);
+                toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                toggleBtn.setAttribute(
+                    'aria-label',
+                    isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'
+                );
             }
 
             const toggleBtn = document.getElementById('menuToggleBtn');
@@ -79,77 +82,8 @@
                 toggleBtn.classList.add('btn-outline-primary');
             });
 
-            const navbarIcon = document.getElementById("navbar-icon");
-            let lastScrollY = window.scrollY;
-            let hideTimeout;
-            let inactivityTimeout;
-
-            function showIcon() {
-                navbarIcon.classList.remove("hidden", "none");
-                clearTimeout(hideTimeout);
-                clearTimeout(inactivityTimeout);
-                startInactivityTimer();
-            }
-
-            function hideIconWithDelay() {
-                navbarIcon.classList.add("hidden");
-                hideTimeout = setTimeout(() => {
-                navbarIcon.classList.add("none");
-                }, 2000);
-            }
-
-            function startInactivityTimer() {
-                inactivityTimeout = setTimeout(() => {
-                hideIconWithDelay();
-                }, 2000);
-            }
-
-            // Reiniciar temporizador si hay interacción con el icono
-            function resetInactivityTimer() {
-                clearTimeout(inactivityTimeout);
-                showIcon();
-            }
-
-            // Eventos que cuentan como interacción
-            navbarIcon.addEventListener("mouseenter", resetInactivityTimer);
-            navbarIcon.addEventListener("mouseleave", resetInactivityTimer);
-            navbarIcon.addEventListener("click", resetInactivityTimer);
-            navbarIcon.addEventListener("touchstart", resetInactivityTimer);
-
-            window.addEventListener("scroll", () => {
-                const currentScroll = window.scrollY;
-
-                if (window.innerWidth < 768) {
-                if (currentScroll === 0) {
-                    showIcon();
-                } else if (currentScroll > lastScrollY) {
-                    hideIconWithDelay();
-                }
-                }
-
-                lastScrollY = currentScroll;
-            });
-
-            // Inicializamos timer al cargar página
-            startInactivityTimer()
+            // El botón hamburguesa permanece siempre visible.
         </script>
-    {% endblock %}
-        {% block session %}
-        {% if request.user.is_authenticated %}
-            <div class="container mt-4">
-                <div id="session-bar" class="session-bar d-flex flex-column flex-sm-row justify-content-between align-items-center p-3 rounded shadow-sm">
-                    
-                    <div class="mb-2 mb-sm-0 small">
-                    Sesión iniciada: <span class="text-primary fw-semibold">{{ request.user.username }}</span>
-                    </div>
-
-                    <form action="{% url 'logout' %}" method="POST" class="m-0">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar sesión</button>
-                    </form>
-                </div>
-                </div>
-            {% endif %}
     {% endblock %}
     {% include "_include/_footer.html" %}
 </body>

@@ -5,40 +5,41 @@
     <link rel="stylesheet" href="{% static "css/login.css" %}">
 {% endblock %}
 {% block title %}Login{% endblock %}
-{% block title_h1 %}TechChain{% endblock %}
+{% block title_h1 %}{% endblock %}
 {% block search_bar %}{% endblock %}
 
 {% block content %}
-    <div class="main-container">
-        <div class="logo-wrapper">
-          <img id="techchain-logo" src="/static/icons/android-chrome-512x512.png" alt="logo" />
-        </div>
-        <div class="content-container">
-          <h2>Conectando con el futuro.</h2>
-          <h3>Únete ahora</h3>
-          <form method='post'>
-              {% csrf_token %}
-              {{ form|crispy }}
-              <div class="form-check mb-3">
-                  <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
-                  <label class="form-check-label" for="rememberMe">Recuérdame</label>
-              </div>
-              <button class='btn btn-primary bg-dark' type='submit'>Entrar</button>
-          </form>   
-          <div class="separator-container">
-              <div class="separator-line"></div>
-              <span class="separator-text">o</span>
-              <div class="separator-line"></div>
-          </div>
+    {% load static %}
+    {% load socialaccount %}
+    <div class="login-page">
+      <div class="login-card">
+        <header class="login-head">
+          <img class="login-logo" src="{% static 'icons/android-chrome-512x512.png' %}" alt="TechChain" />
+          <h1 class="login-title">Bienvenido de nuevo</h1>
+          <p class="login-subtitle">Conecta con la comunidad tech.</p>
+        </header>
 
-          {% load static %}
-          {% load socialaccount %}
-          <a href="{% provider_login_url 'google' process="login" %}" class="google-login-btn">
-              <img src="{% static 'icons/google-icon.png' %}" alt="Google">
-              Entrar con Google
-          </a>
-          <p class="register">¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate</a></p>
+        <form class="login-form" method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="form-check login-remember">
+                <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
+                <label class="form-check-label" for="rememberMe">Recuérdame</label>
+            </div>
+            <button class="login-btn login-btn--primary" type="submit">Entrar</button>
+        </form>
+
+        <div class="login-separator" role="separator" aria-label="o">
+            <span>o</span>
         </div>
+
+        <a href="{% provider_login_url 'google' process='login' %}" class="login-btn login-btn--google" aria-label="Entrar con Google">
+            <img src="{% static 'icons/google-icon.png' %}" alt="" aria-hidden="true">
+            Entrar con Google
+        </a>
+
+        <p class="login-register">¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate</a></p>
+      </div>
     </div>
 {% endblock %}
 
@@ -66,14 +67,17 @@
 
   function toggleNavbar() {
     const toggleIcon = document.querySelector('.toggle-navbar-icon');
+    const toggleBtn = document.querySelector('.toggle-navbar-button');
     const navbar = document.getElementById('navbar');
 
-    navbar.toggleAttribute('hidden');
-      if (toggleIcon.classList.contains('opened')) {
-          toggleIcon.classList.remove('opened');
-      } else {
-          toggleIcon.classList.add('opened')
-      }
+    const isOpen = !navbar.toggleAttribute('hidden');
+    toggleIcon.classList.toggle('bi-list', !isOpen);
+    toggleIcon.classList.toggle('bi-x-lg', isOpen);
+    toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    toggleBtn.setAttribute(
+      'aria-label',
+      isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'
+    );
   }
 
   const toggleBtn = document.getElementById('menuToggleBtn');
@@ -91,30 +95,6 @@
 
 </script>
 
-<script>
-  const techchainLogo = document.getElementById("techchain-logo")
-  techchainLogo.style.transition = "transform 0.25s cubic-bezier(.2,.8,.2,1)"
-
-  techchainLogo.addEventListener("mousedown", () => {
-    techchainLogo.style.transform = "scale(1.12) rotate(-1deg)"
-    console.log('mousedown')
-  })
-
-  techchainLogo.addEventListener("mouseup", () => {
-    techchainLogo.style.transform = "scale(1)"
-        console.log('mouseup')
-  })
-
-  techchainLogo.addEventListener("mouseleave", () => {
-    techchainLogo.style.transform = "scale(1)"
-        console.log('mouseleave')
-  })
-
-  techchainLogo.addEventListener("mouseenter", () => {
-    techchainLogo.style.transform = "scale(1.1)"
-        console.log('mouseenter')
-  })
-</script>
 <script>
   const input = document.querySelector('input#id_password')
 

@@ -1,31 +1,105 @@
+/* Design Tokens */
+:root {
+    --color-accent: #2563eb;
+    --color-accent-hover: #1d4ed8;
+    --color-accent-active: #1e40af;
+    --color-accent-contrast: #ffffff;
+    --color-accent-soft: rgba(37, 99, 235, 0.12);
+    --gradient-accent: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+
+    --color-success: #16a34a;
+    --color-danger:  #dc2626;
+    --color-warning: #d97706;
+
+    --font-display: "Goldman-Regular", system-ui, sans-serif;
+    --font-serif:   "Newsreader-Variable", Georgia, serif;
+    --font-body:    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+    --fs-xs: 0.8rem;
+    --fs-sm: 0.9rem;
+    --fs-md: 1rem;
+    --fs-lg: 1.25rem;
+    --fs-xl: 1.75rem;
+    --fs-2xl: 2.5rem;
+
+    --fw-normal: 400;
+    --fw-medium: 500;
+    --fw-bold: 700;
+
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-8: 3rem;
+
+    --radius-sm: 0.375rem;
+    --radius-md: 0.625rem;
+    --radius-lg: 1rem;
+    --radius-pill: 999px;
+
+    --shadow-sm: 0 1px 2px rgba(16, 16, 40, 0.06);
+    --shadow-md: 0 4px 16px rgba(16, 16, 40, 0.08);
+    --shadow-lg: 0 12px 32px rgba(16, 16, 40, 0.12);
+
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.25s ease;
+}
+
 /* --- 1. Variables Globales (Modo Claro por Defecto) --- */
 :root {
     /* Colores primarios */
     --color-bg-primary: #ffffff; /* Fondo principal */
+    --color-bg-surface: #f7f7fb;
     --color-text-primary: #212529; /* Texto principal (dark-mode por defecto en Bootstrap) */
     --color-text-secondary: rgba(33, 37, 41, 0.75); /* El color que usas para .n-likes y a.like-button */
+    --color-text-muted: #6b7280;
+    --color-border: rgba(16, 16, 40, 0.1);
 
     /* Colores del Footer (basados en tu CSS, asumiendo que quieres un footer oscuro siempre) */
     --color-footer-text-primary: white;
     --color-footer-text-secondary: rgba(255, 255, 255, 0.6);
     --color-footer-bg: #0e0e0e;
+
+    --bs-primary: var(--color-accent);
+    --bs-primary-rgb: 37, 99, 235;
+    --bs-link-color: var(--color-accent);
+    --bs-link-hover-color: var(--color-accent-hover);
+    --bs-border-radius: var(--radius-md);
+    --bs-border-radius-sm: var(--radius-sm);
+    --bs-border-radius-lg: var(--radius-lg);
+    --bs-border-color: var(--color-border);
+    --bs-box-shadow-sm: var(--shadow-sm);
+    --bs-box-shadow: var(--shadow-md);
 }
 
 /* --- 2. Sobrescritura para Modo Oscuro --- */
 html.dark-mode {
-    --color-bg-primary: #121212; 
+    --color-bg-primary: #121212;
+    --color-bg-surface: #1e1e1e;
     --color-text-primary: #e5e5e5; /* Texto claro */
     --color-text-secondary: #a3a3a3; /* Texto secundario claro */
     --color-text-muted: #737373;
+    --color-border: rgba(255, 255, 255, 0.1);
+
+    --color-accent: #3b82f6;
+    --color-accent-hover: #60a5fa;
+    --color-accent-soft: rgba(59, 130, 246, 0.16);
 
     /* Colores Sobreescritos BS*/
     --bs-body-bg: #1e1e1e;
     --bs-body-color: var(--color-text-primary);
 
     --bs-card-color: #e5e5e5;
-    --bs-border-color: rgb(255,255,255, 0.006);
+    --bs-border-color: var(--color-border);
 
     --bs-secondary-color: var(--color-text-secondary);
+
+    --bs-primary: var(--color-accent);
+    --bs-primary-rgb: 59, 130, 246;
+    --bs-link-color: var(--color-accent);
+    --bs-link-hover-color: var(--color-accent-hover);
 }
 
 /* --- 3. Aplicación a Elementos Principales --- */
@@ -37,15 +111,127 @@ body {
     cursor: url('/static/cursor/Aero.cur'), auto; 
 }
 
-header {
+/* Solo la cabecera principal de navegación lleva fondo oscuro fijo.
+   Antes se aplicaba a todo <header>, lo que pintaba de negro la cabecera
+   del logo en el login (header.login-head) también en modo claro. */
+#main-header {
     background-color: var(--color-footer-bg);
 }
-footer {
-    background-color: var(--color-footer-bg);
-}
+/* El fondo y los colores del footer se gestionan en styles.css (.site-footer).
+   El footer mantiene fondo oscuro fijo en ambos temas vía --color-footer-bg. */
 
 #sidebarMenu > ul > li > a  {
     color:  var(--color-text-primary);
+    border-radius: var(--radius-md);
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+#sidebarMenu > ul > li > a:hover,
+#sidebarMenu > ul > li > a:focus-visible {
+    color: var(--color-accent);
+    background-color: var(--color-accent-soft);
+}
+
+#sidebarMenu > ul > li > a.active {
+    color: var(--color-accent);
+    font-weight: var(--fw-medium);
+}
+
+#sidebarMenu > ul > li > i {
+    color: var(--color-text-secondary);
+    transition: color var(--transition-fast);
+}
+
+#sidebarMenu > ul > li:hover > i,
+#sidebarMenu > ul > li:has(a.active) > i {
+    color: var(--color-accent);
+}
+
+#navbar .nav-link.active {
+    color: var(--color-accent);
+    font-weight: var(--fw-medium);
+}
+
+/* Nav discreto: tipografía más pequeña en todos los enlaces */
+#navbar .nav-link {
+    font-size: var(--fs-sm);
+}
+
+#navbar #theme-toggle {
+    padding: 0.2rem 0.5rem;
+    font-size: var(--fs-sm);
+}
+
+.nav-logout-form {
+    margin: 0;
+}
+
+#navbar .nav-logout {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-size: var(--fs-sm);
+}
+
+#navbar .nav-logout:hover,
+#navbar .nav-logout:focus-visible {
+    color: var(--color-danger);
+}
+
+#navbar .nav-username {
+    opacity: 0.7;
+}
+
+/* Desktop: links a la izquierda; tema + perfil + sesión a la derecha */
+@media (min-width: 992px) {
+    #navbar .nav-item:last-child {
+        margin-left: 0;
+    }
+    #navbar .nav-item:has(#theme-toggle) {
+        margin-left: auto;
+    }
+}
+
+/* Móvil: panel en fila. Derecha = links + tema; izquierda = perfil + sesión */
+@media (max-width: 991.98px) {
+    #navbar .navbar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.25rem 0.5rem !important;
+        padding: 6px 10px 10px;
+    }
+
+    #navbar .nav-item:not(:last-child) {
+        border-bottom: 0;
+    }
+
+    #navbar .nav-hide-mobile {
+        display: none;
+    }
+
+    .site-footer {
+        display: none;
+    }
+
+    #navbar .nav-link {
+        min-height: 36px;
+        padding: 0 6px;
+    }
+
+    #navbar .nav-user {
+        order: -2;
+    }
+
+    #navbar .nav-session {
+        order: -1;
+        margin-right: auto;
+    }
+
+    .nav-logout-form {
+        width: auto;
+    }
 }
 
 .card {
@@ -56,11 +242,108 @@ footer {
     color: var(--color-text-secondary);
 }
 
-/* IMPORTANTE: Tu footer parece tener colores fijos (blanco/gris claro), por lo que lo mantendremos así: */
-footer p:nth-of-type(1) {
-    color: var(--color-footer-text-primary);
+/* Componentes base */
+
+/* Títulos */
+h1, h2, h3, .title {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+}
+h1 { font-size: var(--fs-2xl); line-height: 1.1; }
+h2 { font-size: var(--fs-xl); line-height: 1.2; }
+.subtitle { font-family: var(--font-serif); color: var(--color-text-secondary); }
+
+/* Cabecera de sección */
+.page-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--color-text-primary);
 }
 
-footer p {
-    color: var(--color-footer-text-secondary);
+#top-bar {
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-5) !important;
+    border-bottom: 1px solid var(--color-border);
 }
+
+.title--accent {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+/* Botones */
+.btn {
+    --bs-btn-border-radius: var(--radius-pill);
+    --bs-btn-font-weight: var(--fw-medium);
+    --bs-btn-padding-x: var(--space-5);
+    --bs-btn-padding-y: var(--space-2);
+    transition: transform var(--transition-fast),
+                box-shadow var(--transition-fast),
+                background-color var(--transition-fast);
+}
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+    --bs-btn-bg: var(--color-accent);
+    --bs-btn-border-color: var(--color-accent);
+    --bs-btn-hover-bg: var(--color-accent-hover);
+    --bs-btn-hover-border-color: var(--color-accent-hover);
+    --bs-btn-active-bg: var(--color-accent-active);
+    --bs-btn-active-border-color: var(--color-accent-active);
+    --bs-btn-color: var(--color-accent-contrast);
+    --bs-btn-hover-color: var(--color-accent-contrast);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+.btn-primary:hover { box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); }
+
+.btn-outline-primary {
+    --bs-btn-color: var(--color-accent);
+    --bs-btn-border-color: var(--color-accent);
+    --bs-btn-hover-bg: var(--color-accent);
+    --bs-btn-hover-border-color: var(--color-accent);
+    --bs-btn-hover-color: var(--color-accent-contrast);
+}
+
+.btn-gradient {
+    background: var(--gradient-accent);
+    color: var(--color-accent-contrast);
+    border: 0;
+    border-radius: var(--radius-pill);
+    font-weight: var(--fw-medium);
+    padding: var(--space-2) var(--space-5);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.btn-gradient:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); color: var(--color-accent-contrast); }
+
+/* Formularios */
+.form-control,
+.form-select {
+    border-radius: var(--radius-md);
+    border-color: var(--color-border);
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 0.2rem var(--color-accent-soft);
+}
+.form-control::placeholder { color: var(--color-text-muted); }
+.form-label { font-weight: var(--fw-medium); color: var(--color-text-primary); }
+
+/* Cards */
+.card {
+    color: var(--bs-card-color);
+    background-color: var(--color-bg-surface);
+    border-color: var(--color-border);
+    border-radius: var(--radius-lg);
+}
+

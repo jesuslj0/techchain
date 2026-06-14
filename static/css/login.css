@@ -1,233 +1,198 @@
+/* ===========================================================
+   TechChain · Login (mobile first, monocromo, minimalista)
+   Usa los tokens de theme.css y respeta claro/oscuro.
+   =========================================================== */
 
-img#techchain-logo {
-    width: 360px;
-    filter: drop-shadow(0px 0px 25px rgba(255, 255, 255, 0.8))
-}
-
-.logo-wrapper {
-  animation: rotate 4s ease-in-out infinite;
-}
-
-@keyframes rotate {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-#techchain-logo:hover {
-  transform: scale(1.05);
-}
-
-#techchain-logo:active {
-  transform: scale(1.12) rotate(-1deg);
-}
-
-
-h1 {
-    font-family: "Goldman-Regular";
-    font-size: 50px;
-}
-
-h2 {
-    font-family: "Goldman-Bold";
-    font-size: 40px;
-}
-
-h3 {
-    font-family: "Newsreader-Variable";
-    font-size: 36px;
-}
-
-.register {
-    font-family: "Newsreader-Variable";
-    font-size: 22px;
-    margin-top: 40px;
-}
-
-p > a {
-    font-weight: bold;
-}
-
-.btn-primary {
-    background-color: black;
-}
-
-.main-container {
+.login-page {
+    min-height: calc(100vh - 120px);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 80px;
-    padding: 50px;
-    margin-bottom: 100px;
+    padding: 24px 16px 48px;
 }
 
-.content-container {
-    max-width: 700px;
-    height: auto;
+.login-card {
+    width: 100%;
+    max-width: 380px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    align-items: start;
-    justify-content: space-between;
 }
 
-form {
+/* ---------- Cabecera (logo discreto) ---------- */
+.login-head {
     display: flex;
     flex-direction: column;
-    max-width: 500px;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    margin-bottom: 4px;
 }
 
-.btn-primary {
-    max-width: 100px;
+.login-logo {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 8px;
 }
 
-.form-label {
-    font-weight: bold;
+.login-title {
+    font-family: "Goldman-Bold", sans-serif;
+    font-size: 1.25rem;        /* ~20px en móvil */
+    line-height: 1.2;
+    margin: 0;
+    color: var(--color-text-primary);
 }
 
-.m-0 {
-    list-style: none;
+.login-subtitle {
+    font-size: 0.85rem;
+    margin: 0;
+    color: var(--color-text-secondary);
 }
 
-.m-0 > li::marker {
-    color: white;
+/* ---------- Formulario ---------- */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-@media (min-width: 320px) and (max-width: 768px) {
-    #main-header {
-        font-size: 18px;
-    }
-
-    img#techchain-logo {
-        width: 200px;
-    }
-
-    h1.title {
-        text-align: center;
-        width: 100%;
-        font-size: 40px;
-        margin-bottom: 0px;
-        margin-top: 30px;
-    }
-
-    h2 {
-        font-size: 30px;
-        text-align: center;
-        margin: 20px 0px 40px 0px;
-    }
-
-    .main-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 20px;
-
-        img {
-            width: 300px;
-            height: auto;
-        }
-    }
+.login-form .form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--color-text-primary);
 }
 
-@media (min-width: 768px) {
-    .title {
-        text-align: center;
-        font-size: 50px;
-        margin-bottom: 30px;
-    }
-
-    h2 {
-        text-align: start;
-    }
-
-    .main-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 20px;
-
-        img {
-            width: 300px;
-            height: auto;
-        }
-    }
+.login-form .form-control {
+    min-height: 44px;
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+    background-color: transparent;
+    border: 1px solid var(--color-text-secondary);
+    border-radius: var(--radius-md);
 }
 
-@media (min-width: 768px) and (max-width: 1025px) {
-    .logo-wrapper {
-        margin-bottom: 30px;
-    }
-
-    img#techchain-logo {
-        width: 250px;
-    }
+.login-form .form-control:focus {
+    border-color: var(--color-text-primary);
+    box-shadow: none;
 }
 
-@media (min-width: 1025px) {
-    .main-container {
-        display: flex;
-        flex-direction: row;
-        gap: 100px;
-        padding: 20px;
-
-        img {
-            width: 300px;
-            height: auto;
-        }
-    }
-    
+.login-remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 4px;
+    min-height: 44px;
 }
 
-.google-login-btn {
+.login-remember .form-check-label {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+
+.login-remember .form-check-input {
+    margin: 0;
+}
+
+/* ---------- Botones (los 3 con el mismo molde) ---------- */
+.login-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-
     width: 100%;
-    padding: 10px 14px;
-
-    border: 1px solid #dadce0;
-    border-radius: 6px;
-
-    background-color: #ffffff;
-    color: #3c4043;
-    font-weight: 500;
-    font-size: 0.95rem;
-
+    min-height: 44px;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    transition: opacity var(--transition-fast), background-color var(--transition-fast);
+}
 
+/* Primario: invertido respecto al fondo en ambos temas */
+.login-btn--primary {
+    background-color: var(--color-text-primary);
+    color: var(--color-bg-primary);
+    border: 1px solid var(--color-text-primary);
+}
+
+.login-btn--primary:hover {
+    opacity: 0.85;
+}
+
+/* Google: outline monocromo coherente con el primario */
+.login-btn--google {
+    background-color: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-text-secondary);
+}
+
+.login-btn--google:hover {
+    border-color: var(--color-text-primary);
+}
+
+.login-btn--google img {
+    width: 18px;
+    height: 18px;
+}
+
+/* ---------- Separador ---------- */
+.login-separator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+}
+
+.login-separator::before,
+.login-separator::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-text-secondary);
+    opacity: 0.4;
+}
+
+/* ---------- Registro ---------- */
+.login-register {
+    text-align: center;
+    font-size: 0.85rem;
+    margin: 4px 0 0;
+    color: var(--color-text-secondary);
+}
+
+.login-register a {
+    font-weight: 700;
+    color: var(--color-text-primary);
     text-decoration: none;
 }
 
-.google-login-btn:hover {
-    background-color: #f7f7f7;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+.login-register a:hover {
+    text-decoration: underline;
 }
 
-.google-login-btn img {
-    width: 20px;
-    height: 20px;
-}
+/* ===========================================================
+   Tablet / desktop: ligeros incrementos, sin protagonismo
+   =========================================================== */
+@media (min-width: 768px) {
+    .login-logo {
+        width: 64px;
+        height: 64px;
+    }
 
-.separator-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0;
-}
+    .login-title {
+        font-size: 1.5rem;
+    }
 
-.separator-line {
-    flex: 1;
-    height: 1px;
-    background-color: #ccc;
-}
+    .login-subtitle {
+        font-size: 0.95rem;
+    }
 
-.separator-text {
-    font-size: 0.85rem;
-    color: #666;
+    .login-btn,
+    .login-form .form-control {
+        font-size: 0.95rem;
+    }
 }

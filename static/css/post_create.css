@@ -22,9 +22,9 @@ div#id_tags > label {
 }
 
 #previewContainer {
-  border: 2px dashed #ddd;
-  border-radius: 8px;
-  background-color: #fafafa;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-surface);
 }
 
 #imagePreview {

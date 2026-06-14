@@ -4,42 +4,51 @@
         <ul class="navbar-nav gap-3">
             {% if request.user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">Inicio</a>
+                    <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house" aria-hidden="true"></i>Inicio</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'explore' %}">Explorar</a>
+                <li class="nav-item nav-hide-mobile">
+                    <a class="nav-link" href="{% url 'explore' %}"><i class="bi bi-compass" aria-hidden="true"></i>Explorar</a>
                 </li>
             {% endif %}
             {% if not request.user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
+                    <a class="nav-link" href="{% url 'login' %}"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>Iniciar Sesión</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Registrarse</a>
+                    <a class="nav-link" href="{% url 'register' %}"><i class="bi bi-person-plus" aria-hidden="true"></i>Registrarse</a>
                 </li>
             {% endif %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'contact' %}">Contacto</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'legal' %}">Aviso Legal</a>
+            <li class="nav-item nav-hide-mobile">
+                <a class="nav-link" href="{% url 'contact' %}"><i class="bi bi-envelope" aria-hidden="true"></i>Contacto</a>
             </li>
             <li class="nav-item">
                 <button id="theme-toggle" class="btn btn-outline-secondary" aria-label="Cambiar modo oscuro/claro">
                     <i class="bi bi-lightbulb-fill" id="toggle-theme-icon"></i>
                 </button>
             </li>
+            {% if request.user.is_authenticated %}
+                <li class="nav-item nav-user">
+                    <a class="nav-link nav-username" href="{% url 'profiles:detail' request.user.uuid %}"><i class="bi bi-person-circle" aria-hidden="true"></i>{{ request.user.username }}</a>
+                </li>
+                <li class="nav-item nav-session">
+                    <form action="{% url 'logout' %}" method="POST" class="nav-logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link nav-logout"><i class="bi bi-box-arrow-right" aria-hidden="true"></i>Cerrar sesión</button>
+                    </form>
+                </li>
+            {% endif %}
         </ul>
         {% endblock %}
     </nav>
     <div class="toggle-navbar">
-        <button class="toggle-navbar-button" onclick="toggleNavbar()">
-          <img id="navbar-icon" class="toggle-navbar-icon" src="/static/icons/arrow-down.svg" />   
+        <button class="toggle-navbar-button" onclick="toggleNavbar()"
+                aria-label="Abrir menú de navegación" aria-controls="navbar" aria-expanded="false">
+          <i id="navbar-icon" class="toggle-navbar-icon bi bi-list"></i>
         </button>
     </div>
 </header>
 {% load static %}
-<script src="{% static 'js/theme-toggle.js' %}"></script>
+<script src="{% static 'js/theme-toggle.js' %}?v=1.1"></script>
 <script>
     const toggleThemeButton = document.getElementById('toggle-theme-icon');
     const isCurrentlyDark = document.documentElement.classList.contains('dark-mode');

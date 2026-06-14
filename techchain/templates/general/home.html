@@ -3,7 +3,7 @@
 
 {% block styles %}
     {% load static %}
-    <link rel="stylesheet" href="{% static "css/home.css" %}">
+    <link rel="stylesheet" href="{% static "css/home.css" %}?v=1.2">
 {% endblock %}
 {% block title %}Inicio - TechChain{% endblock %}
 {% block title_h1 %}
@@ -14,58 +14,22 @@
     <hr class="d-none d-xl-block"/>
     <div class='container'>
         <div class="row">
-            <!-- Botón para mostrar el menú (solo visible en móvil) -->
-            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-3 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
-            <i class="bi bi-list"></i> Menú
-            </button>
-
-            <!-- Menú colapsable -->
-            <div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
-                <ul class="list-unstyled d-flex flex-column p-2">
-                    <li class='p-2'>
-                    <i class="bi bi-person-circle"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'profiles:detail' request.user.uuid %}">Mi Perfil</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-camera-reels"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'posts:reels_feed' %}">Reels</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-bell"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'notifications:list' %}">Notificaciones</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-chat-square-text"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'chat:chat_rooms' %}">Chats</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-people-fill"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-people"></i>
-                    <a class="mb-2 text-decoration-none" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-postcard-heart"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-file-earmark-plus"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'posts:create' user_uuid %}">Crear</a>
-                    </li>
-                </ul>
-            </div>
+            {% include '_include/_sidebar.html' %}
 
             <div class="col-12 col-md-12 col-lg-8">
                 
                 <ul class="list-group mb-3">
                     {% if not recent_posts %}
-                    <p class="me-2">No hay ningun post reciente. Sigue a algún usuario!</p>
+                    <div class="home-empty text-center">
+                        <i class="bi bi-postcard-heart home-empty__icon"></i>
+                        <h3 class="home-empty__title">Aún no hay publicaciones</h3>
+                        <p class="home-empty__text">Sigue a otros usuarios para ver aquí sus publicaciones más recientes.</p>
+                        <a href="{% url 'explore' %}" class="btn btn-primary">Descubrir usuarios</a>
+                    </div>
                     {% else %}
                         <h2 class="subtitle">Publicaciones recientes</h2>
                         {% for post in recent_posts %}
-                        <div class="list-group-item col-12 col-lg-12 mb-4 d-flex flex-column justify-content-between p-3 shadow-sm border rounded">
+                        <div class="home-post-card list-group-item col-12 col-lg-12 mb-4 d-flex flex-column justify-content-between p-3 shadow-sm border rounded">
                             <div class="row g-3">
                                 <!-- Imagen del post -->
                                 <div class="col-md-5 col-lg-6">

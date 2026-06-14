@@ -1,0 +1,46 @@
+<button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
+    <i class="bi bi-list"></i> Menú
+</button>
+
+{% with current=request.resolver_match.view_name %}
+<div class="collapse d-lg-block col-12 col-lg-3" id="sidebarMenu">
+    <ul class="list-unstyled d-flex flex-column p-2">
+        <li class='p-2'>
+            <i class="bi bi-house"></i>
+            <a class="text-decoration-none{% if current == 'home' %} active{% endif %}" href="{% url 'home' %}">Inicio</a>
+        </li>
+        <li class='p-2'>
+            <i class="bi bi-person-circle"></i>
+            <a class="text-decoration-none{% if current == 'profiles:detail' %} active{% endif %}" href="{% url 'profiles:detail' user_uuid %}">Mi Perfil</a>
+        </li>
+        <li class='p-2'>
+            <i class="bi bi-camera-reels"></i>
+            <a class="text-decoration-none{% if current == 'posts:reels_feed' %} active{% endif %}" href="{% url 'posts:reels_feed' %}">Reels</a>
+        </li>
+        <li class='p-2'>
+            <i class="bi bi-bell"></i>
+            <a class="text-decoration-none{% if current == 'notifications:list' %} active{% endif %}" href="{% url 'notifications:list' %}">Notificaciones</a>
+        </li>
+        <li class='p-2'>
+            <i class="bi bi-chat-square-text"></i>
+            <a class="text-decoration-none{% if current == 'chat:chat_rooms' %} active{% endif %}" href="{% url 'chat:chat_rooms' %}">Chats</a>
+        </li>
+        <li class='p-2'>
+            <i class="bi bi-people-fill"></i>
+            <a class="text-decoration-none{% if current == 'profiles:followers' %} active{% endif %}" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
+        </li>
+        <li class='p-2'>
+            <i class="bi bi-people"></i>
+            <a class="text-decoration-none{% if current == 'profiles:following' %} active{% endif %}" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
+        </li>
+        <li class='p-2'>
+            <i class="bi bi-postcard-heart"></i>
+            <a class="text-decoration-none{% if current == 'posts:list' %} active{% endif %}" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
+        </li>
+        <li class='p-2'>
+            <i class="bi bi-file-earmark-plus"></i>
+            <a class="text-decoration-none{% if current == 'posts:create' %} active{% endif %}" href="{% url 'posts:create' user_uuid %}">Crear</a>
+        </li>
+    </ul>
+</div>
+{% endwith %}

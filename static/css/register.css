@@ -1,140 +1,49 @@
-.title {
-    font-family: "Goldman-Regular";
-    font-size: 50px;
-    margin-bottom: 20px;
+/* ===========================================================
+   TechChain · Registro
+   Extiende el sistema de login.css. Solo overrides puntuales:
+   card algo más ancha (4 campos) y soporte de password toggle.
+   =========================================================== */
+
+.login-card--wide {
+    max-width: 420px;
 }
 
-.form-title {
-    font-family: "Goldman-Bold";
+/* Textos de ayuda de validación de contraseña de Django (crispy) */
+.login-form .form-text,
+.login-form .helptext {
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
 }
 
-.main-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 80px;
-    padding: 50px;
-    margin-bottom: 100px;
+.login-form ul {
+    margin: 4px 0 0;
+    padding-left: 18px;
 }
 
-.content-container {
-    max-width: 600px;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    align-items: start;
-    justify-content: space-between;
+/* Espaciado entre grupos de campos (4 campos necesitan más aire) */
+.login-form .mb-3 {
+    margin-bottom: 14px !important;
 }
 
-.form-label {
-    font-weight: bold;
-}
-
-img#techchain-logo {
-    width: 400px;
-    animation: rotate 6s linear infinite; /* Ajusta la duración y el tipo de animación */
-    filter: drop-shadow(0px 0px 25px rgba(255, 255, 255, 0.8))
-}
-
-@keyframes rotate {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-
-@media (min-width: 320px) and (max-width: 768px) {
-    #main-header {
-        font-size: 18px;
-    }
-
-    img#techchain-logo {
-        width: 250px;
-    }
-
-    h1.title {
-        text-align: center;
-        width: 100%;
-        font-size: 40px;
-        margin-bottom: 0px;
-        margin-top: 30px;
-    }
-
-    h2 {
-        font-size: 30px;
-        text-align: center;
-        margin-bottom: 50px;
-    }
-
-    .main-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 20px;
-    }
-}
-
-@media (min-width: 768px) {
-    .title {
-        width: auto;
-        font-size: 50px;
-        margin-bottom: 20px;
-    }
-
-    h2 {
-        text-align: start;
-    }
-
-    .main-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 20px;
-    }
-}
-
-@media (min-width: 1025px) {
-    .main-container {
-        display: flex;
-        flex-direction: row;
-        gap: 100px;
-    }
-}
-
-
-.google-login-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-
-    width: 100%;
-    padding: 10px 14px;
-
-    border: 1px solid #dadce0;
-    border-radius: 6px;
-
-    background-color: #ffffff;
-    color: #3c4043;
-    font-weight: 500;
-    font-size: 0.95rem;
-
+/* Toggle de visibilidad de contraseña */
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
     cursor: pointer;
-    transition: background-color 0.15s ease, box-shadow 0.15s ease;
-
-    text-decoration: none;
+    opacity: 0.6;
+    color: var(--color-text-primary);
+    line-height: 1;
 }
 
-.google-login-btn:hover {
-    background-color: #f7f7f7;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+.password-toggle:hover {
+    opacity: 1;
 }
 
-.google-login-btn img {
-    width: 20px;
-    height: 20px;
+/* Mensajes de error de validación legibles en ambos temas */
+.login-form .invalid-feedback,
+.login-form .errorlist {
+    font-size: 0.8rem;
 }

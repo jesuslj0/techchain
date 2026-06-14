@@ -2,16 +2,33 @@
 {% load crispy_forms_tags %}
 {% block styles %}
     {% load static %}
-    <link rel="stylesheet" href="{% static "css/contact.css" %}">
+    <link rel="stylesheet" href="{% static "css/login.css" %}?v=1.1">
+    <link rel="stylesheet" href="{% static "css/contact.css" %}?v=2.0">
 {% endblock %}
-{% block title %}Contact{% endblock %}
-{% block title_h1 %}Contacta con nosotros{% endblock %}
+{% block title %}Contacto{% endblock %}
+{% block title_h1 %}{% endblock %}
 {% block search_bar %}{% endblock %}
 
-{% block form %}
-    <form method='post'>
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button class='btn btn-secondary mb-3' type='submit'>Enviar</button>
-    </form>
+{% block content %}
+    {% load static %}
+    <div class="login-page">
+      <div class="login-card login-card--wide">
+        <header class="login-head">
+          <i class="bi bi-envelope login-head-icon" aria-hidden="true"></i>
+          <h1 class="login-title">Contacta con nosotros</h1>
+          <p class="login-subtitle">¿Tienes una duda o sugerencia? Escríbenos.</p>
+        </header>
+
+        <form class="login-form" method="post" novalidate>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="login-btn login-btn--primary" type="submit">Enviar mensaje</button>
+        </form>
+
+        <p class="login-register">
+            También puedes escribirnos a
+            <a href="mailto:developersteam@alt4ir.com">developersteam@alt4ir.com</a>
+        </p>
+      </div>
+    </div>
 {% endblock %}

@@ -1,23 +1,37 @@
-<footer class="text-white pt-4 pb-3 mt-auto">
-  <div class="container text-center text-md-start">
-    <div class="row">
-      <div class="col-12 col-md-4 mb-3">
-        <p class="mb-1">&copy; 2025 TechChain</p>
-        <p class="mb-1">Albacete - Spain</p>
-        <p class="mb-0">techchain.live@gmail.com</p>
+{% load static %}
+<footer class="site-footer mt-auto" role="contentinfo">
+  <div class="site-footer__inner">
+
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <a href="{% url 'home' %}" class="site-footer__logo">TechChain</a>
+        <p class="site-footer__tagline">La red social de quienes construyen tecnología.</p>
       </div>
 
-      <div class="col-12 col-md-8 d-flex justify-content-center justify-content-md-end align-items-center gap-3">
-        <a href="https://www.facebook.com" target="_blank" class="text-white fs-4">
-          <i class="bi bi-facebook"></i>
-        </a>
-        <a href="https://twitter.com" target="_blank" class="text-white fs-4">
-          <i class="bi bi-twitter-x"></i>
-        </a>
-        <a href="https://www.linkedin.com" target="_blank" class="text-white fs-4">
-          <i class="bi bi-linkedin"></i>
-        </a>
-      </div>
+      <nav class="site-footer__nav" aria-label="Enlaces del pie de página">
+        <div class="site-footer__col">
+          <h2 class="site-footer__heading">Explorar</h2>
+          <ul class="site-footer__list">
+            <li><a href="{% url 'home' %}" class="site-footer__link">Inicio</a></li>
+            <li><a href="{% url 'explore' %}" class="site-footer__link">Descubrir</a></li>
+            <li><a href="{% url 'posts:reels_feed' %}" class="site-footer__link">Reels</a></li>
+          </ul>
+        </div>
+
+        <div class="site-footer__col">
+          <h2 class="site-footer__heading">TechChain</h2>
+          <ul class="site-footer__list">
+            <li><a href="{% url 'contact' %}" class="site-footer__link">Contacto</a></li>
+            <li><a href="{% url 'legal' %}" class="site-footer__link">Aviso legal</a></li>
+            <li><a href="{% url 'legal' %}" class="site-footer__link">Privacidad</a></li>
+          </ul>
+        </div>
+      </nav>
     </div>
+
+    <div class="site-footer__bottom">
+      <p class="site-footer__copy">&copy; {% now "Y" %} TechChain · Albacete, España</p>
+    </div>
+
   </div>
 </footer>

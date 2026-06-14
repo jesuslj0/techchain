@@ -44,50 +44,291 @@ form.d-flex {
     align-self: center;
 }
 
-header {
+/* ===========================================================
+   Cabecera principal de navegación (#main-header)
+   Mobile first: barra con botón hamburguesa + panel desplegable.
+   Desktop (≥992px): nav en fila alineada a la izquierda.
+   =========================================================== */
+#main-header {
     width: 100%;
-    display: flex;
-    justify-content: center;
     position: relative;
 }
 
+/* ---------- Botón hamburguesa (solo móvil, a la derecha) ---------- */
 .toggle-navbar {
-    position: absolute;
-    bottom: -25px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .toggle-navbar-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin: 4px 8px;
     background-color: transparent;
-    border: 0px;
+    border: 0;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-#navbar-icon {
-  transition: opacity 0.5s ease;
-  width: 18px;
-  height: auto;
-  transform: none;
+.toggle-navbar-button:hover,
+.toggle-navbar-button:focus-visible {
+    background-color: rgba(255, 255, 255, 0.1);
+    outline: none;
 }
 
-#navbar-icon.hidden {
-  opacity: 0;
-  pointer-events: none;
+/* ---------- Lista de enlaces ---------- */
+#navbar .navbar-nav {
+    width: 100%;
+    margin: 0;
+    padding: 4px 8px 8px;
+    gap: 0 !important;
 }
 
-#navbar-icon.opened {
-  transform: rotate(180deg);
+#navbar .nav-item:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-#navbar-icon.none {
-  display: none;
+#navbar .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* móvil: enlaces a la derecha */
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 8px;
+    color: rgba(255, 255, 255, 0.75);
+    transition: color 0.2s ease;
 }
 
-footer {
-    p:nth-of-type(1) {
-        color: white;
+/* El botón de tema también alineado a la derecha en el panel móvil */
+#navbar .nav-item:last-child {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#navbar .nav-link:hover,
+#navbar .nav-link:focus-visible {
+    color: #ffffff;
+}
+
+#navbar #theme-toggle {
+    margin: 8px 0;
+}
+
+/* Panel desplegable a ancho completo bajo la barra (móvil) */
+#navbar:not([hidden]) {
+    animation: navbar-slide 0.2s ease;
+}
+
+@keyframes navbar-slide {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================================================
+   Desktop: enlaces en fila, alineados a la IZQUIERDA, sin toggler
+   =========================================================== */
+@media (min-width: 992px) {
+    /* Se ignora el atributo hidden: la nav siempre visible en desktop.
+       !important necesario para ganar al [hidden]{display:none!important} de Bootstrap */
+    #navbar[hidden] {
+        display: flex !important;
     }
 
-    p {
-        color: rgba(255, 255, 255, 0.6)
+    .toggle-navbar {
+        display: none;
+    }
+
+    #navbar .navbar-nav {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;  /* enlaces a la izquierda */
+        padding: 4px 16px;
+        gap: 4px 8px !important;
+        animation: none;
+    }
+
+    #navbar .nav-item:not(:last-child) {
+        border-bottom: 0;
+    }
+
+    #navbar .nav-link {
+        justify-content: flex-start;
+        padding: 0 12px;
+        border-radius: 8px;
+    }
+
+    #navbar .nav-link:hover,
+    #navbar .nav-link:focus-visible {
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* El selector de tema empujado al extremo derecho */
+    #navbar .nav-item:last-child {
+        margin-left: auto;
+    }
+}
+
+/* ============================================================
+   FOOTER (rediseño)
+   Full-bleed, fondo oscuro fijo (--color-footer-bg), texto claro.
+   Mobile first: el contenido se apila; el footer queda bajo el fold
+   gracias a body.min-vh-100 + main.flex-grow-1 + footer.mt-auto.
+   ============================================================ */
+.site-footer {
+    width: 100%;
+    background-color: var(--color-footer-bg);
+    /* texto base claro: corrige enlaces invisibles en desktop (modo claro) */
+    color: var(--color-footer-text-secondary);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.site-footer__inner {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 1.75rem;
+}
+
+.site-footer__top {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.site-footer__brand {
+    max-width: 24rem;
+}
+
+.site-footer__logo {
+    display: inline-block;
+    font-family: "Goldman-Regular", sans-serif;
+    font-size: 1.35rem;
+    line-height: 1;
+    color: var(--color-footer-text-primary);
+    text-decoration: none;
+}
+
+.site-footer__logo:hover,
+.site-footer__logo:focus-visible {
+    color: #ffffff;
+}
+
+.site-footer__tagline {
+    margin: 0.75rem 0 0;
+    font-size: 0.9rem;
+    color: var(--color-footer-text-secondary);
+}
+
+.site-footer__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+}
+
+.site-footer__heading {
+    margin: 0 0 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-footer-text-primary);
+}
+
+.site-footer__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.site-footer__link {
+    display: inline-flex;
+    align-items: center;
+    /* área táctil cómoda (>=44px de alto efectivo entre enlaces) */
+    padding: 0.4rem 0;
+    font-size: 0.9rem;
+    /* color explícito: NO heredamos de Bootstrap, así se ve en ambos temas */
+    color: var(--color-footer-text-secondary);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.site-footer__link:hover,
+.site-footer__link:focus-visible {
+    color: #ffffff;
+}
+
+.site-footer__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.site-footer__copy {
+    margin: 0;
+    font-size: 0.825rem;
+    color: var(--color-footer-text-secondary);
+}
+
+.site-footer__social {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.site-footer__social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 0.5rem;
+    font-size: 1.15rem;
+    color: var(--color-footer-text-secondary);
+    text-decoration: none;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.site-footer__social-link:hover,
+.site-footer__social-link:focus-visible {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Desktop: marca a la izquierda, navegación a la derecha;
+   banda inferior con copyright e iconos en extremos opuestos. */
+@media (min-width: 768px) {
+    .site-footer__inner {
+        padding: 3rem 1.5rem 2rem;
+    }
+
+    .site-footer__top {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 3rem;
+    }
+
+    .site-footer__nav {
+        gap: 4rem;
+    }
+
+    .site-footer__bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
 }
 

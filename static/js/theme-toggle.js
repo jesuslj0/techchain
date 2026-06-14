@@ -3,14 +3,12 @@ const toggleButton = document.getElementById('theme-toggle');
 const html = document.documentElement; // Uso el documento html directamente
 const storageKey = 'themePreference';
 const darkClass = 'dark-mode';
-const toggleNavBar = document.getElementById('navbar-icon');
 
 // Función para aplicar la clase y guardar en localStorage
 const setTheme = (isDark) => {
     if (isDark) {
         html.classList.add(darkClass);
         localStorage.setItem(storageKey, 'dark');
-        toggleNavBar.style.filter = 'invert(1)';
     } else {
         html.classList.remove(darkClass);
         localStorage.setItem(storageKey, 'light');

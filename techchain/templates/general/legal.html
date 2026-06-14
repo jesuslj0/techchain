@@ -1,23 +1,151 @@
 {% extends 'layout/layout_basic.html' %}
-{% block title %}Legal{% endblock %}
-{% block title_h1 %}Aviso legal{% endblock %}
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/legal.css" %}?v=1.0">
+{% endblock %}
+{% block title %}Aviso legal{% endblock %}
+{% block title_h1 %}{% endblock %}
 {% block search_bar %}{% endblock %}
+
 {% block content %}
-<p class='h3'>1. Información General </p>
-<p>
-El presente aviso legal regula el uso del sitio web TechChain
-(en adelante, "TechChain.live"), accesible desde la URL www.techchain.live.
-La titularidad de la Plataforma corresponde a Jesús López Jaén, con correo electrónico de contacto: jesuslopj0@gmail.com.
-</p>
+<article class="legal-doc">
+    <header class="legal-header">
+        <h1 class="legal-title">Aviso legal y política de privacidad</h1>
+        <p class="legal-updated">Última actualización: 11 de junio de 2026</p>
+    </header>
 
-<p class='h3'>2. Condiciones de Uso</p>
-<p>
-El acceso y uso de la Plataforma implica la aceptación de los términos y condiciones establecidos en este aviso legal. 
-Si no estás de acuerdo con alguna de las condiciones, por favor, abstente de utilizar TechChain.</p>
+    <section class="legal-section" aria-labelledby="sec-1">
+        <h2 id="sec-1">1. Información general (LSSI-CE)</h2>
+        <p>
+            En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios
+            de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se informa
+            de los datos identificativos del titular del sitio web TechChain
+            (en adelante, «la Plataforma»), accesible desde
+            <a href="https://www.techchain.live">www.techchain.live</a>:
+        </p>
+        <ul class="legal-data">
+            <li><strong>Titular:</strong> [NOMBRE DEL TITULAR]</li>
+            <li><strong>NIF / CIF:</strong> [NIF]</li>
+            <li><strong>Domicilio:</strong> [DOMICILIO], Albacete, España</li>
+            <li><strong>Correo electrónico de contacto:</strong>
+                <a href="mailto:developersteam@alt4ir.com">developersteam@alt4ir.com</a></li>
+        </ul>
+    </section>
 
-<p class='h3'>3. Propiedad Intelectual </p>
-<p>
-Todos los contenidos publicados en TechChain, incluidos textos, imágenes, logotipos, diseños, software y otros elementos, 
-están protegidos por derechos de propiedad intelectual e industrial. Está prohibida su reproducción, distribución o modificación
-sin la autorización previa y por escrito del titular.</p>
+    <section class="legal-section" aria-labelledby="sec-2">
+        <h2 id="sec-2">2. Objeto y condiciones de uso</h2>
+        <p>
+            La Plataforma es una red social orientada a la tecnología que permite a los
+            usuarios publicar contenidos, interactuar y comunicarse entre sí. El acceso y
+            uso de la Plataforma atribuye la condición de usuario e implica la aceptación
+            plena de las presentes condiciones. Si no estás de acuerdo con alguna de ellas,
+            abstente de utilizar la Plataforma.
+        </p>
+        <p>
+            El usuario se compromete a hacer un uso lícito, diligente y conforme a la ley,
+            la moral y el orden público, absteniéndose de cualquier conducta que pueda
+            dañar, inutilizar o sobrecargar la Plataforma o impedir su normal uso.
+        </p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="sec-3">
+        <h2 id="sec-3">3. Registro de usuarios</h2>
+        <p>
+            Algunas funcionalidades requieren registro mediante usuario y contraseña, o a
+            través de cuentas de terceros (ver apartado 7). El usuario es responsable de la
+            veracidad de los datos facilitados y de la custodia de sus credenciales,
+            comprometiéndose a notificar cualquier uso no autorizado de su cuenta. Para
+            registrarse es necesario ser mayor de 14 años conforme a la normativa española
+            de protección de datos.
+        </p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="sec-4">
+        <h2 id="sec-4">4. Propiedad intelectual e industrial</h2>
+        <p>
+            Todos los elementos de la Plataforma (código, diseño, logotipos, marcas, textos
+            e imágenes propias) están protegidos por derechos de propiedad intelectual e
+            industrial cuya titularidad corresponde al titular o a sus licenciantes. Queda
+            prohibida su reproducción, distribución, transformación o comunicación pública
+            sin autorización previa y por escrito.
+        </p>
+        <p>
+            Los contenidos publicados por los usuarios siguen siendo de su titularidad. No
+            obstante, al publicarlos, el usuario concede al titular una licencia gratuita y
+            no exclusiva para alojarlos y mostrarlos dentro de la Plataforma con la
+            finalidad de prestar el servicio.
+        </p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="sec-5">
+        <h2 id="sec-5">5. Responsabilidad sobre los contenidos de usuarios</h2>
+        <p>
+            El usuario es el único responsable de los contenidos que publica y garantiza
+            disponer de los derechos necesarios sobre ellos. Queda prohibido publicar
+            contenidos ilícitos, ofensivos, que infrinjan derechos de terceros o que
+            vulneren la normativa vigente.
+        </p>
+        <p>
+            Conforme a los artículos 16 y 17 de la LSSI-CE, el titular no tiene obligación
+            de supervisar previamente los contenidos, pero retirará o bloqueará aquellos que
+            sean manifiestamente ilícitos en cuanto tenga conocimiento efectivo de ellos.
+            Puedes notificar contenidos inapropiados a
+            <a href="mailto:developersteam@alt4ir.com">developersteam@alt4ir.com</a>.
+        </p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="sec-6">
+        <h2 id="sec-6">6. Protección de datos (RGPD y LOPDGDD)</h2>
+        <p>
+            En cumplimiento del Reglamento (UE) 2016/679 (RGPD) y de la Ley Orgánica 3/2018
+            (LOPDGDD), se informa sobre el tratamiento de datos personales:
+        </p>
+        <ul class="legal-data">
+            <li><strong>Responsable:</strong> [NOMBRE DEL TITULAR] — [NIF] — Albacete, España.</li>
+            <li><strong>Finalidad:</strong> gestionar el registro y la cuenta del usuario,
+                permitir la publicación e interacción de contenidos y atender las
+                comunicaciones recibidas.</li>
+            <li><strong>Base legal:</strong> la ejecución del contrato de prestación del
+                servicio (art. 6.1.b RGPD), el consentimiento del interesado (art. 6.1.a)
+                para comunicaciones, y el interés legítimo (art. 6.1.f) para la seguridad de
+                la Plataforma.</li>
+            <li><strong>Conservación:</strong> los datos se conservarán mientras la cuenta
+                esté activa y, posteriormente, durante los plazos legales aplicables.</li>
+            <li><strong>Destinatarios:</strong> no se cederán datos a terceros salvo
+                obligación legal o proveedores que prestan servicios al titular
+                (p. ej. proveedores de autenticación y correo).</li>
+        </ul>
+        <p>
+            Puedes ejercer tus derechos de <strong>acceso, rectificación, supresión,
+            oposición, limitación del tratamiento y portabilidad</strong> (derechos ARCO y
+            del RGPD) enviando una solicitud a
+            <a href="mailto:developersteam@alt4ir.com">developersteam@alt4ir.com</a>,
+            indicando el derecho que deseas ejercer y adjuntando un documento que acredite
+            tu identidad. Asimismo, tienes derecho a presentar una reclamación ante la
+            Agencia Española de Protección de Datos (<a href="https://www.aepd.es">www.aepd.es</a>).
+        </p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="sec-7">
+        <h2 id="sec-7">7. Enlaces y servicios de terceros</h2>
+        <p>
+            La Plataforma permite iniciar sesión mediante <strong>Google</strong>. Al
+            utilizar esta opción, el tratamiento de datos por parte de Google se rige por
+            su propia política de privacidad
+            (<a href="https://policies.google.com/privacy">policies.google.com/privacy</a>).
+            El titular no se responsabiliza del contenido ni de las políticas de sitios o
+            servicios de terceros enlazados desde la Plataforma.
+        </p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="sec-8">
+        <h2 id="sec-8">8. Legislación aplicable y jurisdicción</h2>
+        <p>
+            Las presentes condiciones se rigen por la legislación española. Para la
+            resolución de cualquier controversia, las partes se someten a los Juzgados y
+            Tribunales de Albacete (España), salvo que la normativa de consumidores y
+            usuarios establezca un fuero distinto de carácter imperativo.
+        </p>
+    </section>
+</article>
 {% endblock %}

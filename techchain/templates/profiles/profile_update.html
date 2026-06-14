@@ -14,46 +14,10 @@
 {% block content %}
     <div class="container m-auto">
         <div class="row">
-            <!-- Botón para mostrar el menú (solo visible en móvil) -->
-            <button id="menuToggleBtn" class="btn btn-outline-primary d-lg-none mb-2 mb-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
-            <i class="bi bi-list"></i> Menú
-            </button>
-            <!-- Menú colapsable -->
-            <div class="collapse d-lg-block col-12 col-lg-2" id="sidebarMenu">
-                <ul class="list-unstyled d-flex flex-column p-2">
-                    <li class='p-2'>
-                    <i class="bi bi-person-circle"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'profiles:detail' user_uuid %}">Mi Perfil</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-bell"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'notifications:list' %}">Notificaciones</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-chat-square-text"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'chat:chat_rooms' %}">Chats</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-people-fill"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'profiles:followers' user_uuid %}">Seguidores</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-people"></i>
-                    <a class="mb-2 text-decoration-none" href="{% url 'profiles:following' user_uuid %}">Seguidos</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-postcard-heart"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'posts:list' user_uuid %}">Publicaciones</a>
-                    </li>
-                    <li class='p-2'>
-                    <i class="bi bi-file-earmark-plus"></i>
-                    <a class="mb-5 text-decoration-none" href="{% url 'posts:create' user_uuid %}">Crear</a>
-                    </li>
-                </ul>
-            </div>
+            {% include '_include/_sidebar.html' %}
 
             <!-- Formulario del perfil -->
-            <div class='col-12 col-md-12 col-lg-10'>
+            <div class='col-12 col-lg-9'>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% if request.user.profile.profile_picture %}
@@ -115,14 +79,17 @@
 
         function toggleNavbar() {
             const toggleIcon = document.querySelector('.toggle-navbar-icon');
+            const toggleBtn = document.querySelector('.toggle-navbar-button');
             const navbar = document.getElementById('navbar');
 
-            navbar.toggleAttribute('hidden');
-            if (toggleIcon.classList.contains('opened')) {
-                toggleIcon.classList.remove('opened');
-            } else {
-                toggleIcon.classList.add('opened')
-            }
+            const isOpen = !navbar.toggleAttribute('hidden');
+            toggleIcon.classList.toggle('bi-list', !isOpen);
+            toggleIcon.classList.toggle('bi-x-lg', isOpen);
+            toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            toggleBtn.setAttribute(
+                'aria-label',
+                isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'
+            );
         }
 
         const toggleBtn = document.getElementById('menuToggleBtn');
