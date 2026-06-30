@@ -126,7 +126,7 @@ body {
     transition: color var(--transition-fast), background-color var(--transition-fast);
 }
 
-#sidebarMenu > ul > li > a:hover,
+#sidebarMenu > ul > li:hover > a,
 #sidebarMenu > ul > li > a:focus-visible {
     color: var(--color-accent);
     background-color: var(--color-accent-soft);
@@ -266,7 +266,6 @@ h2 { font-size: var(--fs-xl); line-height: 1.2; }
 #top-bar {
     padding-bottom: var(--space-3);
     margin-bottom: var(--space-5) !important;
-    border-bottom: 1px solid var(--color-border);
 }
 
 .title--accent {
